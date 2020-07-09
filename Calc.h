@@ -12,8 +12,8 @@ class Calc : public QMainWindow
     Q_OBJECT
 
 public:
-	Calc(QWidget *parent = nullptr);
-    ~Calc();
+	explicit Calc(QWidget *parent = nullptr);
+    ~Calc() override;
 
 private:
     Ui::Calc *ui;

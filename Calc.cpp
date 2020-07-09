@@ -32,8 +32,7 @@ op_decision;
 ///////////////////////////////////////////////////////////
 
 Calc::Calc(QWidget *parent) :
-	QMainWindow(parent),
-    ui(new Ui::Calc)
+	QMainWindow(parent), ui(new Ui::Calc)
 {
 	// UI initialization.
     ui->setupUi(this);
