@@ -23,6 +23,8 @@ private slots:
 	void commaButtonPressed();
 	void mathButtonPressed();
 
+	QString performOperation();
+
 	void equalButtonPressed();
 	void percentButtonPressed();
 
