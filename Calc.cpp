@@ -281,10 +281,16 @@ void Calc::sqrtButtonPressed()
 	ui->display->setText(str_result);
 }
 
-// Clearing the display with [C] button.
+// Clearing the display and buffer with [C] button.
 void Calc::clearButtonPressed()
 {
+	// Clear the display.
 	ui->display->setText(QString::number(Data::init_calc_value));
+
+	// Flush the buffer.
+	Data::op_decision = NONE;
+	Data::lhs = 0.0;
+	Data::rhs = 1.0;
 }
 
 // Changing display value sign with [±] button.
