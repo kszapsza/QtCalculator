@@ -137,6 +137,7 @@ QString Calc::performOperation()
 	switch (Data::op_decision)
 	{
 	case NONE:
+		str_result = ui->display->text();
 		break;
 	case DIV:
 		if (Data::rhs == 0)
