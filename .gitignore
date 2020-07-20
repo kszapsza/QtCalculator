@@ -1,6 +1,8 @@
-# CLion-specific files
+# IDE-specific files
 /.idea
-# CMake build
+/.vs
+# Builds
+/out
 /cmake-build-debug
 # Default ignored files
 /shelf/
