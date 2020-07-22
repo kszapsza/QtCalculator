@@ -10,18 +10,31 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class Calc; }
 QT_END_NAMESPACE
 
-enum class Operation : uint8_t { NONE = 0, DIV, MUL, SUB, ADD };
-enum class Mode : int { BASIC = 0, SCIENTIFIC };
+enum class operation : uint8_t
+{
+	none = 0,
+	division = 1,
+	multiplication = 2,
+	subtraction = 3,
+	addition = 4
+};
+
+enum class mode : int
+{
+	basic = 0,
+	scientific = 1
+};
 
 struct Data
 {
 	// Initial display value.
 	static constexpr double init_calc_value{ 0.0 };
 
-	// True since first operation, until [=] or [%] is pressed.
 	// Allows to perform sequential operations such as 2*2*2 = 8
-	// (first operation can be evaluated and treated as lhs for the following one).
 	bool sequential_operation{ false };
+	
+	// Allows to perform sequential operations such as 2*3[=][=][=] = 54.
+	uint8_t subsequent_equal_presses{ false };
 
 	// Buffer for operations.
 	double lhs{ 0.0 };
@@ -32,7 +45,7 @@ struct Data
 	double memory{ 0.0 };
 
 	// Operation decision memory for two-argument operations.
-	Operation op_decision{ Operation::NONE };
+	operation op_decision{ operation::none };
 };
 
 class Calc final : public QMainWindow
@@ -50,9 +63,9 @@ private:
 	QActionGroup* calc_modes_;
 
 private slots:	
-	void numButtonPressed() const;
-	void commaButtonPressed() const;
-	
+	void numButtonPressed();
+	void commaButtonPressed();
+
 	QString performOperation() const;
 	void mathButtonPressed();	
 
@@ -62,15 +75,14 @@ private slots:
 	void squareButtonPressed();
 	void sqrtButtonPressed();
 
+	void backspaceButtonPressed() const;
 	void clearButtonPressed();
-	void signButtonPressed() const;
+	void signButtonPressed();
 
 	void memButtonPressed();
 	void memAddButtonPressed();
-	void memSubButtonPressed();
-
-	void backspaceButtonPressed() const;
-
-	void menuViewModeChanged() const;
+	void memSubButtonPressed();	
+	
+	void menuViewModeChanged();
 };
 #endif // CALC_H
