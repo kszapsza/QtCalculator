@@ -6,6 +6,8 @@
 #include <QMap>
 #include <QStackedWidget>
 
+#include <cmath>
+
 #ifdef QT_DEBUG
 #include <QDebug>
 #endif
