@@ -1,21 +1,26 @@
 ﻿#ifndef CALC_H
 #define CALC_H
 
+#include "./ui_Calc.h"
+
 #include <QMainWindow>
+#include <QActionGroup>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Calc; }
 QT_END_NAMESPACE
 
 enum class Operation : uint8_t { NONE = 0, DIV, MUL, SUB, ADD };
+enum class Mode : int { BASIC = 0, SCIENTIFIC };
 
 struct Data
 {
 	// Initial display value.
 	static constexpr double init_calc_value{ 0.0 };
 
-	// True since first operation, until [=] or [%] is pressed. Allows to perform sequential operations
-	// such as 2*2*2 = 8 (first operation can be evaluated and treated as lhs for the following one).
+	// True since first operation, until [=] or [%] is pressed.
+	// Allows to perform sequential operations such as 2*2*2 = 8
+	// (first operation can be evaluated and treated as lhs for the following one).
 	bool sequential_operation{ false };
 
 	// Buffer for operations.
@@ -37,13 +42,14 @@ class Calc final : public QMainWindow
 public:
 	explicit Calc(QWidget *parent = nullptr);
     ~Calc() override;
-
-	Data data{};
-
+	
 private:
-    Ui::Calc *ui;
+    Ui::Calc *ui;	
+	Data data;
+	
+	QActionGroup* calc_modes_;
 
-private slots:
+private slots:	
 	void numButtonPressed() const;
 	void commaButtonPressed() const;
 	
@@ -63,6 +69,8 @@ private slots:
 	void memAddButtonPressed();
 	void memSubButtonPressed();
 
-	static void offButtonPressed();
+	void backspaceButtonPressed() const;
+
+	void menuViewModeChanged() const;
 };
 #endif // CALC_H

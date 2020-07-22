@@ -3,7 +3,12 @@
 
 #include <QPushButton>
 #include <QtMath>
-#include <map>
+#include <QMap>
+#include <QStackedWidget>
+
+#ifdef QT_DEBUG
+#include <QDebug>
+#endif
 
 /*
 ///////////////////////////////////////////////////////////
@@ -16,7 +21,8 @@ Calc::Calc(QWidget *parent) :
 	QMainWindow(parent), ui(new Ui::Calc)
 {
 	// UI initialization.
-    ui->setupUi(this);
+    ui->setupUi(this);	
+	ui->modes->setCurrentIndex(static_cast<int>(Mode::BASIC));
 
     // Initialize display with init value.
     ui->display->setText(QString::number(Data::init_calc_value));
@@ -26,7 +32,7 @@ Calc::Calc(QWidget *parent) :
     for (size_t i = 0; i < 10; ++i)
 	{
     	QString button_name = "button_" + QString::number(i);
-    	number_buttons[i] = Calc::findChild<QPushButton*>(button_name);
+    	number_buttons[i] = findChild<QPushButton*>(button_name);
     	connect(number_buttons[i], SIGNAL(released()),
     		this, SLOT(numButtonPressed()));
 	}
@@ -74,8 +80,18 @@ Calc::Calc(QWidget *parent) :
 		this, SLOT(memSubButtonPressed()));
 
     // Initialize [OFF] button.
-    connect(ui->button_off, SIGNAL(released()),
-		this, SLOT(offButtonPressed()));
+    connect(ui->button_backspace, SIGNAL(released()),
+		this, SLOT(backspaceButtonPressed()));
+
+	// Initialize [View] menu bar tab.
+	calc_modes_ = new QActionGroup(this);
+	calc_modes_->addAction(ui->actionBasic);
+	calc_modes_->addAction(ui->actionScientific);
+	
+	ui->actionBasic->setChecked(true);
+
+	connect(calc_modes_, SIGNAL(triggered(QAction*)),
+		this, SLOT(menuViewModeChanged()));
 }
 
 Calc::~Calc()
@@ -120,14 +136,14 @@ void Calc::commaButtonPressed() const
 
 // Core function performing operation stored in buffer.
 // Used both by [=] button and math buttons.
-QString Calc::performOperation() const
+[[nodiscard]] QString Calc::performOperation() const
 {
 	// Result string.
 	QString str_result{};
 
 	switch (data.op_decision)
 	{
-	case Operation::NONE:
+	case Operation::NONE:		
 		str_result = ui->display->text();
 		break;
 	case Operation::DIV:
@@ -163,7 +179,7 @@ void Calc::mathButtonPressed()
 		// perform operation and put the result on screen.
 		data.rhs = ui->display->text().toDouble();
 		const QString prev_op_result = performOperation();
-		ui->display->setText(prev_op_result);
+		ui->display->setText(prev_op_result); 
 	}
 
 	// If first operation, lhs = previously put number,
@@ -171,7 +187,7 @@ void Calc::mathButtonPressed()
 	data.lhs = ui->display->text().toDouble();
 
 	// Operation enum mapping to key labels.
-	std::map<QString, Operation> op_names
+	QMap<QString, Operation> op_names
 	{
 		{"/", Operation::DIV},
 		{"*", Operation::MUL},
@@ -180,7 +196,7 @@ void Calc::mathButtonPressed()
 	};
 
 	// Establish pointer to the button pressed.
-	const auto *button = dynamic_cast<QPushButton*>(sender());
+	const auto *button = qobject_cast<QPushButton*>(sender());
 	const QString button_label = button->text();
 
 	// Set op_decision basing on the label of the button pressed.
@@ -193,7 +209,8 @@ void Calc::mathButtonPressed()
 // Procedure when pressing [=] button.
 void Calc::equalButtonPressed()
 {
-	data.rhs = ui->display->text().toDouble();
+	//const auto curr_display = ui->display->text().toDouble();
+	data.rhs = ui->display->text().toDouble();	
 	ui->display->setText(performOperation());
 
 	// End of sequential operation.
@@ -205,7 +222,7 @@ void Calc::equalButtonPressed()
 void Calc::percentButtonPressed()
 {
 	// Save current display state as rhs value.
-	data.rhs = ui->display->text().toDouble();
+	data.lhs = ui->display->text().toDouble();
 
 	QString str_result{};
 	union
@@ -329,8 +346,36 @@ void Calc::memSubButtonPressed()
 	ui->statusbar->showMessage("Subtracted from memory.", 2000);
 }
 
-// Quitting the app with [OFF] button.
-void Calc::offButtonPressed()
+// [⌫] (Backspace) button functionality.
+void Calc::backspaceButtonPressed() const
 {
-	QApplication::quit();
+	if (ui->display->text().length() > 1)
+	{
+		ui->display->backspace();
+	}
+	else
+	{
+		ui->display->setText("0");
+	}
+}
+
+///////////////////////////////////////////////////////////
+//	MENU BAR											 //
+///////////////////////////////////////////////////////////
+
+// Changing view mode in [View] tab
+void Calc::menuViewModeChanged() const
+{
+	if (ui->modes->currentIndex() != static_cast<int>(Mode::BASIC))
+	{
+		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::BASIC");
+		ui->modes->setCurrentIndex(static_cast<int>(Mode::BASIC));
+		ui->statusbar->showMessage("Changed mode to Basic.", 2000);
+	}
+	else /* if (ui->modes->currentIndex() != static_cast<int>(Mode::SCIENTIFIC)) */		
+	{
+		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::SCIENTIFIC");
+		ui->modes->setCurrentIndex(static_cast<int>(Mode::SCIENTIFIC));
+		ui->statusbar->showMessage("Changed mode to Scientific.", 2000);
+	}	
 }
