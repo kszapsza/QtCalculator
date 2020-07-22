@@ -92,7 +92,10 @@ private slots:
 	void memButtonPressed();
 	void memAddButtonPressed();
 	void memSubButtonPressed();
+
+	void menuViewBasicTriggered();
+	void menuViewScientificTriggered();
 	
-	void menuViewModeChanged();
+	//void menuViewModeChanged();
 };
 #endif // CALC_H

@@ -89,8 +89,13 @@ Calc::Calc(QWidget *parent) :
 	
 	ui->actionBasic->setChecked(true);
 
-	connect(calc_modes_, SIGNAL(triggered(QAction*)),
-		this, SLOT(menuViewModeChanged()));
+	connect(ui->actionBasic, SIGNAL(triggered(bool)),
+		this, SLOT(menuViewBasicTriggered()));
+	connect(ui->actionScientific, SIGNAL(triggered(bool)),
+		this, SLOT(menuViewScientificTriggered()));
+
+	/*connect(calc_modes_, SIGNAL(triggered(QAction*)),
+		this, SLOT(menuViewModeChanged()));*/
 }
 
 Calc::~Calc()
