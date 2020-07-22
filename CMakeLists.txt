@@ -15,9 +15,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 add_executable(Calc
-    main.cpp
-    Calc.cpp
-    Calc.h
-    Calc.ui )
+    src/main.cpp
+    src/initializeCalc.cpp
+    src/basicCalc.cpp
+    src/Calc.h
+    src/Calc.ui
+)
 
 target_link_libraries(Calc PRIVATE Qt5::Widgets)

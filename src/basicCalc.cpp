@@ -17,86 +17,27 @@
 ///////////////////////////////////////////////////////////
 */
 
-Calc::Calc(QWidget *parent) :
-	QMainWindow(parent), ui(new Ui::Calc)
+///////////////////////////////////////////////////////////
+//	MENU BAR											 //
+///////////////////////////////////////////////////////////
+
+// Changing view mode in [View] tab
+void Calc::menuViewModeChanged()
 {
-	// UI initialization.
-    ui->setupUi(this);	
-	ui->modes->setCurrentIndex(static_cast<int>(mode::basic));
-
-    // Initialize display with init value.
-    ui->display->setText(QString::number(Data::init_calc_value));
-
-    // Initialize number buttons.
-    QPushButton *number_buttons[10]{ nullptr };
-    for (size_t i = 0; i < 10; ++i)
-	{
-    	QString button_name = "button_" + QString::number(i);
-    	number_buttons[i] = findChild<QPushButton*>(button_name);
-    	connect(number_buttons[i], SIGNAL(released()),
-    		this, SLOT(numButtonPressed()));
-	}
-
-	// Initialize [.] comma button.
-	connect(ui->button_comma, SIGNAL(released()),
-		this, SLOT(commaButtonPressed()));
-
-    // Initialize math operations buttons.
-    connect(ui->button_div, SIGNAL(released()),
-		this, SLOT(mathButtonPressed()));
-	connect(ui->button_mul, SIGNAL(released()),
-		this, SLOT(mathButtonPressed()));
-	connect(ui->button_sub, SIGNAL(released()),
-		this, SLOT(mathButtonPressed()));
-	connect(ui->button_add, SIGNAL(released()),
-		this, SLOT(mathButtonPressed()));
-
-	// Initialize [x²] and [√‾] buttons.
-	connect(ui->button_square, SIGNAL(released()),
-		this, SLOT(squareButtonPressed()));
-	connect(ui->button_sqrt, SIGNAL(released()),
-		this, SLOT(sqrtButtonPressed()));
-
-	// Initialize result buttons: [=] and [%].
-	connect(ui->button_equal, SIGNAL(released()),
-		this, SLOT(equalButtonPressed()));
-	connect(ui->button_percent, SIGNAL(released()),
-		this, SLOT(percentButtonPressed()));
-
-    // Initialize [C] button.
-    connect(ui->button_C, SIGNAL(released()),
-		this, SLOT(clearButtonPressed()));
-
-    // Initialize [±] button.
-    connect(ui->button_sign, SIGNAL(released()),
-		this, SLOT(signButtonPressed()));
-
-	// Initialize [MRC], [M+], [M−] buttons.
-	connect(ui->button_mem, SIGNAL(released()),
-		this, SLOT(memButtonPressed()));
-	connect(ui->button_mem_add, SIGNAL(released()),
-		this, SLOT(memAddButtonPressed()));
-	connect(ui->button_mem_sub, SIGNAL(released()),
-		this, SLOT(memSubButtonPressed()));
-
-    // Initialize [OFF] button.
-    connect(ui->button_backspace, SIGNAL(released()),
-		this, SLOT(backspaceButtonPressed()));
-
-	// Initialize [View] menu bar tab.
-	calc_modes_ = new QActionGroup(this);
-	calc_modes_->addAction(ui->actionBasic);
-	calc_modes_->addAction(ui->actionScientific);
+	clearButtonPressed();
 	
-	ui->actionBasic->setChecked(true);
-
-	connect(calc_modes_, SIGNAL(triggered(QAction*)),
-		this, SLOT(menuViewModeChanged()));
-}
-
-Calc::~Calc()
-{
-    delete ui;
+	if (ui->modes->currentIndex() != static_cast<int>(mode::basic))
+	{
+		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::basic");
+		ui->modes->setCurrentIndex(static_cast<int>(mode::basic));
+		ui->statusbar->showMessage("Changed mode to Basic.", 2000);
+	}
+	else /* if (ui->modes->currentIndex() != static_cast<int>(Mode::scientific)) */		
+	{
+		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::scientific");
+		ui->modes->setCurrentIndex(static_cast<int>(mode::scientific));
+		ui->statusbar->showMessage("Changed mode to Scientific.", 2000);
+	}	
 }
 
 ///////////////////////////////////////////////////////////
@@ -392,27 +333,4 @@ void Calc::memSubButtonPressed()
 	const QString curr_value = ui->display->text();
 	data.memory -= curr_value.toDouble();
 	ui->statusbar->showMessage("Subtracted from memory.", 2000);
-}
-
-///////////////////////////////////////////////////////////
-//	MENU BAR											 //
-///////////////////////////////////////////////////////////
-
-// Changing view mode in [View] tab
-void Calc::menuViewModeChanged()
-{
-	clearButtonPressed();
-	
-	if (ui->modes->currentIndex() != static_cast<int>(mode::basic))
-	{
-		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::basic");
-		ui->modes->setCurrentIndex(static_cast<int>(mode::basic));
-		ui->statusbar->showMessage("Changed mode to Basic.", 2000);
-	}
-	else /* if (ui->modes->currentIndex() != static_cast<int>(Mode::scientific)) */		
-	{
-		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::scientific");
-		ui->modes->setCurrentIndex(static_cast<int>(mode::scientific));
-		ui->statusbar->showMessage("Changed mode to Scientific.", 2000);
-	}	
 }
