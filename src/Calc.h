@@ -6,6 +6,16 @@
 #include <QMainWindow>
 #include <QActionGroup>
 
+/*
+///////////////////////////////////////////////////////////
+	Qt Calculator
+ 	2020, Karol Szapsza
+ 	
+ 	Calc.h
+ 	Calc class main header.
+///////////////////////////////////////////////////////////
+*/
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class Calc; }
 QT_END_NAMESPACE
@@ -81,7 +91,7 @@ private slots:
 
 	void memButtonPressed();
 	void memAddButtonPressed();
-	void memSubButtonPressed();	
+	void memSubButtonPressed();
 	
 	void menuViewModeChanged();
 };

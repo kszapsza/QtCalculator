@@ -12,7 +12,7 @@
  	2020, Karol Szapsza
 
  	initializeCalc.cpp
- 	Calc constructor/destructor
+ 	Calc constructor/destructor.
 ///////////////////////////////////////////////////////////
 */
 
