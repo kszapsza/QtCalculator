@@ -27,19 +27,25 @@
 // Changing view mode to Basic in [View] tab
 void Calc::menuViewBasicTriggered()
 {
-	clearButtonPressed();
-	qInfo("void Calc::menuViewModeChanged(): Enabled Mode::basic");
-	ui->modes->setCurrentIndex(static_cast<int>(mode::basic));
-	ui->statusbar->showMessage("Changed mode to Basic.", 2000);
+	if (ui->modes->currentIndex() != static_cast<int>(mode::basic))
+	{
+		clearButtonPressed();
+		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::basic");
+		ui->modes->setCurrentIndex(static_cast<int>(mode::basic));
+		ui->statusbar->showMessage("Changed mode to Basic.", 2000);
+	}
 }
 
 // Changing view mode to Scientific in [View] tab
 void Calc::menuViewScientificTriggered()
 {
-	clearButtonPressed();
-	qInfo("void Calc::menuViewModeChanged(): Enabled Mode::scientific");
-	ui->modes->setCurrentIndex(static_cast<int>(mode::scientific));
-	ui->statusbar->showMessage("Changed mode to Scientific.", 2000);
+	if (ui->modes->currentIndex() != static_cast<int>(mode::scientific))
+	{
+		clearButtonPressed();
+		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::scientific");
+		ui->modes->setCurrentIndex(static_cast<int>(mode::scientific));
+		ui->statusbar->showMessage("Changed mode to Scientific.", 2000);
+	}
 }
 
 ///////////////////////////////////////////////////////////
