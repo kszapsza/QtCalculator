@@ -277,6 +277,7 @@ void Calc::percentButtonPressed()
 	}
 	
 	data_.sequential_operation = false;
+	curr_display_->setText(str_result);
 }
 
 ///////////////////////////////////////////////////////////

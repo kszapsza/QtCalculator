@@ -33,8 +33,8 @@ Calc::Calc(QWidget *parent) :
 	case mode::basic:
 		curr_display_ = ui->display;
 		break;
-	}	
-
+	}
+	
     // Initialize both displays with init value.
     ui->display->setText(QString::number(config_.init_calc_value));
 	ui->display_sci->setText(QString::number(config_.init_calc_value));
@@ -93,7 +93,7 @@ Calc::Calc(QWidget *parent) :
 	connect(ui->button_mem_sub, SIGNAL(released()),
 		this, SLOT(memSubButtonPressed()));
 
-    // Initialize [OFF] button.
+    // Initialize [Backspace] button.
     connect(ui->button_backspace, SIGNAL(released()),
 		this, SLOT(backspaceButtonPressed()));
 
@@ -186,15 +186,29 @@ Calc::Calc(QWidget *parent) :
 	// Inverse.
 	connect(ui->button_inverse, SIGNAL(released()),
 		this, SLOT(inverseButtonPressed()));
+
+	// Initialize [Backspace] button.
+    connect(ui->button_backspace_sci, SIGNAL(released()),
+		this, SLOT(backspaceButtonPressed()));
 	
 /// MENU BAR INIT ///
 
 	// Initialize [View] menu bar tab.
 	calc_modes_ = new QActionGroup(this);
 	calc_modes_->addAction(ui->actionBasic);
-	calc_modes_->addAction(ui->actionScientific);
+	calc_modes_->addAction(ui->actionScientific);	
 	
-	ui->actionBasic->setChecked(true);
+	// Set current mode based on config.
+	switch(config_.start_mode)
+	{
+	case mode::scientific:
+		ui->actionScientific->setChecked(true);
+		break;		
+	default:
+	case mode::basic:
+		ui->actionBasic->setChecked(true);
+		break;
+	}	
 
 	connect(ui->actionBasic, SIGNAL(triggered(bool)),
 		this, SLOT(menuViewBasicTriggered()));
