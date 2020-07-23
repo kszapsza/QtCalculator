@@ -101,17 +101,19 @@ private:
 	QActionGroup* calc_modes_;
 	QLineEdit* curr_display_;
 
+	[[nodiscard]] QString performBinaryOperation() const;
+	void performUnaryOperation(double (*func)(double));
+
 private slots:
 
 // basicCalc.cpp
 	
 	void numButtonPressed();
 	void commaButtonPressed();	
-	void mathButtonPressed();	
-
-	QString performOperation() const;
+	void mathButtonPressed();
+	
 	void equalButtonPressed();
-	void percentButtonPressed();
+	void percentButtonPressed();	
 
 	void squareButtonPressed();
 	void sqrtButtonPressed();

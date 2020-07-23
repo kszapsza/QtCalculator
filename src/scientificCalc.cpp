@@ -51,44 +51,17 @@ void Calc::logBaseYButtonPressed()
 
 void Calc::logBase2ButtonPressed()
 {
-	// Reset [=] presses count.
-	data_.subsequent_equal_presses = 0;
-	
-	// Save current display state as base value.
-	data_.unary = curr_display_->text().toDouble();
-
-	// Evaluate and show log2.
-	QString str_result{};
-	str_result.setNum(log2(data_.unary), config_.disp_format, config_.display_prec);
-	curr_display_->setText(str_result);
+	performUnaryOperation(log2);
 }
 
 void Calc::logBase10ButtonPressed()
 {
-	// Reset [=] presses count.
-	data_.subsequent_equal_presses = 0;
-	
-	// Save current display state as base value.
-	data_.unary = curr_display_->text().toDouble();
-
-	// Evaluate and show log10.
-	QString str_result{};
-	str_result.setNum(log10(data_.unary), config_.disp_format, config_.display_prec);
-	curr_display_->setText(str_result);
+	performUnaryOperation(log10);
 }
 
 void Calc::lnButtonPressed()
 {
-	// Reset [=] presses count.
-	data_.subsequent_equal_presses = 0;
-	
-	// Save current display state as argument.
-	data_.unary = curr_display_->text().toDouble();
-
-	// Evaluate and show ln.
-	QString str_result{};
-	str_result.setNum(log(data_.unary), config_.disp_format, config_.display_prec);
-	curr_display_->setText(str_result);
+	performUnaryOperation(log);
 }
 
 void Calc::factorialButtonPressed()
@@ -113,16 +86,7 @@ void Calc::xToYButtonPressed()
 
 void Calc::absButtonPressed()
 {
-	// Reset [=] presses count.
-	data_.subsequent_equal_presses = 0;
-	
-	// Save current display state as argument
-	data_.unary = curr_display_->text().toDouble();
-
-	// Evaluate and show absolute value.
-	QString str_result{};
-	str_result.setNum(fabs(data_.unary), config_.disp_format, config_.display_prec);
-	curr_display_->setText(str_result);
+	performUnaryOperation(fabs);
 }
 
 void Calc::inverseButtonPressed()

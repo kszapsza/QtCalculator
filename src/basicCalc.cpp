@@ -6,8 +6,6 @@
 #include <QMap>
 #include <QStackedWidget>
 
-#include <cmath>
-
 #ifdef QT_DEBUG
 #include <QDebug>
 #endif
@@ -95,7 +93,7 @@ void Calc::commaButtonPressed()
 
 // Core function performing operation stored in buffer.
 // Used both by [=] button and math buttons.
-[[nodiscard]] QString Calc::performOperation() const
+[[nodiscard]] QString Calc::performBinaryOperation() const
 {
 	double result{};
 	QString str_result{};
@@ -147,7 +145,7 @@ void Calc::mathButtonPressed()
 		// The lhs is already saved, save rhs from display,
 		// perform operation and put the result on screen.
 		data_.rhs = curr_display_->text().toDouble();
-		const QString prev_op_result = performOperation();
+		const QString prev_op_result = performBinaryOperation();
 		curr_display_->setText(prev_op_result); 
 	}
 
@@ -193,7 +191,7 @@ void Calc::equalButtonPressed()
 		data_.rhs = curr_display;
 	}	
 	
-	curr_display_->setText(performOperation());
+	curr_display_->setText(performBinaryOperation());
 	data_.sequential_operation = false;
 }
 
@@ -259,8 +257,7 @@ void Calc::percentButtonPressed()
 //	SINGLE-ARGUMENT OPERATIONS							 //
 ///////////////////////////////////////////////////////////
 
-// Square button [x²].
-void Calc::squareButtonPressed()
+void Calc::performUnaryOperation(double (*func)(double))
 {
 	// Reset [=] presses count.
 	data_.subsequent_equal_presses = 0;
@@ -270,25 +267,23 @@ void Calc::squareButtonPressed()
 
 	// Evaluate and show square.
 	QString str_result;
-	str_result.setNum(qPow(data_.unary, 2), config_.disp_format, config_.display_prec);
+	str_result.setNum(static_cast<double>(func(data_.unary)),
+		config_.disp_format, config_.display_prec);
+	
 	curr_display_->setText(str_result);
+}
+
+// Square button [x²].
+void Calc::squareButtonPressed()
+{
+	double (*square)(double) = [](const double x){ return x*x; };
+	performUnaryOperation(square);
 }
 
 // Square root button [√‾].
 void Calc::sqrtButtonPressed()
 {
-	// Reset [=] presses count.
-	data_.subsequent_equal_presses = 0;
-	
-	// Save current display state as base value.
-	data_.unary = curr_display_->text().toDouble();
-
-	// Evaluate and show square.	
-	QString str_result{};
-	const qreal result = qSqrt(data_.unary);
-	
-	str_result.setNum(result, config_.disp_format, config_.display_prec);
-	curr_display_->setText(str_result);
+	performUnaryOperation(qSqrt);
 }
 
 // [⌫] (Backspace) button functionality.
@@ -300,7 +295,8 @@ void Calc::backspaceButtonPressed() const
 	}
 	else
 	{
-		curr_display_->setText("0");
+		const QString init_txt = QString::number(config_.init_calc_value);
+		curr_display_->setText(init_txt);
 	}
 }
 
