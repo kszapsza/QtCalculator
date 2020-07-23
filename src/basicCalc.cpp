@@ -35,6 +35,7 @@ void Calc::menuViewBasicTriggered()
 		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::basic");
 		ui->modes->setCurrentIndex(static_cast<int>(mode::basic));
 		ui->statusbar->showMessage("Changed mode to Basic.", 2000);
+		curr_display_ = ui->display;
 	}
 }
 
@@ -47,6 +48,7 @@ void Calc::menuViewScientificTriggered()
 		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::scientific");
 		ui->modes->setCurrentIndex(static_cast<int>(mode::scientific));
 		ui->statusbar->showMessage("Changed mode to Scientific.", 2000);
+		curr_display_ = ui->display_sci;
 	}
 }
 
@@ -58,33 +60,33 @@ void Calc::menuViewScientificTriggered()
 void Calc::numButtonPressed()
 {
 	// Reset [=] presses count.
-	data.subsequent_equal_presses = 0;
+	data_.subsequent_equal_presses = 0;
 	
 	// Establish pointer to the button pressed.
 	const auto *button = dynamic_cast<QPushButton*>(sender());
 	const QString button_value = button->text();
-	const QString display_value = ui->display->text();
+	const QString display_value = curr_display_->text();
 
-	if (display_value == QString::number(data.lhs)
+	if (display_value == QString::number(data_.lhs)
 		|| display_value == "0" )
 	{
-		ui->display->setText(button_value);
+		curr_display_->setText(button_value);
 	}
 	else
 	{
 		const QString new_value = display_value + button_value;
-		ui->display->setText(new_value);
+		curr_display_->setText(new_value);
 	}
 }
 
 void Calc::commaButtonPressed()
 {
 	// Reset [=] presses count.
-	data.subsequent_equal_presses = 0;
+	data_.subsequent_equal_presses = 0;
 	
-	const QString display_value = ui->display->text();
+	const QString display_value = curr_display_->text();
 	const QString new_value = display_value + '.';
-	ui->display->setText(new_value);
+	curr_display_->setText(new_value);
 }
 
 ///////////////////////////////////////////////////////////
@@ -95,30 +97,37 @@ void Calc::commaButtonPressed()
 // Used both by [=] button and math buttons.
 [[nodiscard]] QString Calc::performOperation() const
 {
-	// Result string.
+	double result{};
 	QString str_result{};
 
-	switch (data.op_decision)
+	switch (data_.op_decision)
 	{
 	case operation::none:		
-		str_result = ui->display->text();
+		str_result = curr_display_->text();
 		break;
 	case operation::division:
-		if (data.rhs == 0)
+		if (data_.rhs == 0)
 		{
 			ui->statusbar->showMessage("Cannot divide by zero!", 2000);
 			str_result = "Err";
 		}
-		else str_result = QString::number(data.lhs / data.rhs);
+		else
+		{
+			result = data_.lhs / data_.rhs;
+			str_result.setNum(result, config_.disp_format, config_.display_prec);
+		}
 		break;
 	case operation::multiplication:
-		str_result = QString::number(data.lhs * data.rhs);
+		result = data_.lhs * data_.rhs;
+		str_result.setNum(result, config_.disp_format, config_.display_prec);
 		break;
 	case operation::subtraction:
-		str_result = QString::number(data.lhs - data.rhs);
+		result = data_.lhs - data_.rhs;
+		str_result.setNum(result, config_.disp_format, config_.display_prec);
 		break;
 	case operation::addition:
-		str_result = QString::number(data.lhs + data.rhs);
+		result = data_.lhs + data_.rhs;
+		str_result.setNum(result, config_.disp_format, config_.display_prec);
 		break;
 	}
 
@@ -129,22 +138,22 @@ void Calc::commaButtonPressed()
 void Calc::mathButtonPressed()
 {
 	// Reset [=] presses count.
-	data.subsequent_equal_presses = 0;
+	data_.subsequent_equal_presses = 0;
 	
 	// If in sequential operation, evaluate queued operation and treat its result
 	// as lhs argument for the next operation now being entered.
-	if (data.sequential_operation)
+	if (data_.sequential_operation)
 	{
 		// The lhs is already saved, save rhs from display,
 		// perform operation and put the result on screen.
-		data.rhs = ui->display->text().toDouble();
+		data_.rhs = curr_display_->text().toDouble();
 		const QString prev_op_result = performOperation();
-		ui->display->setText(prev_op_result); 
+		curr_display_->setText(prev_op_result); 
 	}
 
 	// If first operation, lhs = previously put number,
 	// if in sequence, lhs = prev result, evaluated above.
-	data.lhs = ui->display->text().toDouble();
+	data_.lhs = curr_display_->text().toDouble();
 
 	// Operation enum mapping to key labels.
 	QMap<QString, operation> op_names
@@ -160,32 +169,32 @@ void Calc::mathButtonPressed()
 	const QString button_label = button->text();
 
 	// Set op_decision basing on the label of the button pressed.
-	data.op_decision = op_names[button_label];
+	data_.op_decision = op_names[button_label];
 
 	// Begin (or maintain) sequential operation state until [=] is pressed.
-	data.sequential_operation = true;
+	data_.sequential_operation = true;
 }
 
 // Procedure when pressing [=] button.
 void Calc::equalButtonPressed()
 {
 	// Record [=] presses count.
-	data.subsequent_equal_presses++;
+	data_.subsequent_equal_presses++;
 
 	// Set result as lhs and leave rhs unchanged if [=] is pressed more than once.
-	if (const auto curr_display = ui->display->text().toDouble();
-		data.subsequent_equal_presses > 1)
+	if (const auto curr_display = curr_display_->text().toDouble();
+		data_.subsequent_equal_presses > 1)
 	{
-		data.lhs = curr_display;
+		data_.lhs = curr_display;
 	}
 	// Otherwise, current value on display is normally treated as rhs.
 	else
 	{
-		data.rhs = curr_display;
+		data_.rhs = curr_display;
 	}	
 	
-	ui->display->setText(performOperation());
-	data.sequential_operation = false;
+	curr_display_->setText(performOperation());
+	data_.sequential_operation = false;
 }
 
 // Procedure when pressing [%] button. The method of calculation is different than usual.
@@ -193,10 +202,10 @@ void Calc::equalButtonPressed()
 void Calc::percentButtonPressed()
 {
 	// Reset [=] presses count.
-	data.subsequent_equal_presses = 0;
+	data_.subsequent_equal_presses = 0;
 	
 	// Save current display state as rhs value.
-	data.rhs = ui->display->text().toDouble();
+	data_.rhs = curr_display_->text().toDouble();
 
 	QString str_result{};
 	union
@@ -205,36 +214,36 @@ void Calc::percentButtonPressed()
 		double percentage_of_lhs;
 	};
 
-	switch (data.op_decision)
+	switch (data_.op_decision)
 	{
 	case operation::none:
-		str_result = ui->display->text();
+		str_result = curr_display_->text();
 		break;
 	case operation::division:
-		percentage_fraction = data.rhs / 100;
+		percentage_fraction = data_.rhs / 100;
 		if (percentage_fraction == 0)
 		{
 			ui->statusbar->showMessage("Cannot divide by zero!", 2000);
 			str_result = "Err";
 		}
-		else str_result = QString::number(data.lhs / percentage_fraction);
+		else str_result = QString::number(data_.lhs / percentage_fraction);
 		break;
 	case operation::multiplication:
-		percentage_fraction = data.rhs / 100;
-		str_result = QString::number(data.lhs * percentage_fraction);
+		percentage_fraction = data_.rhs / 100;
+		str_result = QString::number(data_.lhs * percentage_fraction);
 		break;
 	case operation::subtraction:
-		percentage_of_lhs = (data.rhs / 100) * data.lhs;
-		str_result = QString::number(data.lhs - percentage_of_lhs);
+		percentage_of_lhs = (data_.rhs / 100) * data_.lhs;
+		str_result = QString::number(data_.lhs - percentage_of_lhs);
 		break;
 	case operation::addition:
-		percentage_of_lhs = (data.rhs / 100) * data.lhs;
-		str_result = QString::number(data.lhs + percentage_of_lhs);
+		percentage_of_lhs = (data_.rhs / 100) * data_.lhs;
+		str_result = QString::number(data_.lhs + percentage_of_lhs);
 		break;
 	}
 
-	ui->display->setText(str_result);
-	data.sequential_operation = false;
+	curr_display_->setText(str_result);
+	data_.sequential_operation = false;
 }
 
 ///////////////////////////////////////////////////////////
@@ -245,41 +254,41 @@ void Calc::percentButtonPressed()
 void Calc::squareButtonPressed()
 {
 	// Reset [=] presses count.
-	data.subsequent_equal_presses = 0;
+	data_.subsequent_equal_presses = 0;
 	
 	// Save current display state as base value.
-	data.unary = ui->display->text().toDouble();
+	data_.unary = curr_display_->text().toDouble();
 
 	// Evaluate and show square.
-	const QString str_result = QString::number(qPow(data.unary, 2));
-	ui->display->setText(str_result);
+	const QString str_result = QString::number(qPow(data_.unary, 2));
+	curr_display_->setText(str_result);
 }
 
 // Square root button [√‾].
 void Calc::sqrtButtonPressed()
 {
 	// Reset [=] presses count.
-	data.subsequent_equal_presses = 0;
+	data_.subsequent_equal_presses = 0;
 	
 	// Save current display state as base value.
-	data.unary = ui->display->text().toDouble();
+	data_.unary = curr_display_->text().toDouble();
 
 	// Evaluate and show square.
-	const qreal sqrt_result = qSqrt(data.unary);
+	const qreal sqrt_result = qSqrt(data_.unary);
 	const QString str_result = QString::number(sqrt_result);
-	ui->display->setText(str_result);
+	curr_display_->setText(str_result);
 }
 
 // [⌫] (Backspace) button functionality.
 void Calc::backspaceButtonPressed() const
 {
-	if (ui->display->text().length() > 1)
+	if (curr_display_->text().length() > 1)
 	{
-		ui->display->backspace();
+		curr_display_->backspace();
 	}
 	else
 	{
-		ui->display->setText("0");
+		curr_display_->setText("0");
 	}
 }
 
@@ -287,27 +296,27 @@ void Calc::backspaceButtonPressed() const
 void Calc::clearButtonPressed()
 {
 	// Reset [=] presses count.
-	data.subsequent_equal_presses = 0;
+	data_.subsequent_equal_presses = 0;
 	
 	// Clear the display.
-	ui->display->setText(QString::number(Data::init_calc_value));
+	curr_display_->setText(QString::number(config_.init_calc_value));
 
 	// Flush the buffer.
-	data.op_decision = operation::none;
-	data.lhs = 0.0;
-	data.rhs = 1.0;
+	data_.op_decision = operation::none;
+	data_.lhs = 0.0;
+	data_.rhs = 1.0;
 }
 
 // Changing display value sign with [±] button.
 void Calc::signButtonPressed()
 {
 	// Reset [=] presses count.
-	data.subsequent_equal_presses = 0;
+	data_.subsequent_equal_presses = 0;
 	
-	const QString curr_value = ui->display->text();
+	const QString curr_value = curr_display_->text();
 	const double dbl_curr_value = curr_value.toDouble();
 	const double dbl_new_value = dbl_curr_value * -1;
-	ui->display->setText(QString::number(dbl_new_value));
+	curr_display_->setText(QString::number(dbl_new_value));
 }
 
 ///////////////////////////////////////////////////////////
@@ -316,11 +325,11 @@ void Calc::signButtonPressed()
 
 void Calc::memButtonPressed()
 {
-	const QString curr_value = ui->display->text();
+	const QString curr_value = curr_display_->text();
 
-	if (data.memory == curr_value.toDouble())
+	if (data_.memory == curr_value.toDouble())
 	{
-		data.memory = Data::init_calc_value;
+		data_.memory = config_.init_calc_value;
 		ui->statusbar->showMessage("Memory cleaned.", 2000);
 	}
 	else
@@ -328,19 +337,19 @@ void Calc::memButtonPressed()
 		ui->statusbar->showMessage("Memory recalled.", 2000);
 	}
 
-	ui->display->setText(QString::number(data.memory));
+	curr_display_->setText(QString::number(data_.memory));
 }
 
 void Calc::memAddButtonPressed()
 {
-	const QString curr_value = ui->display->text();
-	data.memory += curr_value.toDouble();
-	ui->statusbar->showMessage("Added to memory.", 2000);
+	const QString curr_value = curr_display_->text();
+	data_.memory += curr_value.toDouble();
+	ui->statusbar->showMessage("Added to memory.", 2000);	
 }
 
 void Calc::memSubButtonPressed()
 {
-	const QString curr_value = ui->display->text();
-	data.memory -= curr_value.toDouble();
+	const QString curr_value = curr_display_->text();
+	data_.memory -= curr_value.toDouble();
 	ui->statusbar->showMessage("Subtracted from memory.", 2000);
 }

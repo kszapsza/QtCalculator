@@ -1,0 +1,90 @@
+#include "Calc.h"
+#include "./ui_Calc.h"
+
+#include <QtMath>
+#include <random>
+#include <chrono>
+
+#ifdef QT_DEBUG
+#include <QDebug>
+#endif
+
+/*
+///////////////////////////////////////////////////////////
+	Qt Calculator
+ 	2020, Karol Szapsza
+
+ 	basicCalc.cpp
+ 	Calc definitions for Scientific mode.
+///////////////////////////////////////////////////////////
+*/
+
+void Calc::piButtonPressed() const
+{
+	QString pi_str{};
+	pi_str.setNum(Constants::pi, config_.disp_format, config_.display_prec);
+	curr_display_->setText(pi_str);
+}
+
+void Calc::eButtonPressed() const
+{
+	QString e_str{};
+	e_str.setNum(Constants::e, config_.disp_format, config_.display_prec);
+	curr_display_->setText(e_str);
+}
+
+void Calc::randButtonPressed() const
+{
+	const auto seed = std::chrono::steady_clock::now().time_since_epoch().count();
+    std::minstd_rand eng(seed);
+
+	const auto rand = static_cast<double>(eng()) / std::minstd_rand::max();
+
+	QString rand_str{};
+	rand_str.setNum(rand, config_.disp_format, config_.display_prec);
+	curr_display_->setText(rand_str);
+}
+
+void Calc::logBaseYButtonPressed()
+{
+}
+
+void Calc::logBase2ButtonPressed()
+{
+}
+
+void Calc::logBase10ButtonPressed()
+{
+}
+
+void Calc::lnButtonPressed()
+{
+}
+
+void Calc::factorialButtonPressed()
+{
+}
+
+void Calc::moduloButtonPressed()
+{
+}
+
+void Calc::expButtonPressed()
+{
+}
+
+void Calc::e10ToXButtonPressed()
+{
+}
+
+void Calc::xToYButtonPressed()
+{
+}
+
+void Calc::absXButtonPressed()
+{
+}
+
+void Calc::inverseButtonPressed()
+{
+}

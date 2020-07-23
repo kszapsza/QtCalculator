@@ -20,6 +20,28 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class Calc; }
 QT_END_NAMESPACE
 
+/// CONSTANTS ///
+
+#define CONSTANT static constexpr double
+
+struct Constants
+{	
+	CONSTANT pi        = 3.141592653589793238463;
+	CONSTANT pi_2      = 1.570796326794896619231;
+	CONSTANT pi_4      = 0.785398163397448309616;
+	CONSTANT _1_pi     = 0.318309886183790671538;
+	CONSTANT _2_pi     = 0.636619772367581343076;
+	CONSTANT _2_sqrtpi = 1.128379167095512573896;
+	CONSTANT sqrt2     = 1.414213562373095048802;
+	CONSTANT _1_sqrt2  = 0.707106781186547524401;
+	CONSTANT sqrt3     = 1.732050807568877293527;
+	CONSTANT e         = 2.718281828459045235360;
+	CONSTANT log2_e    = 1.442695040888963407360;
+	CONSTANT log10_e   = 0.434294481903251827651;
+	CONSTANT ln2       = 0.693147180559945309417;
+	CONSTANT ln10      = 2.302585092994045684018;
+};
+
 enum class operation : uint8_t
 {
 	none = 0,
@@ -35,11 +57,15 @@ enum class mode : int
 	scientific = 1
 };
 
+struct Config
+{
+	double init_calc_value{ 0.0 };
+	char disp_format{ 'g' };
+	uint8_t display_prec{ 9 };
+};
+
 struct Data
 {
-	// Initial display value.
-	static constexpr double init_calc_value{ 0.0 };
-
 	// Allows to perform sequential operations such as 2*2*2 = 8
 	bool sequential_operation{ false };
 	
@@ -67,18 +93,23 @@ public:
     ~Calc() override;
 	
 private:
-    Ui::Calc *ui;	
-	Data data;
+    Ui::Calc *ui;
+	
+	Config config_{};
+	Data data_;
 	
 	QActionGroup* calc_modes_;
+	QLineEdit* curr_display_;
 
-private slots:	
+private slots:
+
+// basicCalc.cpp
+	
 	void numButtonPressed();
-	void commaButtonPressed();
-
-	QString performOperation() const;
+	void commaButtonPressed();	
 	void mathButtonPressed();	
 
+	QString performOperation() const;
 	void equalButtonPressed();
 	void percentButtonPressed();
 
@@ -95,7 +126,26 @@ private slots:
 
 	void menuViewBasicTriggered();
 	void menuViewScientificTriggered();
+
+// scientificCalc.cpp
+
+	void piButtonPressed() const;
+	void eButtonPressed() const;
+	void randButtonPressed() const;
+
+	void logBaseYButtonPressed();
+	void logBase2ButtonPressed();
+	void logBase10ButtonPressed();
+	void lnButtonPressed();
+
+	void factorialButtonPressed();
+	void moduloButtonPressed();
 	
-	//void menuViewModeChanged();
+	void expButtonPressed();
+	void e10ToXButtonPressed();	
+	void xToYButtonPressed();
+	
+	void absXButtonPressed();
+	void inverseButtonPressed();	
 };
 #endif // CALC_H
