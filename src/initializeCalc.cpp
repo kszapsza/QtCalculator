@@ -164,9 +164,9 @@ Calc::Calc(QWidget *parent) :
 	connect(ui->button_e_to_x, SIGNAL(released()),
 		this, SLOT(expButtonPressed()));
 	connect(ui->button_10_to_x, SIGNAL(released()),
-		this, SLOT(e10toXButtonPressed()));
+		this, SLOT(e10ToXButtonPressed()));
 	connect(ui->button_x_to_y, SIGNAL(released()),
-		this, SLOT(XtoYButtonPressed()));
+		this, SLOT(xToYButtonPressed()));
 
 	// Absolute value.
 	connect(ui->button_abs, SIGNAL(released()),
@@ -174,7 +174,7 @@ Calc::Calc(QWidget *parent) :
 
 	// Inverse.
 	connect(ui->button_inverse, SIGNAL(released()),
-		this, SLOT(inverseButtonPressed()ButtonPressed()));
+		this, SLOT(inverseButtonPressed()));
 	
 /// MENU BAR INIT ///
 

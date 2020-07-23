@@ -207,7 +207,9 @@ void Calc::percentButtonPressed()
 	// Save current display state as rhs value.
 	data_.rhs = curr_display_->text().toDouble();
 
+	double result{};
 	QString str_result{};
+	
 	union
 	{
 		double percentage_fraction{};
@@ -226,19 +228,26 @@ void Calc::percentButtonPressed()
 			ui->statusbar->showMessage("Cannot divide by zero!", 2000);
 			str_result = "Err";
 		}
-		else str_result = QString::number(data_.lhs / percentage_fraction);
+		else 
+		{
+			result = data_.lhs / percentage_fraction;
+			str_result.setNum(result, config_.disp_format, config_.display_prec);
+		}
 		break;
 	case operation::multiplication:
 		percentage_fraction = data_.rhs / 100;
-		str_result = QString::number(data_.lhs * percentage_fraction);
+		result = data_.lhs * percentage_fraction;
+		str_result.setNum(result, config_.disp_format, config_.display_prec);
 		break;
 	case operation::subtraction:
 		percentage_of_lhs = (data_.rhs / 100) * data_.lhs;
-		str_result = QString::number(data_.lhs - percentage_of_lhs);
+		result = data_.lhs - percentage_of_lhs;
+		str_result.setNum(result, config_.disp_format, config_.display_prec);
 		break;
 	case operation::addition:
 		percentage_of_lhs = (data_.rhs / 100) * data_.lhs;
-		str_result = QString::number(data_.lhs + percentage_of_lhs);
+		result = data_.lhs + percentage_of_lhs;
+		str_result.setNum(result, config_.disp_format, config_.display_prec);
 		break;
 	}
 
@@ -260,7 +269,8 @@ void Calc::squareButtonPressed()
 	data_.unary = curr_display_->text().toDouble();
 
 	// Evaluate and show square.
-	const QString str_result = QString::number(qPow(data_.unary, 2));
+	QString str_result;
+	str_result.setNum(qPow(data_.unary, 2), config_.disp_format, config_.display_prec);
 	curr_display_->setText(str_result);
 }
 
@@ -273,9 +283,11 @@ void Calc::sqrtButtonPressed()
 	// Save current display state as base value.
 	data_.unary = curr_display_->text().toDouble();
 
-	// Evaluate and show square.
-	const qreal sqrt_result = qSqrt(data_.unary);
-	const QString str_result = QString::number(sqrt_result);
+	// Evaluate and show square.	
+	QString str_result{};
+	const qreal result = qSqrt(data_.unary);
+	
+	str_result.setNum(result, config_.disp_format, config_.display_prec);
 	curr_display_->setText(str_result);
 }
 
@@ -311,12 +323,22 @@ void Calc::clearButtonPressed()
 void Calc::signButtonPressed()
 {
 	// Reset [=] presses count.
-	data_.subsequent_equal_presses = 0;
+	data_.subsequent_equal_presses = 0;	
+
+	// Remove or add minus sign on display.	
+	QString curr_value = curr_display_->text();
+	QString new_value{};
 	
-	const QString curr_value = curr_display_->text();
-	const double dbl_curr_value = curr_value.toDouble();
-	const double dbl_new_value = dbl_curr_value * -1;
-	curr_display_->setText(QString::number(dbl_new_value));
+	if (curr_value[0] == '-')
+	{
+		new_value = curr_value.remove(0, 1);
+	}
+	else
+	{
+		new_value = '-' + curr_value;
+	}
+	
+	curr_display_->setText(new_value);
 }
 
 ///////////////////////////////////////////////////////////

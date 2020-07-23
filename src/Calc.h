@@ -61,7 +61,7 @@ struct Config
 {
 	double init_calc_value{ 0.0 };
 	char disp_format{ 'g' };
-	uint8_t display_prec{ 9 };
+	uint8_t display_prec{ 15 };
 };
 
 struct Data
@@ -145,7 +145,7 @@ private slots:
 	void e10ToXButtonPressed();	
 	void xToYButtonPressed();
 	
-	void absXButtonPressed();
+	void absButtonPressed();
 	void inverseButtonPressed();	
 };
 #endif // CALC_H

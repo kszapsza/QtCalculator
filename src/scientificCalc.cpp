@@ -1,7 +1,7 @@
 #include "Calc.h"
 #include "./ui_Calc.h"
 
-#include <QtMath>
+#include <cmath>
 #include <random>
 #include <chrono>
 
@@ -51,14 +51,44 @@ void Calc::logBaseYButtonPressed()
 
 void Calc::logBase2ButtonPressed()
 {
+	// Reset [=] presses count.
+	data_.subsequent_equal_presses = 0;
+	
+	// Save current display state as base value.
+	data_.unary = curr_display_->text().toDouble();
+
+	// Evaluate and show log2.
+	QString str_result{};
+	str_result.setNum(log2(data_.unary), config_.disp_format, config_.display_prec);
+	curr_display_->setText(str_result);
 }
 
 void Calc::logBase10ButtonPressed()
 {
+	// Reset [=] presses count.
+	data_.subsequent_equal_presses = 0;
+	
+	// Save current display state as base value.
+	data_.unary = curr_display_->text().toDouble();
+
+	// Evaluate and show log10.
+	QString str_result{};
+	str_result.setNum(log10(data_.unary), config_.disp_format, config_.display_prec);
+	curr_display_->setText(str_result);
 }
 
 void Calc::lnButtonPressed()
 {
+	// Reset [=] presses count.
+	data_.subsequent_equal_presses = 0;
+	
+	// Save current display state as argument.
+	data_.unary = curr_display_->text().toDouble();
+
+	// Evaluate and show ln.
+	QString str_result{};
+	str_result.setNum(log(data_.unary), config_.disp_format, config_.display_prec);
+	curr_display_->setText(str_result);
 }
 
 void Calc::factorialButtonPressed()
@@ -81,10 +111,40 @@ void Calc::xToYButtonPressed()
 {
 }
 
-void Calc::absXButtonPressed()
+void Calc::absButtonPressed()
 {
+	// Reset [=] presses count.
+	data_.subsequent_equal_presses = 0;
+	
+	// Save current display state as argument
+	data_.unary = curr_display_->text().toDouble();
+
+	// Evaluate and show absolute value.
+	QString str_result{};
+	str_result.setNum(fabs(data_.unary), config_.disp_format, config_.display_prec);
+	curr_display_->setText(str_result);
 }
 
 void Calc::inverseButtonPressed()
 {
+	// Save current display state as argument.
+	data_.unary = curr_display_->text().toDouble();
+
+	QString str_result{};
+	
+	if (data_.unary != 0)
+	{
+		// Reset [=] presses count.
+		data_.subsequent_equal_presses = 0;
+
+		// Evaluate and show inverted value.		
+		str_result.setNum(1 / data_.unary, config_.disp_format, config_.display_prec);		
+	}
+	else
+	{
+		ui->statusbar->showMessage("Cannot divide by zero!", 2000);
+		str_result = "Err";
+	}
+	
+	curr_display_->setText(str_result);
 }
