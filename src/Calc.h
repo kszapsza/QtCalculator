@@ -20,7 +20,6 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class Calc; }
 QT_END_NAMESPACE
 
-
 #define CONSTANT static constexpr double
 
 typedef long double ldbl;
