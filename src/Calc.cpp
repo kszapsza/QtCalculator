@@ -65,8 +65,11 @@ void Calc::numButtonPressed()
 	const QString button_value = button->text();
 	const QString display_value = curr_display_->text();
 
-	if (display_value == QString::number(data_.lhs)
-		|| display_value == "0" )
+	QString str_lhs_value{};
+	str_lhs_value.setNum(data_.lhs, config_.disp_format, config_.display_prec);
+
+	if (display_value == str_lhs_value
+		|| display_value == QString::number(config_.init_calc_value))
 	{
 		curr_display_->setText(button_value);
 	}
@@ -102,7 +105,7 @@ void Calc::commaButtonPressed()
 	switch (data_.op_decision)
 	{
 	case operation::division:
-		[[unlikely]] if (data_.rhs == 0)			
+		[[unlikely]] if (data_.rhs == 0)
 			err = true;
 		else
 			result = data_.lhs / data_.rhs;
@@ -117,7 +120,10 @@ void Calc::commaButtonPressed()
 		result = data_.lhs + data_.rhs;
 		break;
 	case operation::log_base_y:
-		result = std::log(data_.lhs) / std::log(data_.rhs);
+		[[unlikely]] if (const double den = std::log(data_.rhs); den == 0)
+			err = true;
+		else
+			result = std::log(data_.lhs) / den;
 		break;
 	case operation::modulo:
 		result = static_cast<int>(data_.lhs) % static_cast<int>(data_.rhs);
@@ -277,7 +283,7 @@ void Calc::percentButtonPressed()
 //	SINGLE-ARGUMENT OPERATIONS (BASIC)					 //
 ///////////////////////////////////////////////////////////
 
-void Calc::performUnaryOperation(long double (*func)(long double))
+void Calc::performUnaryOperation(const ldbl_ptr func)
 {
 	// Reset [=] presses count.
 	data_.subsequent_equal_presses = 0;

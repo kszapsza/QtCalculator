@@ -21,10 +21,21 @@ Calc::Calc(QWidget *parent) :
 {
 	// UI initialization.
     ui->setupUi(this);	
-	ui->modes->setCurrentIndex(static_cast<int>(mode::basic));
-	curr_display_ = ui->display;
+	ui->modes->setCurrentIndex(static_cast<int>(config_.start_mode));
 
-    // Initialize displays with init value.
+	// Set current mode based on config.
+	switch(config_.start_mode)
+	{
+	case mode::scientific:
+		curr_display_ = ui->display_sci;
+		break;		
+	default:
+	case mode::basic:
+		curr_display_ = ui->display;
+		break;
+	}	
+
+    // Initialize both displays with init value.
     ui->display->setText(QString::number(config_.init_calc_value));
 	ui->display_sci->setText(QString::number(config_.init_calc_value));
 
@@ -144,7 +155,7 @@ Calc::Calc(QWidget *parent) :
 
 	// Logarithms buttons.
 	connect(ui->button_log_basey, SIGNAL(released()),
-		this, SLOT(logBaseYButtonPressed()));
+		this, SLOT(mathButtonPressed()));
 	connect(ui->button_log_base2, SIGNAL(released()),
 		this, SLOT(logBase2ButtonPressed()));
 	connect(ui->button_log_base10, SIGNAL(released()),
@@ -158,7 +169,7 @@ Calc::Calc(QWidget *parent) :
 
 	// Modulo button.
 	connect(ui->button_modulo, SIGNAL(released()),
-		this, SLOT(moduloButtonPressed()));
+		this, SLOT(mathButtonPressed()));
 
 	// Exponential and power functions.
 	connect(ui->button_e_to_x, SIGNAL(released()),
@@ -166,7 +177,7 @@ Calc::Calc(QWidget *parent) :
 	connect(ui->button_10_to_x, SIGNAL(released()),
 		this, SLOT(e10ToXButtonPressed()));
 	connect(ui->button_x_to_y, SIGNAL(released()),
-		this, SLOT(xToYButtonPressed()));
+		this, SLOT(mathButtonPressed()));
 
 	// Absolute value.
 	connect(ui->button_abs, SIGNAL(released()),

@@ -17,7 +17,7 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 add_executable(Calc
     src/main.cpp
     src/initializeCalc.cpp
-    src/basicCalc.cpp
+    src/Calc.cpp
     src/Calc.h
     src/Calc.ui
     src/scientificCalc.cpp)

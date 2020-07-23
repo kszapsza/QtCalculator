@@ -20,9 +20,13 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class Calc; }
 QT_END_NAMESPACE
 
-/// CONSTANTS ///
 
 #define CONSTANT static constexpr double
+
+typedef long double ldbl;
+typedef long double (*ldbl_ptr)(long double);
+
+/// CONSTANTS ///
 
 struct Constants
 {	
@@ -44,17 +48,13 @@ struct Constants
 
 enum class operation : uint8_t
 {
-	none = 0,
-	division = 1,
-	multiplication = 2,
-	subtraction = 3,
-	addition = 4
+	none = 0, division = 1, multiplication = 2, subtraction = 3,
+	addition = 4, log_base_y = 5, modulo = 6, power = 7
 };
 
 enum class mode : int
 {
-	basic = 0,
-	scientific = 1
+	basic = 0, scientific = 1
 };
 
 struct Config
@@ -62,6 +62,7 @@ struct Config
 	double init_calc_value{ 0.0 };
 	char disp_format{ 'g' };
 	uint8_t display_prec{ 15 };
+	mode start_mode{ mode::scientific };
 };
 
 struct Data
@@ -102,7 +103,7 @@ private:
 	QLineEdit* curr_display_;
 
 	[[nodiscard]] QString performBinaryOperation() const;
-	void performUnaryOperation(double (*func)(double));
+	void performUnaryOperation(ldbl_ptr func);
 
 private slots:
 
@@ -131,21 +132,17 @@ private slots:
 
 // scientificCalc.cpp
 
-	void piButtonPressed() const;
-	void eButtonPressed() const;
-	void randButtonPressed() const;
-
-	void logBaseYButtonPressed();
+	void piButtonPressed();
+	void eButtonPressed();
+	void randButtonPressed();
+	
 	void logBase2ButtonPressed();
 	void logBase10ButtonPressed();
 	void lnButtonPressed();
 
-	void factorialButtonPressed();
-	void moduloButtonPressed();
-	
+	void factorialButtonPressed();	
 	void expButtonPressed();
-	void e10ToXButtonPressed();	
-	void xToYButtonPressed();
+	void e10ToXButtonPressed();
 	
 	void absButtonPressed();
 	void inverseButtonPressed();	
