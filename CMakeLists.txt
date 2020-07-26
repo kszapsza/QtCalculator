@@ -20,6 +20,9 @@ add_executable(Calc
     src/Calc.cpp
     src/Calc.h
     src/Calc.ui
-    src/scientificCalc.cpp)
+    src/scientificCalc.cpp
+    src/Settings.cpp
+    src/Settings.h
+    src/Settings.ui)
 
 target_link_libraries(Calc PRIVATE Qt5::Widgets)

@@ -1,10 +1,10 @@
-﻿#include "Calc.h"
-#include "./ui_Calc.h"
-
-#include <QPushButton>
+﻿#include <QFile>
 #include <QtMath>
 #include <QMap>
-#include <QStackedWidget>
+#include <QTextStream>
+
+#include "Calc.h"
+#include "./ui_Calc.h"
 
 /*
 ///////////////////////////////////////////////////////////
@@ -16,15 +16,42 @@
 ///////////////////////////////////////////////////////////
 */
 
+void Calc::loadConfig()
+{
+	QFile config_file("config.dat");
+
+	if (config_file.open(QIODevice::ReadOnly | QIODevice::Text))
+	{
+		QTextStream config_str(&config_file);
+		auto nl_flush = [&](){ char nl{}; config_str >> nl; };
+
+		config_str >> config_.init_value;
+
+		int init_mode_in{};
+		config_str >> init_mode_in;
+		config_.init_mode = static_cast<mode>(init_mode_in);
+
+		nl_flush();			
+		config_str >> config_.disp_format;
+		nl_flush();
+		
+		config_str >> config_.display_prec;
+	}
+
+	config_file.close();
+}
+
 Calc::Calc(QWidget *parent) :
 	QMainWindow(parent), ui(new Ui::Calc)
 {
+	loadConfig();
+	
 	// UI initialization.
-    ui->setupUi(this);	
-	ui->modes->setCurrentIndex(static_cast<int>(config_.start_mode));
+    ui->setupUi(this);
+	ui->modes->setCurrentIndex(static_cast<int>(config_.init_mode));
 
 	// Set current mode based on config.
-	switch(config_.start_mode)
+	switch(config_.init_mode)
 	{
 	case mode::scientific:
 		curr_display_ = ui->display_sci;
@@ -36,8 +63,8 @@ Calc::Calc(QWidget *parent) :
 	}
 	
     // Initialize both displays with init value.
-    ui->display->setText(QString::number(config_.init_calc_value));
-	ui->display_sci->setText(QString::number(config_.init_calc_value));
+    ui->display->setText(QString::number(config_.init_value));
+	ui->display_sci->setText(QString::number(config_.init_value));
 
 /// BASIC MODE BUTTONS INIT ///
 
@@ -193,13 +220,16 @@ Calc::Calc(QWidget *parent) :
 	
 /// MENU BAR INIT ///
 
+	connect(ui->actionOptions, SIGNAL(triggered(bool)),
+		this, SLOT(menuFileOptions()));
+
 	// Initialize [View] menu bar tab.
 	calc_modes_ = new QActionGroup(this);
 	calc_modes_->addAction(ui->actionBasic);
 	calc_modes_->addAction(ui->actionScientific);	
 	
 	// Set current mode based on config.
-	switch(config_.start_mode)
+	switch(config_.init_mode)
 	{
 	case mode::scientific:
 		ui->actionScientific->setChecked(true);

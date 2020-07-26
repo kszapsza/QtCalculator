@@ -1,5 +1,5 @@
 #include "Calc.h"
-#include "./ui_Calc.h"
+#include "Settings.h"
 
 #include <QPushButton>
 #include <QtMath>
@@ -23,6 +23,13 @@
 ///////////////////////////////////////////////////////////
 //	MENU BAR											 //
 ///////////////////////////////////////////////////////////
+
+void Calc::menuFileOptions()
+{
+	Settings settings(this);
+	settings.setModal(true);
+	settings.exec();
+}
 
 // Changing view mode to Basic in [View] tab
 void Calc::menuViewBasicTriggered()
@@ -69,7 +76,7 @@ void Calc::numButtonPressed()
 	str_lhs_value.setNum(data_.lhs, config_.disp_format, config_.display_prec);
 
 	if (display_value == str_lhs_value
-		|| display_value == QString::number(config_.init_calc_value))
+		|| display_value == QString::number(config_.init_value))
 	{
 		curr_display_->setText(button_value);
 	}
@@ -322,7 +329,7 @@ void Calc::backspaceButtonPressed() const
 	}
 	else
 	{
-		const QString init_txt = QString::number(config_.init_calc_value);
+		const QString init_txt = QString::number(config_.init_value);
 		curr_display_->setText(init_txt);
 	}
 }
@@ -334,7 +341,7 @@ void Calc::clearButtonPressed()
 	data_.subsequent_equal_presses = 0;
 	
 	// Clear the display.
-	curr_display_->setText(QString::number(config_.init_calc_value));
+	curr_display_->setText(QString::number(config_.init_value));
 
 	// Flush the buffer.
 	data_.op_decision = operation::none;
@@ -374,7 +381,7 @@ void Calc::memButtonPressed()
 
 	if (data_.memory == curr_value.toDouble())
 	{
-		data_.memory = config_.init_calc_value;
+		data_.memory = config_.init_value;
 		ui->statusbar->showMessage("Memory cleaned.", 2000);
 	}
 	else

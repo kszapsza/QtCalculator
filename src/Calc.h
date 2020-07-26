@@ -45,7 +45,7 @@ struct Constants
 	CONSTANT ln10      = 2.302585092994045684018;
 };
 
-enum class operation : uint8_t
+enum class operation : int
 {
 	none = 0, division = 1, multiplication = 2, subtraction = 3,
 	addition = 4, log_base_y = 5, modulo = 6, power = 7
@@ -58,10 +58,10 @@ enum class mode : int
 
 struct Config
 {
-	double init_calc_value{ 0.0 };
+	double init_value{ 0.0 };
+	mode init_mode{ mode::scientific };
 	char disp_format{ 'g' };
-	uint8_t display_prec{ 15 };
-	mode start_mode{ mode::scientific };
+	int display_prec{ 15 };	
 };
 
 struct Data
@@ -101,11 +101,15 @@ private:
 	QActionGroup* calc_modes_;
 	QLineEdit* curr_display_;
 
+	void loadConfig();
+
 	[[nodiscard]] QString performBinaryOperation() const;
 	void performUnaryOperation(ldbl_ptr func);
 
-private slots:
+	friend class Settings;
 
+private slots:
+	
 // basicCalc.cpp
 	
 	void numButtonPressed();
@@ -126,6 +130,7 @@ private slots:
 	void memAddButtonPressed();
 	void memSubButtonPressed();
 
+	void menuFileOptions();
 	void menuViewBasicTriggered();
 	void menuViewScientificTriggered();
 

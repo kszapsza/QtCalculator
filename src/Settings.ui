@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Settings</class>
+ <widget class="QDialog" name="Settings">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>408</width>
+    <height>191</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Settings</string>
+  </property>
+  <widget class="QDialogButtonBox" name="settingsButtons">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>10</y>
+     <width>81</width>
+     <height>241</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   </property>
+  </widget>
+  <widget class="QWidget" name="verticalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>301</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="settingsVerticalLayout">
+    <item>
+     <widget class="QGroupBox" name="settingsGeneral">
+      <property name="title">
+       <string>On startup</string>
+      </property>
+      <widget class="QWidget" name="gridLayoutWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>251</width>
+         <height>53</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="settingsGeneralGrid">
+        <item row="1" column="1">
+         <widget class="QComboBox" name="settingsInitMode">
+          <item>
+           <property name="text">
+            <string>Basic</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Scientific</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="settingsInitModeLabel">
+          <property name="text">
+           <string>Initial mode</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="settingsInitValueLabel">
+          <property name="text">
+           <string>Initial value</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QDoubleSpinBox" name="settingsInitValue"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+    <item>
+     <widget class="QGroupBox" name="settingsOnStartup">
+      <property name="title">
+       <string>Display</string>
+      </property>
+      <widget class="QWidget" name="gridLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>251</width>
+         <height>51</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="settingsOnStartupGrid">
+        <item row="1" column="0">
+         <widget class="QLabel" name="settingsDispPrecisionLabel">
+          <property name="text">
+           <string>Display precision</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="settingsDispFormatLabel">
+          <property name="text">
+           <string>Display format</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="settingsDispFormat">
+          <item>
+           <property name="text">
+            <string>[-]9.9e[+|-]999 (e)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>[-]9.9E[+|-]999 (E)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>[-]9.9 (f)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>autom. use e or f (g)</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>autom. use E or f (G)</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QSpinBox" name="settingsDispPrecision"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>settingsButtons</sender>
+   <signal>accepted()</signal>
+   <receiver>Settings</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>settingsButtons</sender>
+   <signal>rejected()</signal>
+   <receiver>Settings</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

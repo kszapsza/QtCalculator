@@ -5,12 +5,6 @@
 #include <random>
 #include <chrono>
 
-#include <QtMath>
-
-#ifdef QT_DEBUG
-#include <QDebug>
-#endif
-
 /*
 ///////////////////////////////////////////////////////////
 	Qt Calculator
