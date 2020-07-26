@@ -1,4 +1,4 @@
-#include "Calc.h"
+﻿#include "Calc.h"
 #include "./ui_Calc.h"
 
 #include <cmath>
@@ -134,7 +134,7 @@ void Calc::cotClicked()
 {
 	const ldbl_ptr ctg = [](const long double r) { return 1 / std::tan(r); };
 	
-	if (std::tan(curr_display_->text().toDouble()) != 0)
+	[[likely]] if (std::tan(curr_display_->text().toDouble()) != 0)
 	{		
 		performUnaryOperation(ctg);
 	}
@@ -149,7 +149,7 @@ void Calc::secClicked()
 {
 	const ldbl_ptr sec = [](const long double r) { return 1 / std::cos(r); };
 	
-	if (std::cos(curr_display_->text().toDouble()) != 0)
+	[[likely]] if (std::cos(curr_display_->text().toDouble()) != 0)
 	{
 		performUnaryOperation(sec);
 	}
@@ -165,7 +165,7 @@ void Calc::cscClicked()
 	const ldbl_ptr csc = [](const long double r) { return 1 / std::sin(r); };
 	const auto curr_display_dbl = curr_display_->text().toDouble();
 	
-	if (std::sin(curr_display_dbl) != 0)
+	[[likely]] if (std::sin(curr_display_dbl) != 0)
 	{
 		performUnaryOperation(csc);		
 	}
@@ -180,7 +180,7 @@ void Calc::arcsinClicked()
 {
 	const auto curr_display_dbl = curr_display_->text().toDouble();
 	
-	if (curr_display_dbl >= -1 && curr_display_dbl <= 1)
+	[[likely]] if (curr_display_dbl >= -1 && curr_display_dbl <= 1)
 	{
 		performUnaryOperation(std::asin);
 	}
@@ -195,7 +195,7 @@ void Calc::arccosClicked()
 {
 	const auto curr_display_dbl = curr_display_->text().toDouble();
 	
-	if (curr_display_dbl >= -1 && curr_display_dbl <= 1)
+	[[likely]] if (curr_display_dbl >= -1 && curr_display_dbl <= 1)
 	{
 		performUnaryOperation(std::acos);
 	}
@@ -208,75 +208,218 @@ void Calc::arccosClicked()
 
 void Calc::arctanClicked()
 {
-	const auto curr_display_dbl = curr_display_->text().toDouble();
-	
-	if (curr_display_dbl > -Constants::pi_2 && curr_display_dbl < Constants::pi_2)
+	performUnaryOperation(std::atan);
+}
+
+void Calc::arccotClicked()
+{
+	const ldbl_ptr arccot = [](const ldbl r) -> ldbl { return Constants::pi_2 - std::atan(r); };
+	performUnaryOperation(arccot);
+}
+
+void Calc::arcsecClicked()
+{
+	const ldbl_ptr arcsec = [](const ldbl r) -> ldbl { return std::acos(1 / r ); };	
+	const double curr_display_dbl = curr_display_->text().toDouble();	
+
+	[[likely]] if (curr_display_dbl != 0)
 	{
-		performUnaryOperation(std::atan);
+		[[likely]] if (const double curr_display_inverted_dbl = 1 / curr_display_dbl;
+			curr_display_inverted_dbl >= -1 && curr_display_inverted_dbl <= 1)
+		{
+			performUnaryOperation(arcsec);
+		}
+		else
+		{
+			ui->statusbar->showMessage("Arcsecant is only definite in "
+				" (-infty, -1) u (1, +infty)", 2000);
+			curr_display_->setText("Err");
+		}
 	}
 	else
 	{
-		ui->statusbar->showMessage("Arcsine is only definite in (-pi/2, pi/2)", 2000);
+		ui->statusbar->showMessage("Arcsecant is only definite in "
+			"(-infty, -1) u (1, +infty)", 2000);
 		curr_display_->setText("Err");
 	}
 }
 
-void Calc::arccotClicked()
-{	
-}
-
-void Calc::arcsecClicked()
-{	
-}
-
 void Calc::arccscClicked()
-{	
+{
+	const ldbl_ptr arccsc = [](const ldbl r) -> ldbl { return std::asin(1 / r ); };	
+	const double curr_display_dbl = curr_display_->text().toDouble();
+
+	[[likely]] if (curr_display_dbl != 0)
+	{
+		[[likely]] if (const double curr_display_inverted_dbl = 1 / curr_display_dbl;
+			curr_display_inverted_dbl >= -1 && curr_display_inverted_dbl <= 1)
+		{
+			performUnaryOperation(arccsc);
+		}
+		else
+		{
+			ui->statusbar->showMessage("Arccosecant is only definite in "
+				"(-infty, -1) u (1, +infty)", 2000);
+			curr_display_->setText("Err");
+		}
+	}
+	else
+	{
+		ui->statusbar->showMessage("Arccosecant is only definite in "
+			"(-infty, -1) u (1, +infty)", 2000);
+		curr_display_->setText("Err");
+	}
 }
 
 void Calc::sinhClicked()
 {
+	performUnaryOperation(std::sinhl);
 }
 
 void Calc::coshClicked()
 {
+	performUnaryOperation(std::coshl);
 }
 
 void Calc::tanhClicked()
 {
+	performUnaryOperation(std::tanhl);
 }
 
 void Calc::cothClicked()
 {
+	const ldbl_ptr coth = [](const ldbl r) -> ldbl { return std::coshl(r) / std::sinhl(r); };
+	const double curr_display_dbl = curr_display_->text().toDouble();
+
+	[[likely]] if (std::sinhl(curr_display_dbl) != 0)
+	{
+		performUnaryOperation(coth);
+	}
+	else
+	{
+		ui->statusbar->showMessage("Cannot divide by zero!", 2000);
+		curr_display_->setText("Err");
+	}
 }
 
 void Calc::sechClicked()
 {
+	const ldbl_ptr sech = [](const ldbl r) noexcept -> ldbl { return 1 / std::coshl(r); };	
+	performUnaryOperation(sech);
 }
 
 void Calc::cschClicked()
 {
+	const ldbl_ptr csch = [](const ldbl r) -> ldbl { return 1 / std::sinhl(r); };
+	const double curr_display_dbl = curr_display_->text().toDouble();
+
+	[[likely]] if (std::sinhl(curr_display_dbl) != 0)
+	{
+		performUnaryOperation(csch);
+	}
+	else
+	{
+		ui->statusbar->showMessage("Cannot divide by zero!", 2000);
+		curr_display_->setText("Err");
+	}
 }
 
 void Calc::arsinhClicked()
 {
+	performUnaryOperation(std::asinhl);
 }
 
 void Calc::arcoshClicked()
 {
+	const double curr_display_dbl = curr_display_->text().toDouble();
+	
+	[[likely]] if (curr_display_dbl >= 1)
+	{
+		performUnaryOperation(std::acoshl);
+	}
+	else
+	{
+		ui->statusbar->showMessage("Area hyperbolic cosinus is only "
+			"definite in [1, infty]", 2000);
+		curr_display_->setText("Err");
+	}
 }
 
 void Calc::artanhClicked()
 {
+	const double curr_display_dbl = curr_display_->text().toDouble();
+	
+	[[likely]] if (curr_display_dbl > -1 && curr_display_dbl < 1)
+	{
+		performUnaryOperation(std::atanhl);
+	}
+	else
+	{
+		ui->statusbar->showMessage("Area hyperbolic tangent is only "
+			"definite in (-1, 1)", 2000);
+		curr_display_->setText("Err");
+	}
 }
 
 void Calc::arcothClicked()
 {
+	const ldbl_ptr arcoth = [](const ldbl r) -> ldbl
+	{
+		return 0.5 * std::log((r+1)/(r-1));
+	};
+	
+	const double curr_display_dbl = curr_display_->text().toDouble();
+	
+	[[likely]] if (curr_display_dbl < -1 || curr_display_dbl > 1)
+	{
+		performUnaryOperation(arcoth);
+	}
+	else
+	{
+		ui->statusbar->showMessage("Area hyperbolic cotangent is only "
+			"definite in (-infty, -1) u (1, infty)", 2000);
+		curr_display_->setText("Err");
+	}
 }
 
 void Calc::arsechClicked()
 {
+	const ldbl_ptr arsech = [](const ldbl r) -> ldbl
+	{
+		return std::log(std::sqrt((1/r) - 1) * std::sqrt((1/r) + 1) + (1/r));
+	};
+
+	const double curr_display_dbl = curr_display_->text().toDouble();
+
+	[[likely]] if (curr_display_dbl > 0 && curr_display_dbl <= 1)
+	{
+		performUnaryOperation(arsech);
+	}
+	else
+	{
+		ui->statusbar->showMessage("Area hyperbolic secant is only "
+			"definite in (0, 1]", 2000);
+		curr_display_->setText("Err");
+	}
 }
 
 void Calc::arcschClicked()
 {
+	const ldbl_ptr arcsch = [](const ldbl r) -> ldbl
+	{
+		return std::log(std::sqrt(1 + (1 / (r*r))) + (1/r));
+	};
+
+	const double curr_display_dbl = curr_display_->text().toDouble();
+
+	[[likely]] if (curr_display_dbl != 0)
+	{
+		performUnaryOperation(arcsch);
+	}
+	else
+	{
+		ui->statusbar->showMessage("Area hyperbolic cosecant is "
+			"indefinite for 0", 2000);
+		curr_display_->setText("Err");
+	}
 }

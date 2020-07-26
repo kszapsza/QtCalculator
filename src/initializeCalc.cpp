@@ -334,18 +334,31 @@ Calc::Calc(QWidget *parent) :
 	connect(ui->actionArccsc, SIGNAL(triggered(bool)),
 		this, SLOT(arccscClicked()));
 
+	connect(ui->actionSinh, SIGNAL(triggered(bool)),
+		this, SLOT(sinhClicked()));	
+	connect(ui->actionCosh, SIGNAL(triggered(bool)),
+		this, SLOT(coshClicked()));	
+	connect(ui->actionTanh, SIGNAL(triggered(bool)),
+		this, SLOT(tanhClicked()));	
+	connect(ui->actionCoth, SIGNAL(triggered(bool)),
+		this, SLOT(cothClicked()));	
+	connect(ui->actionSech, SIGNAL(triggered(bool)),
+		this, SLOT(sechClicked()));	
+	connect(ui->actionCsch, SIGNAL(triggered(bool)),
+		this, SLOT(cschClicked()));
+
 	connect(ui->actionArsinh, SIGNAL(triggered(bool)),
-		this, SLOT(arcsinhClicked()));	
+		this, SLOT(arsinhClicked()));	
 	connect(ui->actionArcosh, SIGNAL(triggered(bool)),
-		this, SLOT(arccoshClicked()));	
+		this, SLOT(arcoshClicked()));	
 	connect(ui->actionArtanh, SIGNAL(triggered(bool)),
-		this, SLOT(arctanhClicked()));	
+		this, SLOT(artanhClicked()));	
 	connect(ui->actionArcoth, SIGNAL(triggered(bool)),
-		this, SLOT(arccothClicked()));	
+		this, SLOT(arcothClicked()));	
 	connect(ui->actionArsech, SIGNAL(triggered(bool)),
-		this, SLOT(arcsechClicked()));	
+		this, SLOT(arsechClicked()));	
 	connect(ui->actionArcsch, SIGNAL(triggered(bool)),
-		this, SLOT(arccschClicked()));
+		this, SLOT(arcschClicked()));
 }
 
 Calc::~Calc()
