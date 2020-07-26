@@ -21,7 +21,7 @@
   </property>
   <widget class="QStackedWidget" name="modes">
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="Basic">
     <property name="sizePolicy">
@@ -1291,8 +1291,62 @@
     </property>
     <addaction name="actionOptions"/>
    </widget>
+   <widget class="QMenu" name="menuFunctions">
+    <property name="title">
+     <string>Functions</string>
+    </property>
+    <widget class="QMenu" name="menuTrigonometric">
+     <property name="title">
+      <string>Trigonometric</string>
+     </property>
+     <addaction name="actionSin"/>
+     <addaction name="actionCos"/>
+     <addaction name="actionTan"/>
+     <addaction name="actionCot"/>
+     <addaction name="actionSec"/>
+     <addaction name="actionCsc"/>
+    </widget>
+    <widget class="QMenu" name="menuInverse_trigonometric">
+     <property name="title">
+      <string>Inverse trigonometric</string>
+     </property>
+     <addaction name="actionArcsin"/>
+     <addaction name="actionArccos"/>
+     <addaction name="actionArctan"/>
+     <addaction name="actionArccot"/>
+     <addaction name="actionArcsec"/>
+     <addaction name="actionArccsc"/>
+    </widget>
+    <widget class="QMenu" name="menuHyperbolic">
+     <property name="title">
+      <string>Hyperbolic</string>
+     </property>
+     <addaction name="actionSinh"/>
+     <addaction name="actionCosh"/>
+     <addaction name="actionTanh"/>
+     <addaction name="actionCoth"/>
+     <addaction name="actionSech"/>
+     <addaction name="actionCsch"/>
+    </widget>
+    <widget class="QMenu" name="menuInverse_hyperbolic">
+     <property name="title">
+      <string>Inverse hyperbolic</string>
+     </property>
+     <addaction name="actionArsinh"/>
+     <addaction name="actionArcosh"/>
+     <addaction name="actionArtanh"/>
+     <addaction name="actionArcoth"/>
+     <addaction name="actionArsech"/>
+     <addaction name="actionArcsch"/>
+    </widget>
+    <addaction name="menuTrigonometric"/>
+    <addaction name="menuInverse_trigonometric"/>
+    <addaction name="menuHyperbolic"/>
+    <addaction name="menuInverse_hyperbolic"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuView"/>
+   <addaction name="menuFunctions"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionBasic">
@@ -1326,6 +1380,141 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionCosine">
+   <property name="text">
+    <string>Cosine</string>
+   </property>
+  </action>
+  <action name="actionTangent">
+   <property name="text">
+    <string>Tangent</string>
+   </property>
+  </action>
+  <action name="actionCotangent">
+   <property name="text">
+    <string>Cotangent</string>
+   </property>
+  </action>
+  <action name="actionSin">
+   <property name="text">
+    <string>Sine</string>
+   </property>
+  </action>
+  <action name="actionCos">
+   <property name="text">
+    <string>Cosine</string>
+   </property>
+  </action>
+  <action name="actionTan">
+   <property name="text">
+    <string>Tangent</string>
+   </property>
+  </action>
+  <action name="actionCot">
+   <property name="text">
+    <string>Cotangent</string>
+   </property>
+  </action>
+  <action name="actionSec">
+   <property name="text">
+    <string>Secant</string>
+   </property>
+  </action>
+  <action name="actionCsc">
+   <property name="text">
+    <string>Cosecant</string>
+   </property>
+  </action>
+  <action name="actionArcsin">
+   <property name="text">
+    <string>Arcsine</string>
+   </property>
+  </action>
+  <action name="actionArccos">
+   <property name="text">
+    <string>Arccosine</string>
+   </property>
+  </action>
+  <action name="actionArctan">
+   <property name="text">
+    <string>Arctangent</string>
+   </property>
+  </action>
+  <action name="actionArccot">
+   <property name="text">
+    <string>Arccotangent</string>
+   </property>
+  </action>
+  <action name="actionArcsec">
+   <property name="text">
+    <string>Arcsecant</string>
+   </property>
+  </action>
+  <action name="actionArccsc">
+   <property name="text">
+    <string>Arccosecant</string>
+   </property>
+  </action>
+  <action name="actionSinh">
+   <property name="text">
+    <string>Hyperbolic sine</string>
+   </property>
+  </action>
+  <action name="actionCosh">
+   <property name="text">
+    <string>Hyperbolic cosine</string>
+   </property>
+  </action>
+  <action name="actionTanh">
+   <property name="text">
+    <string>Hyperbolic tangent</string>
+   </property>
+  </action>
+  <action name="actionCoth">
+   <property name="text">
+    <string>Hyperbolic cotangent</string>
+   </property>
+  </action>
+  <action name="actionSech">
+   <property name="text">
+    <string>Hyperbolic secant</string>
+   </property>
+  </action>
+  <action name="actionCsch">
+   <property name="text">
+    <string>Hyperbolic cosecant</string>
+   </property>
+  </action>
+  <action name="actionArsinh">
+   <property name="text">
+    <string>Area hyperbolic sine</string>
+   </property>
+  </action>
+  <action name="actionArcosh">
+   <property name="text">
+    <string>Area hyperbolic cosine</string>
+   </property>
+  </action>
+  <action name="actionArtanh">
+   <property name="text">
+    <string>Area hyperbolic tangent</string>
+   </property>
+  </action>
+  <action name="actionArcoth">
+   <property name="text">
+    <string>Area hyperbolic cotangent</string>
+   </property>
+  </action>
+  <action name="actionArsech">
+   <property name="text">
+    <string>Area hyperbolic secant</string>
+   </property>
+  </action>
+  <action name="actionArcsch">
+   <property name="text">
+    <string>Area hyperbolic cosecant</string>
    </property>
   </action>
  </widget>

@@ -65,8 +65,7 @@ Settings::Settings(Calc *parent) :
 		});
 
 	connect(ui->settingsButtons, SIGNAL(accepted()),
-		this, SLOT(saveConfig()));
-	
+		this, SLOT(saveConfig()));	
 }
 
 Settings::~Settings()
@@ -94,6 +93,9 @@ void Settings::saveConfig() const
 			config_str << calc_->config_.disp_format << '\n';
 			config_str << calc_->config_.display_prec << '\n';
 		}
+		
+		// Clear input as operations can work bad after changing formatting.
+		calc_->clearButtonPressed();
 
 		config_file.close();
 	}
@@ -115,5 +117,9 @@ void Settings::reject()
 		{
 			QDialog::reject();
 		}
-	}	
+	}
+	else
+	{
+		QDialog::reject();
+	}
 }

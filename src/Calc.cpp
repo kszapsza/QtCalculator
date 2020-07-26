@@ -36,9 +36,11 @@ void Calc::menuViewBasicTriggered()
 {
 	if (ui->modes->currentIndex() != static_cast<int>(mode::basic))
 	{
-		clearButtonPressed();
-		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::basic");
+		clearButtonPressed();		
 		ui->modes->setCurrentIndex(static_cast<int>(mode::basic));
+		ui->menuFunctions->menuAction()->setVisible(false);
+
+		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::basic");
 		ui->statusbar->showMessage("Changed mode to Basic.", 2000);
 		curr_display_ = ui->display;
 	}
@@ -50,8 +52,11 @@ void Calc::menuViewScientificTriggered()
 	if (ui->modes->currentIndex() != static_cast<int>(mode::scientific))
 	{
 		clearButtonPressed();
-		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::scientific");
+		
 		ui->modes->setCurrentIndex(static_cast<int>(mode::scientific));
+		ui->menuFunctions->menuAction()->setVisible(true);
+		
+		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::scientific");
 		ui->statusbar->showMessage("Changed mode to Scientific.", 2000);
 		curr_display_ = ui->display_sci;
 	}
@@ -72,11 +77,23 @@ void Calc::numButtonPressed()
 	const QString button_value = button->text();
 	const QString display_value = curr_display_->text();
 
-	QString str_lhs_value{};
-	str_lhs_value.setNum(data_.lhs, config_.disp_format, config_.display_prec);
+	
+	QString formatted_lhs_value{};
+	formatted_lhs_value.setNum(data_.lhs, config_.disp_format, config_.display_prec);
 
-	if (display_value == str_lhs_value
-		|| display_value == QString::number(config_.init_value))
+	QString formatted_last_result{};
+	formatted_last_result.setNum(data_.last_result, config_.disp_format, config_.display_prec);
+
+	// CONCATENATION CONDITIONS: compare display value...
+	// 1st: ...to lhs ignoring formatting mode (user input is always in basic format),
+	// 2nd: ...to lhs taking into account format (formatted results might be in lhs),
+	// 3rd: ...to initial value w/o formatting,
+	// 4th: ...to last result with formatting.
+	 
+	if (display_value == QString::number(data_.lhs) 
+		|| display_value == formatted_lhs_value
+		|| display_value == QString::number(config_.init_value)
+		|| display_value == formatted_last_result)
 	{
 		curr_display_->setText(button_value);
 	}
@@ -103,7 +120,7 @@ void Calc::commaButtonPressed()
 
 // Core function performing operation stored in buffer.
 // Used both by [=] button and math buttons.
-[[nodiscard]] QString Calc::performBinaryOperation() const
+[[nodiscard]] QString Calc::performBinaryOperation()
 {
 	double result{};
 	QString str_result{};
@@ -146,6 +163,7 @@ void Calc::commaButtonPressed()
 
 	if (!err)
 	{
+		data_.last_result = result;
 		str_result.setNum(result, config_.disp_format, config_.display_prec);
 	}
 	else
@@ -275,6 +293,7 @@ void Calc::percentButtonPressed()
 
 	if (!err)
 	{
+		data_.last_result = result;
 		str_result.setNum(result, config_.disp_format, config_.display_prec);
 	}
 	else
@@ -298,11 +317,11 @@ void Calc::performUnaryOperation(const ldbl_ptr func)
 	
 	// Save current display state as base value.
 	data_.unary = curr_display_->text().toDouble();
-
-	// Evaluate and show square.
-	QString str_result;
-	str_result.setNum(static_cast<double>(func(data_.unary)),
-		config_.disp_format, config_.display_prec);
+	
+	const double result = data_.last_result = static_cast<double>(func(data_.unary));
+	
+	QString str_result{};
+	str_result.setNum(result, config_.disp_format, config_.display_prec);
 	
 	curr_display_->setText(str_result);
 }

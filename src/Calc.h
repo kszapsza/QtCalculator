@@ -72,6 +72,8 @@ struct Data
 	// Allows to perform sequential operations such as 2*3[=][=][=] = 54.
 	uint8_t subsequent_equal_presses{ false };
 
+	double last_result{ 0.0 };
+
 	// Buffer for operations.
 	double lhs{ 0.0 };
 	double rhs{ 1.0 };
@@ -103,7 +105,7 @@ private:
 
 	void loadConfig();
 
-	[[nodiscard]] QString performBinaryOperation() const;
+	[[nodiscard]] QString performBinaryOperation();
 	void performUnaryOperation(ldbl_ptr func);
 
 	friend class Settings;
@@ -149,6 +151,34 @@ private slots:
 	void e10ToXButtonPressed();
 	
 	void absButtonPressed();
-	void inverseButtonPressed();	
+	void inverseButtonPressed();
+
+	void sinClicked();
+	void cosClicked();
+	void tanClicked();
+	void cotClicked();
+	void secClicked();
+	void cscClicked();
+
+	void arcsinClicked();
+	void arccosClicked();
+	void arctanClicked();
+	void arccotClicked();
+	void arcsecClicked();
+	void arccscClicked();
+
+	void sinhClicked();
+	void coshClicked();
+	void tanhClicked();
+	void cothClicked();
+	void sechClicked();
+	void cschClicked();
+
+	void arsinhClicked();
+	void arcoshClicked();
+	void artanhClicked();
+	void arcothClicked();
+	void arsechClicked();
+	void arcschClicked();
 };
 #endif // CALC_H
