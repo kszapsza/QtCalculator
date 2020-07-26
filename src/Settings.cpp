@@ -111,7 +111,7 @@ void Settings::reject()
 		{
 			saveConfig();
 		}
-		else if (mbox_unsaved_decision != QMessageBox::Cancel)
+		else if (mbox_unsaved_decision == QMessageBox::No)
 		{
 			QDialog::reject();
 		}
