@@ -23,9 +23,7 @@ void Calc::loadConfig()
 	if (config_file.open(QIODevice::ReadOnly | QIODevice::Text))
 	{
 		QTextStream config_str(&config_file);
-		
-		// For dealing with newlines when getting chars
-		auto eat_newline = [&](){ char nl{}; config_str >> nl; };
+		auto nl_flush = [&](){ char nl{}; config_str >> nl; };
 
 		config_str >> config_.init_value;
 
@@ -33,9 +31,9 @@ void Calc::loadConfig()
 		config_str >> init_mode_in;
 		config_.init_mode = static_cast<mode>(init_mode_in);
 
-		eat_newline();			
+		nl_flush();			
 		config_str >> config_.disp_format;
-		eat_newline();
+		nl_flush();
 		
 		config_str >> config_.display_prec;
 	}
