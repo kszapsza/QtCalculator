@@ -34,8 +34,6 @@ void Calc::loadConfig()
 		nl_flush();			
 		config_str >> config_.disp_format;
 		nl_flush();
-		
-		config_str >> config_.display_prec;
 	}
 
 	config_file.close();

@@ -4,6 +4,7 @@
 #include <cmath>
 #include <random>
 #include <chrono>
+#include <numbers>
 
 /*
 ///////////////////////////////////////////////////////////
@@ -15,24 +16,41 @@
 ///////////////////////////////////////////////////////////
 */
 
+template<typename T>
+concept Float = std::is_floating_point_v<T>;
+
+template<typename Float>
+bool flpnt_equal(const Float a, const Float b)
+	requires std::is_floating_point_v<Float>
+{
+	return std::abs(std::abs(a) - std::abs(b))
+		<= std::numeric_limits<Float>::epsilon() * std::max(std::abs(a), std::abs(b));
+}
+
+template<typename Float>
+bool flpnt_equal(const Float a, const Float b, const unsigned int factor)
+	requires std::is_floating_point_v<Float>
+{
+	return std::abs(std::abs(a) - std::abs(b))
+		<= std::numeric_limits<Float>::epsilon() * factor;
+}
+
 ///////////////////////////////////////////////////////////
 //	SCIENTIFIC BUTTONS									 //
 ///////////////////////////////////////////////////////////
 
-void Calc::piButtonPressed()
+void Calc::piButtonPressed() const
 {
 	QString pi_str{};
-	pi_str.setNum(Constants::pi, config_.disp_format, config_.display_prec);
+	pi_str.setNum(std::numbers::pi, config_.disp_format, Config::display_prec);
 	curr_display_->setText(pi_str);
-	data_.lhs = Constants::pi;
 }
 
-void Calc::eButtonPressed()
+void Calc::eButtonPressed() const
 {
 	QString e_str{};
-	e_str.setNum(Constants::e, config_.disp_format, config_.display_prec);
+	e_str.setNum(std::numbers::e, config_.disp_format, Config::display_prec);
 	curr_display_->setText(e_str);
-	data_.lhs = Constants::e;
 }
 
 void Calc::randButtonPressed()
@@ -44,41 +62,41 @@ void Calc::randButtonPressed()
 	data_.lhs = rand;
 
 	QString rand_str{};
-	rand_str.setNum(rand, config_.disp_format, config_.display_prec);
+	rand_str.setNum(rand, config_.disp_format, Config::display_prec);
 	curr_display_->setText(rand_str);
 }
 
 void Calc::logBase2ButtonPressed()
 {
-	const ldbl_ptr log2_ldbl = [](const ldbl r) -> ldbl { return std::logl(r) / std::logl(2); };
+	const dbl_ptr log2_ldbl = [](const double r) -> double { return std::logl(r) / std::logl(2); };
 	performUnaryOperation(log2_ldbl);
 }
 
 void Calc::logBase10ButtonPressed()
 {
-	performUnaryOperation(std::log10l);
+	performUnaryOperation(std::log10);
 }
 
 void Calc::lnButtonPressed()
 {
-	performUnaryOperation(std::logl);
+	performUnaryOperation(std::log);
 }
 
 void Calc::factorialButtonPressed()
 {
-	const ldbl_ptr real_fact = [](const ldbl r) -> ldbl { return std::tgamma(r + 1); };
+	const dbl_ptr real_fact = [](const double r) -> double { return std::tgamma(r + 1); };
 	performUnaryOperation(real_fact);
 }
 
 void Calc::expButtonPressed()
 {
-	const ldbl_ptr exp = [](const ldbl r) -> ldbl { return std::pow(Constants::e, r); };
+	const dbl_ptr exp = [](const double r) -> double { return std::pow(std::numbers::e, r); };
 	performUnaryOperation(exp);
 }
 
 void Calc::e10ToXButtonPressed()
 {
-	const ldbl_ptr _10_to_x = [](const ldbl r) -> ldbl { return std::pow(10, r); };
+	const dbl_ptr _10_to_x = [](const double r) -> double { return std::pow(10, r); };
 	performUnaryOperation(_10_to_x);
 }
 
@@ -105,7 +123,7 @@ void Calc::inverseButtonPressed()
 		data_.subsequent_equal_presses = 0;
 
 		// Evaluate and show inverted value.		
-		str_result.setNum(1 / data_.unary, config_.disp_format, config_.display_prec);
+		str_result.setNum(1 / data_.unary, config_.disp_format, Config::display_prec);
 	}
 	
 	curr_display_->setText(str_result);
@@ -127,29 +145,53 @@ void Calc::cosClicked()
 
 void Calc::tanClicked()
 {
-	performUnaryOperation(std::tan);
+	const double curr_display_dbl = curr_display_->text().toDouble();
+
+	// If input % pi == pi/2, raise an error.
+	const double pi_modulo = std::fmod(curr_display_dbl, std::numbers::pi);
+
+	// Factor is display value or pi (whichever is greater) because modulo precision
+	// depends on those two (and pi decision is constant).
+	[[unlikely]] if (flpnt_equal(std::fabs(pi_modulo), std::numbers::pi/2,
+		std::max(std::fabs(curr_display_dbl), std::numbers::pi)))
+	{
+		curr_display_->setText("Err");
+		ui->statusbar->showMessage("Tangent is indeterminate for multiples of pi/2!", 2000);
+	}
+	else
+	{
+		performUnaryOperation(std::tan);
+	}
 }
 
 void Calc::cotClicked()
 {
-	const ldbl_ptr ctg = [](const long double r) { return 1 / std::tan(r); };
-	
-	[[likely]] if (std::tan(curr_display_->text().toDouble()) != 0)
+	const dbl_ptr cot = [](const double r) { return 1 / std::tan(r); };
+	const auto curr_display_dbl = curr_display_->text().toDouble();
+
+	// If input % pi == 0, raise an error.
+	const double pi_modulo = std::fmod(curr_display_dbl, std::numbers::pi);
+
+	// Factor is display value or pi (whichever is greater) because modulo precision
+	// depends on those two (and pi decision is constant).
+	[[unlikely]] if (flpnt_equal(std::fabs(pi_modulo), 0.0,
+		std::max(std::fabs(curr_display_dbl), std::numbers::pi)))
 	{		
-		performUnaryOperation(ctg);
+		ui->statusbar->showMessage("Cotangent is indeterminate for multiples of pi!", 2000);
+		curr_display_->setText("Err");
 	}
 	else
 	{
-		ui->statusbar->showMessage("Cannot divide by zero!", 2000);
-		curr_display_->setText("Err");
+		performUnaryOperation(cot);
 	}
 }
 
 void Calc::secClicked()
 {
-	const ldbl_ptr sec = [](const long double r) { return 1 / std::cos(r); };
+	const dbl_ptr sec = [](const double r) { return 1 / std::cos(r); };
+	const auto curr_display_dbl = curr_display_->text().toDouble();
 	
-	[[likely]] if (std::cos(curr_display_->text().toDouble()) != 0)
+	[[likely]] if (std::cos(curr_display_dbl) != 0)
 	{
 		performUnaryOperation(sec);
 	}
@@ -162,7 +204,7 @@ void Calc::secClicked()
 
 void Calc::cscClicked()
 {
-	const ldbl_ptr csc = [](const long double r) { return 1 / std::sin(r); };
+	const dbl_ptr csc = [](const double r) { return 1 / std::sin(r); };
 	const auto curr_display_dbl = curr_display_->text().toDouble();
 	
 	[[likely]] if (std::sin(curr_display_dbl) != 0)
@@ -213,13 +255,13 @@ void Calc::arctanClicked()
 
 void Calc::arccotClicked()
 {
-	const ldbl_ptr arccot = [](const ldbl r) -> ldbl { return Constants::pi_2 - std::atan(r); };
+	const dbl_ptr arccot = [](const double r) -> double { return (std::numbers::pi / 2) - std::atan(r); };
 	performUnaryOperation(arccot);
 }
 
 void Calc::arcsecClicked()
 {
-	const ldbl_ptr arcsec = [](const ldbl r) -> ldbl { return std::acos(1 / r ); };	
+	const dbl_ptr arcsec = [](const double r) -> double { return std::acos(1 / r ); };	
 	const double curr_display_dbl = curr_display_->text().toDouble();	
 
 	[[likely]] if (curr_display_dbl != 0)
@@ -246,7 +288,7 @@ void Calc::arcsecClicked()
 
 void Calc::arccscClicked()
 {
-	const ldbl_ptr arccsc = [](const ldbl r) -> ldbl { return std::asin(1 / r ); };	
+	const dbl_ptr arccsc = [](const double r) -> double { return std::asin(1 / r ); };	
 	const double curr_display_dbl = curr_display_->text().toDouble();
 
 	[[likely]] if (curr_display_dbl != 0)
@@ -273,22 +315,22 @@ void Calc::arccscClicked()
 
 void Calc::sinhClicked()
 {
-	performUnaryOperation(std::sinhl);
+	performUnaryOperation(std::sinh);
 }
 
 void Calc::coshClicked()
 {
-	performUnaryOperation(std::coshl);
+	performUnaryOperation(std::cosh);
 }
 
 void Calc::tanhClicked()
 {
-	performUnaryOperation(std::tanhl);
+	performUnaryOperation(std::tanh);
 }
 
 void Calc::cothClicked()
 {
-	const ldbl_ptr coth = [](const ldbl r) -> ldbl { return std::coshl(r) / std::sinhl(r); };
+	const dbl_ptr coth = [](const double r) -> double { return std::coshl(r) / std::sinhl(r); };
 	const double curr_display_dbl = curr_display_->text().toDouble();
 
 	[[likely]] if (std::sinhl(curr_display_dbl) != 0)
@@ -304,13 +346,13 @@ void Calc::cothClicked()
 
 void Calc::sechClicked()
 {
-	const ldbl_ptr sech = [](const ldbl r) noexcept -> ldbl { return 1 / std::coshl(r); };	
+	const dbl_ptr sech = [](const double r) noexcept -> double { return 1 / std::coshl(r); };	
 	performUnaryOperation(sech);
 }
 
 void Calc::cschClicked()
 {
-	const ldbl_ptr csch = [](const ldbl r) -> ldbl { return 1 / std::sinhl(r); };
+	const dbl_ptr csch = [](const double r) -> double { return 1 / std::sinhl(r); };
 	const double curr_display_dbl = curr_display_->text().toDouble();
 
 	[[likely]] if (std::sinhl(curr_display_dbl) != 0)
@@ -326,7 +368,7 @@ void Calc::cschClicked()
 
 void Calc::arsinhClicked()
 {
-	performUnaryOperation(std::asinhl);
+	performUnaryOperation(std::asinh);
 }
 
 void Calc::arcoshClicked()
@@ -335,7 +377,7 @@ void Calc::arcoshClicked()
 	
 	[[likely]] if (curr_display_dbl >= 1)
 	{
-		performUnaryOperation(std::acoshl);
+		performUnaryOperation(std::acosh);
 	}
 	else
 	{
@@ -351,7 +393,7 @@ void Calc::artanhClicked()
 	
 	[[likely]] if (curr_display_dbl > -1 && curr_display_dbl < 1)
 	{
-		performUnaryOperation(std::atanhl);
+		performUnaryOperation(std::atanh);
 	}
 	else
 	{
@@ -363,7 +405,7 @@ void Calc::artanhClicked()
 
 void Calc::arcothClicked()
 {
-	const ldbl_ptr arcoth = [](const ldbl r) -> ldbl
+	const dbl_ptr arcoth = [](const double r) -> double
 	{
 		return 0.5 * std::log((r+1)/(r-1));
 	};
@@ -384,7 +426,7 @@ void Calc::arcothClicked()
 
 void Calc::arsechClicked()
 {
-	const ldbl_ptr arsech = [](const ldbl r) -> ldbl
+	const dbl_ptr arsech = [](const double r) -> double
 	{
 		return std::log(std::sqrt((1/r) - 1) * std::sqrt((1/r) + 1) + (1/r));
 	};
@@ -405,7 +447,7 @@ void Calc::arsechClicked()
 
 void Calc::arcschClicked()
 {
-	const ldbl_ptr arcsch = [](const ldbl r) -> ldbl
+	const dbl_ptr arcsch = [](const double r) -> double
 	{
 		return std::log(std::sqrt(1 + (1 / (r*r))) + (1/r));
 	};

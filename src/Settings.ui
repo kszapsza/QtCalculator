@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>408</width>
-    <height>191</height>
+    <height>182</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -35,7 +35,7 @@
      <x>10</x>
      <y>10</y>
      <width>301</width>
-     <height>171</height>
+     <height>161</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="settingsVerticalLayout">
@@ -100,24 +100,10 @@
          <x>10</x>
          <y>20</y>
          <width>251</width>
-         <height>51</height>
+         <height>31</height>
         </rect>
        </property>
        <layout class="QGridLayout" name="settingsOnStartupGrid">
-        <item row="1" column="0">
-         <widget class="QLabel" name="settingsDispPrecisionLabel">
-          <property name="text">
-           <string>Display precision</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="settingsDispFormatLabel">
-          <property name="text">
-           <string>Display format</string>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="1">
          <widget class="QComboBox" name="settingsDispFormat">
           <item>
@@ -147,8 +133,12 @@
           </item>
          </widget>
         </item>
-        <item row="1" column="1">
-         <widget class="QSpinBox" name="settingsDispPrecision"/>
+        <item row="0" column="0">
+         <widget class="QLabel" name="settingsDispFormatLabel">
+          <property name="text">
+           <string>Display format</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

@@ -34,7 +34,6 @@ Settings::Settings(Calc *parent) :
 	const QMap<int, char> disp_format_itoc = { {0, 'e'}, {1, 'E'}, {2, 'f'}, {3, 'g'}, {4, 'G'} };
 
 	ui->settingsDispFormat->setCurrentIndex(disp_format_ctoi[parent->config_.disp_format]);
-	ui->settingsDispPrecision->setValue(parent->config_.display_prec);
 
 	connect(ui->settingsInitValue, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
 		[=](const double settings_init_value)
@@ -57,13 +56,6 @@ Settings::Settings(Calc *parent) :
 			changes_made_ = true;
 		});
 
-	connect(ui->settingsDispPrecision, QOverload<int>::of(&QSpinBox::valueChanged),
-		[=](const int settings_disp_prec)
-		{
-			unsaved_config_.display_prec = settings_disp_prec;
-			changes_made_ = true;
-		});
-
 	connect(ui->settingsButtons, SIGNAL(accepted()),
 		this, SLOT(saveConfig()));	
 }
@@ -80,7 +72,6 @@ void Settings::saveConfig() const
 		calc_->config_.init_value = unsaved_config_.init_value;
 		calc_->config_.init_mode = unsaved_config_.init_mode;
 		calc_->config_.disp_format = unsaved_config_.disp_format;
-		calc_->config_.display_prec = unsaved_config_.display_prec;
 		
 		QFile config_file("config.dat");
 
@@ -91,7 +82,6 @@ void Settings::saveConfig() const
 			config_str << calc_->config_.init_value << '\n';
 			config_str << static_cast<int>(calc_->config_.init_mode) << '\n';
 			config_str << calc_->config_.disp_format << '\n';
-			config_str << calc_->config_.display_prec << '\n';
 		}
 		
 		// Clear input as operations can work bad after changing formatting.

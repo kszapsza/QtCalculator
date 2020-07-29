@@ -21,29 +21,7 @@ namespace Ui { class Calc; }
 QT_END_NAMESPACE
 
 #define CONSTANT static constexpr double
-
-typedef long double ldbl;
-typedef long double (*ldbl_ptr)(long double);
-
-/// CONSTANTS ///
-
-struct Constants
-{	
-	CONSTANT pi        = 3.141592653589793238463;
-	CONSTANT pi_2      = 1.570796326794896619231;
-	CONSTANT pi_4      = 0.785398163397448309616;
-	CONSTANT _1_pi     = 0.318309886183790671538;
-	CONSTANT _2_pi     = 0.636619772367581343076;
-	CONSTANT _2_sqrtpi = 1.128379167095512573896;
-	CONSTANT sqrt2     = 1.414213562373095048802;
-	CONSTANT _1_sqrt2  = 0.707106781186547524401;
-	CONSTANT sqrt3     = 1.732050807568877293527;
-	CONSTANT e         = 2.718281828459045235360;
-	CONSTANT log2_e    = 1.442695040888963407360;
-	CONSTANT log10_e   = 0.434294481903251827651;
-	CONSTANT ln2       = 0.693147180559945309417;
-	CONSTANT ln10      = 2.302585092994045684018;
-};
+typedef double (*dbl_ptr)(double);
 
 enum class operation : int
 {
@@ -61,7 +39,10 @@ struct Config
 	double init_value{ 0.0 };
 	mode init_mode{ mode::scientific };
 	char disp_format{ 'g' };
-	int display_prec{ 15 };	
+
+	// Higher precision doesn't make sense for doubles,
+	// lower precision causes severe problems with functions.
+	static constexpr int display_prec{ 18 };
 };
 
 struct Data
@@ -70,7 +51,7 @@ struct Data
 	bool sequential_operation{ false };
 	
 	// Allows to perform sequential operations such as 2*3[=][=][=] = 54.
-	uint8_t subsequent_equal_presses{ false };
+	uint8_t subsequent_equal_presses{ 0 };
 
 	double last_result{ 0.0 };
 
@@ -106,7 +87,7 @@ private:
 	void loadConfig();
 
 	[[nodiscard]] QString performBinaryOperation();
-	void performUnaryOperation(ldbl_ptr func);
+	void performUnaryOperation(dbl_ptr func);
 
 	friend class Settings;
 
@@ -138,8 +119,8 @@ private slots:
 
 // scientificCalc.cpp
 
-	void piButtonPressed();
-	void eButtonPressed();
+	void piButtonPressed() const;
+	void eButtonPressed() const;
 	void randButtonPressed();
 	
 	void logBase2ButtonPressed();

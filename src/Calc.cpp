@@ -68,40 +68,42 @@ void Calc::menuViewScientificTriggered()
 
 // Putting numbers in using [0~9] buttons.
 void Calc::numButtonPressed()
-{
-	// Reset [=] presses count.
-	data_.subsequent_equal_presses = 0;
-	
+{	
 	// Establish pointer to the button pressed.
 	const auto *button = dynamic_cast<QPushButton*>(sender());
 	const QString button_value = button->text();
 	const QString display_value = curr_display_->text();
-
 	
 	QString formatted_lhs_value{};
-	formatted_lhs_value.setNum(data_.lhs, config_.disp_format, config_.display_prec);
+	formatted_lhs_value.setNum(data_.lhs, config_.disp_format, Config::display_prec);
 
 	QString formatted_last_result{};
-	formatted_last_result.setNum(data_.last_result, config_.disp_format, config_.display_prec);
+	formatted_last_result.setNum(data_.last_result, config_.disp_format, Config::display_prec);
 
-	// CONCATENATION CONDITIONS: compare display value...
+	// SUBSTITUTION CONDITIONS: compare display value...
 	// 1st: ...to lhs ignoring formatting mode (user input is always in basic format),
 	// 2nd: ...to lhs taking into account format (formatted results might be in lhs),
 	// 3rd: ...to initial value w/o formatting,
-	// 4th: ...to last result with formatting.
+	// 4th: ...to last result with formatting,
+	// 5th: ...errors.
 	 
 	if (display_value == QString::number(data_.lhs) 
 		|| display_value == formatted_lhs_value
 		|| display_value == QString::number(config_.init_value)
-		|| display_value == formatted_last_result)
+		|| (display_value == formatted_last_result && data_.subsequent_equal_presses)
+		|| display_value == "Err" || display_value == "nan" || display_value == "Inf")
 	{
 		curr_display_->setText(button_value);
 	}
+	// ELSE CONCATENATE
 	else
 	{
 		const QString new_value = display_value + button_value;
 		curr_display_->setText(new_value);
 	}
+	
+	// Reset [=] presses count.
+	data_.subsequent_equal_presses = 0;
 }
 
 void Calc::commaButtonPressed()
@@ -164,7 +166,7 @@ void Calc::commaButtonPressed()
 	if (!err)
 	{
 		data_.last_result = result;
-		str_result.setNum(result, config_.disp_format, config_.display_prec);
+		str_result.setNum(result, config_.disp_format, Config::display_prec);
 	}
 	else
 	{
@@ -294,7 +296,7 @@ void Calc::percentButtonPressed()
 	if (!err)
 	{
 		data_.last_result = result;
-		str_result.setNum(result, config_.disp_format, config_.display_prec);
+		str_result.setNum(result, config_.disp_format, Config::display_prec);
 	}
 	else
 	{
@@ -310,18 +312,19 @@ void Calc::percentButtonPressed()
 //	SINGLE-ARGUMENT OPERATIONS (BASIC)					 //
 ///////////////////////////////////////////////////////////
 
-void Calc::performUnaryOperation(const ldbl_ptr func)
+void Calc::performUnaryOperation(const dbl_ptr func)
 {
-	// Reset [=] presses count.
 	data_.subsequent_equal_presses = 0;
-	
-	// Save current display state as base value.
 	data_.unary = curr_display_->text().toDouble();
 	
-	const double result = data_.last_result = static_cast<double>(func(data_.unary));
+	double result = data_.last_result = static_cast<double>(func(data_.unary));
+
+	// Round to zero if result is less than epsilon
+    const double epsilon = std::numeric_limits<double>::epsilon() * std::fabs(result);
+    result = result <= epsilon ? 0 : result;
 	
 	QString str_result{};
-	str_result.setNum(result, config_.disp_format, config_.display_prec);
+	str_result.setNum(result, config_.disp_format, Config::display_prec);
 	
 	curr_display_->setText(str_result);
 }
@@ -329,7 +332,7 @@ void Calc::performUnaryOperation(const ldbl_ptr func)
 // Square button [x²].
 void Calc::squareButtonPressed()
 {
-	const ldbl_ptr square = [](const ldbl x){ return std::pow(x, 2); };
+	const dbl_ptr square = [](const double x){ return std::pow(x, 2); };
 	performUnaryOperation(square);
 }
 
@@ -356,16 +359,17 @@ void Calc::backspaceButtonPressed() const
 // Clearing the display and buffer with [C] button.
 void Calc::clearButtonPressed()
 {
-	// Reset [=] presses count.
-	data_.subsequent_equal_presses = 0;
-	
 	// Clear the display.
 	curr_display_->setText(QString::number(config_.init_value));
 
-	// Flush the buffer.
+	// Reset data.
+	data_.sequential_operation = false;
+	data_.subsequent_equal_presses = 0;
 	data_.op_decision = operation::none;
 	data_.lhs = 0.0;
 	data_.rhs = 1.0;
+	data_.unary = 0.0;
+	data_.last_result = 0.0;
 }
 
 // Changing display value sign with [±] button.
@@ -376,7 +380,7 @@ void Calc::signButtonPressed()
 
 	// Remove or add minus sign on display.	
 	QString curr_value = curr_display_->text();
-	QString new_value{};
+	QString new_value;
 	
 	if (curr_value[0] == '-')
 	{
