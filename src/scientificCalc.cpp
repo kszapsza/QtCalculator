@@ -16,11 +16,8 @@
 ///////////////////////////////////////////////////////////
 */
 
-template<typename T>
-concept Float = std::is_floating_point_v<T>;
-
 template<typename Float>
-bool flpnt_equal(const Float a, const Float b)
+bool nearly_equal(const Float a, const Float b)
 	requires std::is_floating_point_v<Float>
 {
 	return std::abs(std::abs(a) - std::abs(b))
@@ -28,7 +25,7 @@ bool flpnt_equal(const Float a, const Float b)
 }
 
 template<typename Float>
-bool flpnt_equal(const Float a, const Float b, const unsigned int factor)
+bool nearly_equal(const Float a, const Float b, const unsigned int factor)
 	requires std::is_floating_point_v<Float>
 {
 	return std::abs(std::abs(a) - std::abs(b))
@@ -152,7 +149,7 @@ void Calc::tanClicked()
 
 	// Factor is display value or pi (whichever is greater) because modulo precision
 	// depends on those two (and pi decision is constant).
-	[[unlikely]] if (flpnt_equal(std::fabs(pi_modulo), std::numbers::pi/2,
+	[[unlikely]] if (nearly_equal(std::fabs(pi_modulo), std::numbers::pi/2,
 		std::max(std::fabs(curr_display_dbl), std::numbers::pi)))
 	{
 		curr_display_->setText("Err");
@@ -174,7 +171,7 @@ void Calc::cotClicked()
 
 	// Factor is display value or pi (whichever is greater) because modulo precision
 	// depends on those two (and pi decision is constant).
-	[[unlikely]] if (flpnt_equal(std::fabs(pi_modulo), 0.0,
+	[[unlikely]] if (nearly_equal(std::fabs(pi_modulo), 0.0,
 		std::max(std::fabs(curr_display_dbl), std::numbers::pi)))
 	{		
 		ui->statusbar->showMessage("Cotangent is indeterminate for multiples of pi!", 2000);
