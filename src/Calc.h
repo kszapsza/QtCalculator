@@ -20,8 +20,49 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class Calc; }
 QT_END_NAMESPACE
 
+/// TYPEDEFS ///
+
 #define CONSTANT static constexpr double
 typedef double (*dbl_ptr)(double);
+
+/// UTILITY FUNCTIONS ///
+
+// Compares if two floats (a, b) are nearly equal with precision of epsilon
+// automatically multiplied by a or b, whichever is greater.
+// This won't work accurately enough if a and b precision depends on
+// some previous operations, use second overload with custom factor instead then.
+//
+// Gives satisfying results indepentently of order of magnitude
+// of pair (a, b), but may work unexpectedly if their individual order differs hugely.
+
+template<typename Float>
+bool nearly_equal(const Float a, const Float b)
+	requires std::is_floating_point_v<Float>
+{
+	return std::abs(std::abs(a) - std::abs(b))
+		<= std::numeric_limits<Float>::epsilon() * std::max(std::abs(a), std::abs(b));
+}
+
+// Compares if two floats (a, b) are nearly equal with precision of epsilon
+// multiplied by custom factor (eps_factor). Useful, if either a or b
+// precision is already result of some previous operation, consider:
+// 
+//	a = std::sin(x), then epsilon factor might be set to std::fabs(x), or e.g.:
+//	b = std::fmod(x, y), then std::max(std::fabs(x), std::fabs(y)) may be used
+//	as a coefficient.
+//
+// Gives satisfying results indepentently of order of magnitude of pair (a, b),
+// but may work unexpectedly if their *individual* order of magnitude differs strongly.
+
+template<typename Float>
+bool nearly_equal(const Float a, const Float b, const Float eps_factor)
+	requires std::is_floating_point_v<Float>
+{
+	return std::abs(std::abs(a) - std::abs(b))
+		<= std::numeric_limits<Float>::epsilon() * eps_factor;
+}
+
+/// ENUMERATION TYPES ///
 
 enum class operation : int
 {
@@ -33,6 +74,8 @@ enum class mode : int
 {
 	basic = 0, scientific = 1
 };
+
+/// STRUCTURES ///
 
 struct Config
 {
@@ -67,6 +110,8 @@ struct Data
 	operation op_decision{ operation::none };
 };
 
+/// CALC ///
+
 class Calc final : public QMainWindow
 {
     Q_OBJECT
@@ -86,7 +131,7 @@ private:
 
 	void loadConfig();
 
-	[[nodiscard]] QString performBinaryOperation();
+	[[nodiscard]] QString performBinaryOperation();	
 	void performUnaryOperation(dbl_ptr func);
 
 	friend class Settings;

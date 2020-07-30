@@ -312,16 +312,14 @@ void Calc::percentButtonPressed()
 //	SINGLE-ARGUMENT OPERATIONS (BASIC)					 //
 ///////////////////////////////////////////////////////////
 
+// Evaluates unary operation from data_.unary and shows result.
 void Calc::performUnaryOperation(const dbl_ptr func)
 {
-	data_.subsequent_equal_presses = 0;
-	data_.unary = curr_display_->text().toDouble();
-	
+	data_.subsequent_equal_presses = 0;	
 	double result = data_.last_result = static_cast<double>(func(data_.unary));
 
-	// Round to zero if result is less than epsilon
-    const double epsilon = std::numeric_limits<double>::epsilon() * std::fabs(result);
-    result = result <= epsilon ? 0 : result;
+	// Round to zero if unaryresult is less than epsilon
+	result = nearly_equal(result, 0.0, std::fabs(data_.unary)) ? 0.0 : result;
 	
 	QString str_result{};
 	str_result.setNum(result, config_.disp_format, Config::display_prec);
