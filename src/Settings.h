@@ -1,7 +1,12 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#ifndef CALC_TESTS
 #include "./ui_Settings.h"
+#else
+// ?
+#endif // CALC_TESTS
+
 #include "Calc.h"
 
 namespace Ui { class Settings; }

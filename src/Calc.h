@@ -1,10 +1,15 @@
 ﻿#ifndef CALC_H
 #define CALC_H
 
+#ifndef CALC_TESTS
 #include "./ui_Calc.h"
+#else
+// ?
+#endif // CALC_TESTS
 
 #include <QMainWindow>
 #include <QActionGroup>
+#include <QLineEdit>
 
 /*
 ///////////////////////////////////////////////////////////
@@ -32,8 +37,8 @@ typedef double (*dbl_ptr)(double);
 // This won't work accurately enough if a and b precision depends on
 // some previous operations, use second overload with custom factor instead then.
 //
-// Gives satisfying results indepentently of order of magnitude
-// of pair (a, b), but may work unexpectedly if their individual order differs hugely.
+// Gives satisfying results indepentently of order of magnitude of pair (a, b),
+// but may work unexpectedly if their *individual* order of magnitude differs strongly.
 
 template<typename Float>
 bool nearly_equal(const Float a, const Float b)
@@ -88,17 +93,14 @@ struct Config
 	static constexpr int display_prec{ 18 };
 };
 
-struct Data
+class Data
 {
 	// Allows to perform sequential operations such as 2*2*2 = 8
-	bool sequential_operation{ false };
-	
+	bool sequential_operation{ false };	
 	// Allows to perform sequential operations such as 2*3[=][=][=] = 54.
 	uint8_t subsequent_equal_presses{ 0 };
 
 	double last_result{ 0.0 };
-
-	// Buffer for operations.
 	double lhs{ 0.0 };
 	double rhs{ 1.0 };
 	double unary{ 0.0 };
@@ -106,8 +108,59 @@ struct Data
 	// Data::memory for [MRC], [M+], [M−] buttons.
 	double memory{ 0.0 };
 
-	// Operation decision memory for two-argument operations.
+	// Operation decision memory for binary operations.
 	operation op_decision{ operation::none };
+
+public:
+
+/// GETTERS ///
+
+	[[nodiscard]] bool isInSequentialOperation() const		{ return sequential_operation; }
+	[[nodiscard]] uint8_t getSubsequentEqualPresses() const	{ return subsequent_equal_presses; }
+	[[nodiscard]] double getLastResult() const				{ return last_result; }
+	[[nodiscard]] double getLhs() const						{ return lhs; }
+	[[nodiscard]] double getRhs() const						{ return rhs; }
+	[[nodiscard]] double getUnary() const					{ return unary; }
+	[[nodiscard]] double getMemory() const					{ return memory; }
+	[[nodiscard]] operation getOpDecision() const			{ return op_decision; }
+
+/// SETTERS ///
+
+#ifdef CALC_TESTS // Unit tests only!
+	void setLhs(const double lhs)							{ this->lhs = lhs; }
+	void setRhs(const double rhs)							{ this->rhs = rhs; }
+	void setUnary(const double unary)						{ this->unary = unary; }
+#endif	
+
+	// We only want to set values in data if shown on display!
+	void takeLhsFromDisp(const QLineEdit* const disp) 		{ lhs = disp->text().toDouble(); }
+	void takeRhsFromDisp(const QLineEdit* const disp)		{ rhs = disp->text().toDouble(); }
+	void takeUnaryFromDisp(const QLineEdit* const disp)		{ unary = disp->text().toDouble(); }
+
+	void setLastResult(const double result)					{ this->last_result = result; }
+	void setOpDecision(const operation op)					{ op_decision = op; }
+
+	void beginSequential()									{ sequential_operation = true; }
+	void endSequential()									{ sequential_operation = false; }
+
+	void subsequentEqualPressesIncrement()					{ ++subsequent_equal_presses; }
+	void resetSubsequentEqualPresses()						{ subsequent_equal_presses = 0; }
+
+	void reset()
+	{
+		sequential_operation = false;
+		subsequent_equal_presses = 0;
+		last_result = 0.0;
+		lhs = 0.0;
+		rhs = 1.0;
+		unary = 0.0;
+		memory = 0.0;
+		op_decision = operation::none;
+	}
+		
+	void addToMemory (const double mem)						{ memory += mem; }
+	void subtractFromMemory (const double mem)				{ memory -= mem; }
+	void resetMemory()										{ memory = 0.0; }
 };
 
 /// CALC ///
@@ -119,12 +172,12 @@ class Calc final : public QMainWindow
 public:
 	explicit Calc(QWidget *parent = nullptr);
     ~Calc() override;
+		
+	Data data_;
 	
 private:
     Ui::Calc *ui;
-	
 	Config config_{};
-	Data data_;
 	
 	QActionGroup* calc_modes_;
 	QLineEdit* curr_display_;
