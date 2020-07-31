@@ -44,8 +44,11 @@ template<typename Float>
 bool nearly_equal(const Float a, const Float b)
 	requires std::is_floating_point_v<Float>
 {
-	return std::abs(std::abs(a) - std::abs(b))
-		<= std::numeric_limits<Float>::epsilon() * std::max(std::abs(a), std::abs(b));
+	const auto abs_a = std::abs(a);
+	const auto abs_b = std::abs(b);
+	
+	return std::abs(abs_a - abs_b)
+		<= std::numeric_limits<Float>::epsilon() * std::max(abs_a, abs_b);
 }
 
 // Compares if two floats (a, b) are nearly equal with precision of epsilon
@@ -63,7 +66,10 @@ template<typename Float>
 bool nearly_equal(const Float a, const Float b, const Float eps_factor)
 	requires std::is_floating_point_v<Float>
 {
-	return std::abs(std::abs(a) - std::abs(b))
+	const auto abs_a = std::abs(a);
+	const auto abs_b = std::abs(b);
+	
+	return std::abs(abs_a - abs_b)
 		<= std::numeric_limits<Float>::epsilon() * eps_factor;
 }
 
@@ -90,7 +96,7 @@ struct Config
 
 	// Higher precision doesn't make sense for doubles,
 	// lower precision causes severe problems with functions.
-	static constexpr int display_prec{ 18 };
+	static constexpr int display_prec{ 17 };
 };
 
 class Data
@@ -126,7 +132,7 @@ public:
 
 /// SETTERS ///
 
-#ifdef CALC_TESTS // Unit tests only!
+#ifdef CALC_TESTS
 	void setLhs(const double lhs)							{ this->lhs = lhs; }
 	void setRhs(const double rhs)							{ this->rhs = rhs; }
 	void setUnary(const double unary)						{ this->unary = unary; }
@@ -170,27 +176,31 @@ class Calc final : public QMainWindow
     Q_OBJECT
 
 public:
+	
 	explicit Calc(QWidget *parent = nullptr);
     ~Calc() override;
-		
-	Data data_;
 	
+	class Data data_{};
+	struct Config config_{};
+		
+	[[nodiscard]] QString performBinaryOperation();	
+	void performUnaryOperation(dbl_ptr func);
+	
+    [[nodiscard]] Ui::Calc* getUi() const				{ return ui; }
+    [[nodiscard]] QActionGroup* getCalcModes() const	{ return calc_modes_; }
+    [[nodiscard]] QLineEdit* getCurrDisplay() const		{ return curr_display_; }
+
 private:
-    Ui::Calc *ui;
-	Config config_{};
+	
+	Ui::Calc *ui;
 	
 	QActionGroup* calc_modes_;
 	QLineEdit* curr_display_;
 
-	void loadConfig();
-
-	[[nodiscard]] QString performBinaryOperation();	
-	void performUnaryOperation(dbl_ptr func);
-
+	void loadConfig();	
 	friend class Settings;
 
-private slots:
-	
+public slots:
 // basicCalc.cpp
 	
 	void numButtonPressed();
