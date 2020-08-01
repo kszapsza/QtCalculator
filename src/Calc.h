@@ -25,9 +25,6 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class Calc; }
 QT_END_NAMESPACE
 
-/// TYPEDEFS ///
-
-#define CONSTANT static constexpr double
 typedef double (*dbl_ptr)(double);
 
 /// UTILITY FUNCTIONS ///
@@ -229,7 +226,7 @@ public slots:
 
 	void piButtonPressed() const;
 	void eButtonPressed() const;
-	void randButtonPressed();
+	void randButtonPressed() const;
 	
 	void logBase2ButtonPressed();
 	void logBase10ButtonPressed();

@@ -34,7 +34,7 @@ void Calc::eButtonPressed() const
 	curr_display_->setText(e_str);
 }
 
-void Calc::randButtonPressed()
+void Calc::randButtonPressed() const
 {
 	const auto seed = std::chrono::steady_clock::now().time_since_epoch().count();
     std::minstd_rand eng(seed);

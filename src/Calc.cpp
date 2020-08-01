@@ -314,9 +314,16 @@ void Calc::performUnaryOperation(const dbl_ptr func)
 	data_.resetSubsequentEqualPresses();	
 	data_.setLastResult(static_cast<double>(func(data_.getUnary())));
 	
-	// Round to zero if unaryresult is less than epsilon.
+	// Round to zero if unary result is less than epsilon.
 	double result = data_.getLastResult();
+	
 	result = nearly_equal(result, 0.0, std::fabs(data_.getUnary())) ? 0.0 : result;
+
+	/*if (const double nextafter = std::nextafter(result, std::numeric_limits<double>::max());
+		nearly_equal(std::fmod(nextafter, 1), 0.0, nextafter))
+	{
+		result = nextafter;
+	}*/
 	
 	QString str_result{};
 	str_result.setNum(result, config_.disp_format, Config::display_prec);
@@ -328,12 +335,14 @@ void Calc::performUnaryOperation(const dbl_ptr func)
 void Calc::squareButtonPressed()
 {
 	const dbl_ptr square = [](const double x){ return std::pow(x, 2); };
+	data_.takeUnaryFromDisp(curr_display_);
 	performUnaryOperation(square);
 }
 
 // Square root button [√‾].
 void Calc::sqrtButtonPressed()
 {
+	data_.takeUnaryFromDisp(curr_display_);
 	performUnaryOperation(std::sqrt);
 }
 
