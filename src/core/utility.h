@@ -1,5 +1,4 @@
 #pragma once
-#include <cmath>
 
 /*
 ///////////////////////////////////////////////////////////
@@ -55,12 +54,12 @@ namespace core
 			<= std::numeric_limits<Float>::epsilon() * eps_factor;
 	}
 
-	inline double square(double r) noexcept;
+	double square(double r) noexcept;
 	double rand();
-	inline double log2(double r) noexcept;
-	inline double real_fact(double r);
-	inline double exp(double r) noexcept;
-	inline double _10_to_x(double r) noexcept;
+	double log2(double r) noexcept;
+	double real_fact(double r);
+	double exp(double r) noexcept;
+	double _10_to_x(double r) noexcept;
 	double inv(double r);
 	
 	double tan(double r);
@@ -70,12 +69,12 @@ namespace core
 	
 	double asin(double r);
 	double acos(double r);
-	inline double acot(double r) noexcept;
+	double acot(double r) noexcept;
 	double asec(double r);
 	double acsc(double r);
 	
 	double coth(double r);
-	inline double sech(double r) noexcept;
+	double sech(double r) noexcept;
 	double csch(double r);
 	
 	double acosh(double r);
@@ -83,4 +82,4 @@ namespace core
 	double acoth(double r);
 	double asech(double r);
 	double acsch(double r);
-}
+} // namespace core

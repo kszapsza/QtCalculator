@@ -85,7 +85,7 @@ void CalcCore::loadConfig()
 }
 
 // Evaluates unary operation from data_.unary and shows result.
-double CalcCore::performUnaryOperation(const dbl_ptr func)
+double CalcCore::performUnaryOperation(double (*func)(double))
 {
 	data.resetSubsequentEqualPresses();
 	data.setLastResult(static_cast<double>(func(data.getUnary())));

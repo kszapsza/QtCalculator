@@ -7,39 +7,39 @@
 
 namespace core
 {
-	inline double square(const double r) noexcept
+	double square(const double r) noexcept
 	{
 		return r * r;
 	}
 	
 	// Generates random real number between 0 and 1.
 	double rand()
-	{
+	{	
 		const auto seed = std::chrono::steady_clock::now().time_since_epoch().count();
 	    std::minstd_rand eng(seed);
 		return static_cast<double>(eng()) / std::minstd_rand::max();
 	}
 
 	// Evaluates log base 2 logarithm.
-	inline double log2(const double r) noexcept
+	double log2(const double r) noexcept
 	{
 		return std::log(r) / std::log(2.0);
 	}
 
 	// Evaluates factorial for any real number.
-	inline double real_fact(const double r)
+	double real_fact(const double r)
 	{
 		return std::tgamma(r + 1);
 	}
 
 	// Exponential function (e base).
-	inline double exp(const double r) noexcept
+	double exp(const double r) noexcept
 	{
 		return std::pow(std::numbers::e, r);
 	}
 
 	// Exponential function (10 base).
-	inline double _10_to_x(const double r) noexcept
+	double _10_to_x(const double r) noexcept
 	{
 		return std::pow(10, r);
 	}
@@ -101,7 +101,7 @@ namespace core
 		return std::acos(r);
 	}
 
-	inline double acot(const double r) noexcept
+	double acot(const double r) noexcept
 	{		
 		return std::numbers::pi / 2 - std::atan(r);
 	}
@@ -130,7 +130,7 @@ namespace core
 		return std::cosh(r) / std::sinh(r);
 	}
 	
-	inline double sech(const double r) noexcept
+	double sech(const double r) noexcept
 	{		
 		return 1 / std::cosh(r);
 	}
@@ -182,4 +182,4 @@ namespace core
 		
 		return std::log(std::sqrt(1 + (1 / (r*r))) + (1/r));
 	}
-}
+} // namespace core

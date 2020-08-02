@@ -120,6 +120,6 @@ struct CalcCore
 	void loadConfig();	
 	
 	[[nodiscard]] double performBinaryOperation() const;
-	[[nodiscard]] double performUnaryOperation(dbl_ptr func);
+	[[nodiscard]] double performUnaryOperation(double (*func)(double));
 	[[nodiscard]] QString toQString(double dbl_result) const;
 };

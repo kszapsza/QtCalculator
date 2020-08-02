@@ -14,5 +14,7 @@ add_executable(Calc_tst
     ../src/gui/Settings.ui
     ../src/core/core.cpp
     ../src/core/core.h
+    ../src/core/utility.h
+    ../src/core/utility.cpp
 )
 target_link_libraries(Calc_tst PRIVATE ${SRC} gtest Qt5::Widgets)
