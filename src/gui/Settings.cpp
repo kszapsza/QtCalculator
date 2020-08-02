@@ -25,15 +25,15 @@ Settings::Settings(Calc *parent) :
     ui->setupUi(this);
 
 	calc_ = parent;
-	unsaved_config_ = parent->config_;
+	unsaved_config_ = *parent->config_;
 
-	ui->settingsInitValue->setValue(parent->config_.init_value);
-	ui->settingsInitMode->setCurrentIndex(static_cast<int>(parent->config_.init_mode));
+	ui->settingsInitValue->setValue(parent->config_->init_value);
+	ui->settingsInitMode->setCurrentIndex(static_cast<int>(parent->config_->init_mode));
 
 	const QMap<char, int> disp_format_ctoi = { {'e', 0}, {'E', 1}, {'f', 2}, {'g', 3}, {'G', 4} };
 	const QMap<int, char> disp_format_itoc = { {0, 'e'}, {1, 'E'}, {2, 'f'}, {3, 'g'}, {4, 'G'} };
 
-	ui->settingsDispFormat->setCurrentIndex(disp_format_ctoi[parent->config_.disp_format]);
+	ui->settingsDispFormat->setCurrentIndex(disp_format_ctoi[parent->config_->disp_format]);
 
 	connect(ui->settingsInitValue, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
 		[=](const double settings_init_value)

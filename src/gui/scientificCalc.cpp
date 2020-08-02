@@ -23,14 +23,14 @@
 void Calc::piButtonPressed() const
 {
 	QString pi_str{};
-	pi_str.setNum(std::numbers::pi, config_.disp_format, Config::display_prec);
+	pi_str.setNum(std::numbers::pi, core_->config.disp_format, Config::display_prec);
 	curr_display_->setText(pi_str);
 }
 
 void Calc::eButtonPressed() const
 {
 	QString e_str{};
-	e_str.setNum(std::numbers::e, config_.disp_format, Config::display_prec);
+	e_str.setNum(std::numbers::e, core_->config.disp_format, Config::display_prec);
 	curr_display_->setText(e_str);
 }
 
@@ -42,64 +42,64 @@ void Calc::randButtonPressed() const
 	const auto rand = static_cast<double>(eng()) / std::minstd_rand::max();
 
 	QString rand_str{};
-	rand_str.setNum(rand, config_.disp_format, Config::display_prec);
+	rand_str.setNum(rand, core_->config.disp_format, Config::display_prec);
 	curr_display_->setText(rand_str);
 }
 
 void Calc::logBase2ButtonPressed()
 {
 	const dbl_ptr log2_ldbl = [](const double r) -> double { return std::log(r) / std::log(2); };
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	performUnaryOperation(log2_ldbl);
 }
 
 void Calc::logBase10ButtonPressed()
 {
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	performUnaryOperation(std::log10);
 }
 
 void Calc::lnButtonPressed()
 {
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	performUnaryOperation(std::log);
 }
 
 void Calc::factorialButtonPressed()
 {
 	const dbl_ptr real_fact = [](const double r) -> double { return std::tgamma(r + 1); };	
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	performUnaryOperation(real_fact);
 }
 
 void Calc::expButtonPressed()
 {
 	const dbl_ptr exp = [](const double r) -> double { return std::pow(std::numbers::e, r); };	
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	performUnaryOperation(exp);
 }
 
 void Calc::e10ToXButtonPressed()
 {
 	const dbl_ptr _10_to_x = [](const double r) -> double { return std::pow(10, r); };
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	performUnaryOperation(_10_to_x);
 }
 
 void Calc::absButtonPressed()
 {
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	performUnaryOperation(std::fabs);
 }
 
 void Calc::inverseButtonPressed()
 {
 	// Save current display state as argument.
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 
 	QString str_result{};
 	
-	[[unlikely]] if (data_.getUnary() == 0)
+	[[unlikely]] if (core_->data.getUnary() == 0)
 	{
 		ui->statusbar->showMessage("Cannot divide by zero!", 2000);
 		str_result = "Err";
@@ -107,10 +107,10 @@ void Calc::inverseButtonPressed()
 	else
 	{		
 		// Reset [=] presses count.
-		data_.resetSubsequentEqualPresses();
+		data_->resetSubsequentEqualPresses();
 
 		// Evaluate and show inverted value.		
-		str_result.setNum(1 / data_.getUnary(), config_.disp_format, Config::display_prec);
+		str_result.setNum(1 / core_->data.getUnary(), core_->config.disp_format, Config::display_prec);
 	}
 	
 	curr_display_->setText(str_result);
@@ -122,23 +122,23 @@ void Calc::inverseButtonPressed()
 
 void Calc::sinClicked()
 {
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	performUnaryOperation(std::sin);
 }
 
 void Calc::cosClicked()
 {
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	performUnaryOperation(std::cos);
 }
 
 void Calc::tanClicked()
 {
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 
 	// Factor is display value or pi (whichever is greater) because modulo precision
 	// depends on those two (and pi decision is constant).
-	[[unlikely]] if (nearly_equal(std::cos(data_.getUnary()), 0.0, std::fabs(data_.getUnary())))
+	[[unlikely]] if (calc_core::nearly_equal(std::cos(core_->data.getUnary()), 0.0, std::fabs(core_->data.getUnary())))
 	{
 		curr_display_->setText("Err");
 		ui->statusbar->showMessage("Tangent is indeterminate for multiples of pi/2!", 2000);
@@ -152,11 +152,11 @@ void Calc::tanClicked()
 void Calc::cotClicked()
 {
 	const dbl_ptr cot = [](const double r) { return 1 / std::tan(r); };
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 
 	// Factor is display value or pi (whichever is greater) because modulo precision
 	// depends on those two (and pi decision is constant).
-	[[unlikely]] if (nearly_equal(std::sin(data_.getUnary()), 0.0, std::fabs(data_.getUnary())))
+	[[unlikely]] if (calc_core::nearly_equal(std::sin(core_->data.getUnary()), 0.0, std::fabs(core_->data.getUnary())))
 	{		
 		ui->statusbar->showMessage("Cotangent is indeterminate for multiples of pi!", 2000);
 		curr_display_->setText("Err");
@@ -170,9 +170,9 @@ void Calc::cotClicked()
 void Calc::secClicked()
 {
 	const dbl_ptr sec = [](const double r) { return 1 / std::cos(r); };
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	
-	[[unlikely]] if (nearly_equal(std::cos(data_.getUnary()), 0.0, std::fabs(data_.getUnary())))
+	[[unlikely]] if (calc_core::nearly_equal(std::cos(core_->data.getUnary()), 0.0, std::fabs(core_->data.getUnary())))
 	{
 		ui->statusbar->showMessage("Secant is indeterminate for multiples of pi/2!", 2000);
 		curr_display_->setText("Err");
@@ -186,9 +186,9 @@ void Calc::secClicked()
 void Calc::cscClicked()
 {
 	const dbl_ptr csc = [](const double r) { return 1 / std::sin(r); };
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	
-	[[unlikely]] if (nearly_equal(std::sin(data_.getUnary()), 0.0, std::fabs(data_.getUnary())))
+	[[unlikely]] if (calc_core::nearly_equal(std::sin(core_->data.getUnary()), 0.0, std::fabs(core_->data.getUnary())))
 	{
 		ui->statusbar->showMessage("Secant is indeterminate for multiples of pi!", 2000);
 		curr_display_->setText("Err");
@@ -201,9 +201,9 @@ void Calc::cscClicked()
 
 void Calc::arcsinClicked()
 {
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	
-	[[unlikely]] if (data_.getUnary() < -1 || data_.getUnary() > 1)
+	[[unlikely]] if (core_->data.getUnary() < -1 || core_->data.getUnary() > 1)
 	{
 		ui->statusbar->showMessage("Arcsine is only definite in [-1, 1]", 2000);
 		curr_display_->setText("Err");
@@ -216,9 +216,9 @@ void Calc::arcsinClicked()
 
 void Calc::arccosClicked()
 {
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	
-	[[unlikely]] if (data_.getUnary() < -1 || data_.getUnary() > 1)
+	[[unlikely]] if (core_->data.getUnary() < -1 || core_->data.getUnary() > 1)
 	{
 		ui->statusbar->showMessage("Arccosine is only definite in [-1, 1]", 2000);
 		curr_display_->setText("Err");
@@ -231,25 +231,25 @@ void Calc::arccosClicked()
 
 void Calc::arctanClicked()
 {
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	performUnaryOperation(std::atan);
 }
 
 void Calc::arccotClicked()
 {
 	const dbl_ptr arccot = [](const double r) -> double { return (std::numbers::pi / 2) - std::atan(r); };
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	performUnaryOperation(arccot);
 }
 
 void Calc::arcsecClicked()
 {
 	const dbl_ptr arcsec = [](const double r) -> double { return std::acos(1 / r ); };	
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 
-	[[likely]] if (data_.getUnary() != 0)
+	[[likely]] if (core_->data.getUnary() != 0)
 	{
-		[[likely]] if (const double curr_display_inverted_dbl = 1 / data_.getUnary();
+		[[likely]] if (const double curr_display_inverted_dbl = 1 / core_->data.getUnary();
 			curr_display_inverted_dbl >= -1 && curr_display_inverted_dbl <= 1)
 		{
 			performUnaryOperation(arcsec);
@@ -272,11 +272,11 @@ void Calc::arcsecClicked()
 void Calc::arccscClicked()
 {
 	const dbl_ptr arccsc = [](const double r) -> double { return std::asin(1 / r ); };	
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 
-	[[likely]] if (data_.getUnary() != 0)
+	[[likely]] if (core_->data.getUnary() != 0)
 	{
-		[[likely]] if (const double curr_display_inverted_dbl = 1 / data_.getUnary();
+		[[likely]] if (const double curr_display_inverted_dbl = 1 / core_->data.getUnary();
 			curr_display_inverted_dbl >= -1 && curr_display_inverted_dbl <= 1)
 		{
 			performUnaryOperation(arccsc);
@@ -298,28 +298,28 @@ void Calc::arccscClicked()
 
 void Calc::sinhClicked()
 {
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	performUnaryOperation(std::sinh);
 }
 
 void Calc::coshClicked()
 {
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	performUnaryOperation(std::cosh);
 }
 
 void Calc::tanhClicked()
 {
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	performUnaryOperation(std::tanh);
 }
 
 void Calc::cothClicked()
 {
 	const dbl_ptr coth = [](const double r) -> double { return std::cosh(r) / std::sinh(r); };
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 
-	[[likely]] if (std::sinhl(data_.getUnary()) != 0)
+	[[likely]] if (std::sinhl(core_->data.getUnary()) != 0)
 	{
 		performUnaryOperation(coth);
 	}
@@ -333,16 +333,16 @@ void Calc::cothClicked()
 void Calc::sechClicked()
 {
 	const dbl_ptr sech = [](const double r) noexcept -> double { return 1 / std::coshl(r); };
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	performUnaryOperation(sech);
 }
 
 void Calc::cschClicked()
 {
 	const dbl_ptr csch = [](const double r) -> double { return 1.0 / std::sinh(r); };
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 
-	[[likely]] if (std::sinhl(data_.getUnary()) != 0)
+	[[likely]] if (std::sinhl(core_->data.getUnary()) != 0)
 	{
 		performUnaryOperation(csch);
 	}
@@ -355,15 +355,15 @@ void Calc::cschClicked()
 
 void Calc::arsinhClicked()
 {
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	performUnaryOperation(std::asinh);
 }
 
 void Calc::arcoshClicked()
 {
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	
-	[[unlikely]] if (data_.getUnary() < 1)
+	[[unlikely]] if (core_->data.getUnary() < 1)
 	{
 		ui->statusbar->showMessage("Area hyperbolic cosinus is only "
 		                           "definite in [1, infty]", 2000);
@@ -377,9 +377,9 @@ void Calc::arcoshClicked()
 
 void Calc::artanhClicked()
 {
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	
-	[[unlikely]] if (data_.getUnary() <= -1 || data_.getUnary() >= 1)
+	[[unlikely]] if (core_->data.getUnary() <= -1 || core_->data.getUnary() >= 1)
 	{
 		ui->statusbar->showMessage("Area hyperbolic tangent is only "
 		                           "definite in (-1, 1)", 2000);
@@ -398,9 +398,9 @@ void Calc::arcothClicked()
 		return 0.5 * std::log((r+1)/(r-1));
 	};
 	
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 	
-	[[unlikely]] if (data_.getUnary() >= -1 && data_.getUnary() <= 1)
+	[[unlikely]] if (core_->data.getUnary() >= -1 && core_->data.getUnary() <= 1)
 	{
 		ui->statusbar->showMessage("Area hyperbolic cotangent is only "
 		                           "definite in (-infty, -1) u (1, infty)", 2000);
@@ -419,9 +419,9 @@ void Calc::arsechClicked()
 		return std::log(std::sqrt((1/r) - 1) * std::sqrt((1/r) + 1) + (1/r));
 	};
 
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 
-	[[unlikely]] if (data_.getUnary() <= 0 || data_.getUnary() > 1)
+	[[unlikely]] if (core_->data.getUnary() <= 0 || core_->data.getUnary() > 1)
 	{
 		ui->statusbar->showMessage("Area hyperbolic secant is only "
 		                           "definite in (0, 1]", 2000);
@@ -440,9 +440,9 @@ void Calc::arcschClicked()
 		return std::log(std::sqrt(1 + (1 / (r*r))) + (1/r));
 	};
 
-	data_.takeUnaryFromDisp(curr_display_);
+	data_->takeUnaryFromDisp(curr_display_);
 
-	[[unlikely]] if (data_.getUnary() == 0)
+	[[unlikely]] if (core_->data.getUnary() == 0)
 	{
 		ui->statusbar->showMessage("Area hyperbolic cosecant is "
 		                           "indefinite for 0", 2000);

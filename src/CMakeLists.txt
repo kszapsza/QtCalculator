@@ -1,19 +1,19 @@
 # src
 
 set(CMAKE_PREFIX_PATH "D:\\Qt\\5.9.9\\msvc2017_64\\bin")
-set(CMAKE_CXX_FLAGS_DEBUG "/MTd")
 
 add_executable(Calc
-    main.cpp
-    initializeCalc.cpp
-    Calc.cpp
-    Calc.h
-    Calc.ui
-    scientificCalc.cpp
-    Settings.cpp
-    Settings.h
-    Settings.ui
-)
+    "main.cpp"
+    gui/initializeCalc.cpp
+    gui/Calc.cpp
+    gui/Calc.h
+    gui/Calc.ui
+    gui/scientificCalc.cpp
+    gui/Settings.cpp
+    gui/Settings.h
+    gui/Settings.ui
+    "log/basicCore.h"
+    "log/scientificCore.h" "log/basicCore.cpp")
 
 target_link_libraries(Calc PRIVATE
     Qt5::Widgets

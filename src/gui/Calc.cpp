@@ -75,10 +75,10 @@ void Calc::numButtonPressed()
 	const QString display_value = curr_display_->text();
 	
 	QString formatted_lhs_value{};
-	formatted_lhs_value.setNum(data_.getLhs(), config_.disp_format, Config::display_prec);
+	formatted_lhs_value.setNum(core_->data.getLhs(), core_->config.disp_format, Config::display_prec);
 
 	QString formatted_last_result{};
-	formatted_last_result.setNum(data_.getLastResult(), config_.disp_format, Config::display_prec);
+	formatted_last_result.setNum(core_->data.getLastResult(), core_->config.disp_format, Config::display_prec);
 
 	// SUBSTITUTION CONDITIONS: compare display value...
 	// 1st: ...to lhs ignoring formatting mode (user input is always in basic format),
@@ -87,10 +87,10 @@ void Calc::numButtonPressed()
 	// 4th: ...to last result with formatting,
 	// 5th: ...errors.
 	 
-	if (display_value == QString::number(data_.getLhs()) 
+	if (display_value == QString::number(core_->data.getLhs()) 
 		|| display_value == formatted_lhs_value
-		|| display_value == QString::number(config_.init_value)
-		|| (display_value == formatted_last_result && data_.getSubsequentEqualPresses())
+		|| display_value == QString::number(core_->config.init_value)
+		|| (display_value == formatted_last_result && core_->data.getSubsequentEqualPresses())
 		|| display_value == "Err" || display_value == "nan" || display_value == "Inf")
 	{
 		curr_display_->setText(button_value);
@@ -102,12 +102,12 @@ void Calc::numButtonPressed()
 		curr_display_->setText(new_value);
 	}
 	
-	data_.resetSubsequentEqualPresses();
+	core_->data.resetSubsequentEqualPresses();
 }
 
 void Calc::commaButtonPressed()
 {
-	data_.resetSubsequentEqualPresses();
+	core_->data.resetSubsequentEqualPresses();
 	
 	const QString display_value = curr_display_->text();
 	curr_display_->setText(display_value + '.');
@@ -117,75 +117,18 @@ void Calc::commaButtonPressed()
 //	(COMMON) TWO-ARGUMENT OPERATIONS					 //
 ///////////////////////////////////////////////////////////
 
-// Core function performing operation stored in buffer.
-// Used both by [=] button and math buttons.
-[[nodiscard]] QString Calc::performBinaryOperation()
-{
-	double result{};
-	QString str_result{};
-	bool err{ false };
-
-	switch (data_.getOpDecision())
-	{
-	case operation::division:
-		[[unlikely]] if (data_.getRhs() == 0)
-			err = true;
-		else
-			result = data_.getLhs() / data_.getRhs();
-		break;
-	case operation::multiplication:
-		result = data_.getLhs() * data_.getRhs();
-		break;
-	case operation::subtraction:
-		result = data_.getLhs() - data_.getRhs();
-		break;
-	case operation::addition:
-		result = data_.getLhs() + data_.getRhs();
-		break;
-	case operation::log_base_y:
-		[[unlikely]] if (const double denom = std::log(data_.getRhs()); denom == 0)
-			err = true;
-		else
-			result = std::log(data_.getLhs()) / denom;
-		break;
-	case operation::modulo:
-		result = static_cast<int>(data_.getLhs()) % static_cast<int>(data_.getRhs());
-		break;
-	case operation::power:
-		result = std::pow(data_.getLhs(), data_.getRhs());		
-		break;		
-	case operation::none:
-	default:
-		result = curr_display_->text().toDouble();
-		break;
-	}
-
-	if (!err)
-	{
-		data_.setLastResult(result);
-		str_result.setNum(result, config_.disp_format, Config::display_prec);
-	}
-	else
-	{
-		str_result = "Err";
-		ui->statusbar->showMessage("Cannot divide by zero!", 2000);
-	}
-
-	return str_result;
-}
-
 // Math two-argument operation buttons: [/], [*], [−], [+].
 void Calc::mathButtonPressed()
 {
-	data_.resetSubsequentEqualPresses();
+	core_->data.resetSubsequentEqualPresses();
 	
 	// If in sequential operation, evaluate queued operation and treat its result
 	// as lhs argument for the next operation now being entered.
-	if (data_.isInSequentialOperation())
+	if (core_->data.isInSequentialOperation())
 	{
 		// The lhs is already saved, save rhs from display,
 		// perform operation and put the result on screen.
-		data_.takeRhsFromDisp(curr_display_);
+		core_->data.takeRhsFromDisp(curr_display_);
 		
 		const QString prev_op_result = performBinaryOperation();
 		curr_display_->setText(prev_op_result); 
@@ -193,7 +136,7 @@ void Calc::mathButtonPressed()
 
 	// If first operation, lhs = previously put number,
 	// if in sequence, lhs = prev result, evaluated above.
-	data_.takeLhsFromDisp(curr_display_);
+	core_->data.takeLhsFromDisp(curr_display_);
 
 	// Operation enum mapping to key labels.
 	const QMap<QPushButton*, operation> op_names
@@ -215,31 +158,31 @@ void Calc::mathButtonPressed()
 	auto *button = qobject_cast<QPushButton*>(sender());
 
 	// Set op_decision basing on the label of the button pressed.
-	data_.setOpDecision(op_names[button]);
+	core_->data.setOpDecision(op_names[button]);
 
 	// Begin (or maintain) sequential operation state until [=] is pressed.
-	data_.beginSequential();
+	core_->data.beginSequential();
 }
 
 // Procedure when pressing [=] button.
 void Calc::equalButtonPressed()
 {
 	// Record [=] presses count.
-	data_.subsequentEqualPressesIncrement();
+	core_->data.subsequentEqualPressesIncrement();
 
 	// Set result as lhs and leave rhs unchanged if [=] is pressed more than once.
-	if (data_.getSubsequentEqualPresses() > 1)
+	if (core_->data.getSubsequentEqualPresses() > 1)
 	{
-		data_.takeLhsFromDisp(curr_display_);
+		core_->data.takeLhsFromDisp(curr_display_);
 	}
 	// Otherwise, current value on display is normally treated as rhs.
 	else
 	{
-		data_.takeRhsFromDisp(curr_display_);
+		core_->data.takeRhsFromDisp(curr_display_);
 	}	
 	
 	curr_display_->setText(performBinaryOperation());
-	data_.endSequential();
+	core_->data.endSequential();
 }
 
 // Procedure when pressing [%] button. The method of calculation is different than usual.
@@ -247,10 +190,10 @@ void Calc::equalButtonPressed()
 void Calc::percentButtonPressed()
 {
 	// Reset [=] presses count.
-	data_.resetSubsequentEqualPresses();
+	core_->data.resetSubsequentEqualPresses();
 	
 	// Save current display state as rhs value.
-	data_.takeRhsFromDisp(curr_display_);
+	core_->data.takeRhsFromDisp(curr_display_);
 
 	double result{};
 	QString str_result{};
@@ -262,26 +205,26 @@ void Calc::percentButtonPressed()
 		double percentage_of_lhs;
 	};
 
-	switch (data_.getOpDecision())
+	switch (core_->data.getOpDecision())
 	{
 	case operation::division:
-		percentage_fraction = data_.getRhs() / 100;
+		percentage_fraction = core_->data.getRhs() / 100;
 		[[unlikely]] if (percentage_fraction == 0)			
 			err = true;
 		else
-			result = data_.getLhs() / percentage_fraction;
+			result = core_->data.getLhs() / percentage_fraction;
 		break;
 	case operation::multiplication:
-		percentage_fraction = data_.getRhs() / 100;
-		result = data_.getLhs() * percentage_fraction;
+		percentage_fraction = core_->data.getRhs() / 100;
+		result = core_->data.getLhs() * percentage_fraction;
 		break;
 	case operation::subtraction:
-		percentage_of_lhs = (data_.getRhs() / 100) * data_.getLhs();
-		result = data_.getLhs() - percentage_of_lhs;
+		percentage_of_lhs = (core_->data.getRhs() / 100) * core_->data.getLhs();
+		result = core_->data.getLhs() - percentage_of_lhs;
 		break;
 	case operation::addition:
-		percentage_of_lhs = (data_.getRhs() / 100) * data_.getLhs();
-		result = data_.getLhs() + percentage_of_lhs;
+		percentage_of_lhs = (core_->data.getRhs() / 100) * core_->data.getLhs();
+		result = core_->data.getLhs() + percentage_of_lhs;
 		break;
 	case operation::none:		
 	default:
@@ -291,8 +234,8 @@ void Calc::percentButtonPressed()
 
 	if (!err)
 	{
-		data_.setLastResult(result);
-		str_result.setNum(result, config_.disp_format, Config::display_prec);
+		core_->data.setLastResult(result);
+		str_result.setNum(result, core_->config.disp_format, Config::display_prec);
 	}
 	else
 	{
@@ -300,7 +243,7 @@ void Calc::percentButtonPressed()
 		ui->statusbar->showMessage("Cannot divide by zero!", 2000);		
 	}
 	
-	data_.endSequential();
+	core_->data.endSequential();
 	curr_display_->setText(str_result);
 }
 
@@ -308,25 +251,19 @@ void Calc::percentButtonPressed()
 //	SINGLE-ARGUMENT OPERATIONS (BASIC)					 //
 ///////////////////////////////////////////////////////////
 
-// Evaluates unary operation from data_.unary and shows result.
+// Evaluates unary operation from core_->data.unary and shows result.
 void Calc::performUnaryOperation(const dbl_ptr func)
 {
-	data_.resetSubsequentEqualPresses();	
-	data_.setLastResult(static_cast<double>(func(data_.getUnary())));
+	core_->data.resetSubsequentEqualPresses();	
+	core_->data.setLastResult(static_cast<double>(func(core_->data.getUnary())));
 	
 	// Round to zero if unary result is less than epsilon.
-	double result = data_.getLastResult();
+	double result = core_->data.getLastResult();
 	
-	result = nearly_equal(result, 0.0, std::fabs(data_.getUnary())) ? 0.0 : result;
-
-	/*if (const double nextafter = std::nextafter(result, std::numeric_limits<double>::max());
-		nearly_equal(std::fmod(nextafter, 1), 0.0, nextafter))
-	{
-		result = nextafter;
-	}*/
+	result = calc_core::nearly_equal(result, 0.0, std::fabs(core_->data.getUnary())) ? 0.0 : result;
 	
 	QString str_result{};
-	str_result.setNum(result, config_.disp_format, Config::display_prec);
+	str_result.setNum(result, core_->config.disp_format, Config::display_prec);
 	
 	curr_display_->setText(str_result);
 }
@@ -335,14 +272,14 @@ void Calc::performUnaryOperation(const dbl_ptr func)
 void Calc::squareButtonPressed()
 {
 	const dbl_ptr square = [](const double x){ return std::pow(x, 2); };
-	data_.takeUnaryFromDisp(curr_display_);
+	core_->data.takeUnaryFromDisp(curr_display_);
 	performUnaryOperation(square);
 }
 
 // Square root button [√‾].
 void Calc::sqrtButtonPressed()
 {
-	data_.takeUnaryFromDisp(curr_display_);
+	core_->data.takeUnaryFromDisp(curr_display_);
 	performUnaryOperation(std::sqrt);
 }
 
@@ -355,7 +292,7 @@ void Calc::backspaceButtonPressed() const
 	}
 	else
 	{
-		const QString init_txt = QString::number(config_.init_value);
+		const QString init_txt = QString::number(core_->config.init_value);
 		curr_display_->setText(init_txt);
 	}
 }
@@ -363,15 +300,15 @@ void Calc::backspaceButtonPressed() const
 // Clearing the display and buffer with [C] button.
 void Calc::clearButtonPressed()
 {
-	curr_display_->setText(QString::number(config_.init_value));
-	data_.reset();
+	curr_display_->setText(QString::number(core_->config.init_value));
+	core_->data.reset();
 }
 
 // Changing display value sign with [±] button.
 void Calc::signButtonPressed()
 {
 	// Reset [=] presses count.
-	data_.resetSubsequentEqualPresses();
+	core_->data.resetSubsequentEqualPresses();
 
 	// Remove or add minus sign on display.	
 	QString curr_value = curr_display_->text();
@@ -397,9 +334,9 @@ void Calc::memButtonPressed()
 {
 	const QString curr_value = curr_display_->text();
 
-	if (data_.getMemory() == curr_value.toDouble())
+	if (core_->data.getMemory() == curr_value.toDouble())
 	{
-		data_.resetMemory();
+		core_->data.resetMemory();
 		ui->statusbar->showMessage("Memory cleaned.", 2000);
 	}
 	else
@@ -407,19 +344,19 @@ void Calc::memButtonPressed()
 		ui->statusbar->showMessage("Memory recalled.", 2000);
 	}
 
-	curr_display_->setText(QString::number(data_.getMemory()));
+	curr_display_->setText(QString::number(core_->data.getMemory()));
 }
 
 void Calc::memAddButtonPressed()
 {
 	const double curr_value = curr_display_->text().toDouble();
-	data_.addToMemory(curr_value);
+	core_->data.addToMemory(curr_value);
 	ui->statusbar->showMessage("Added to memory.", 2000);	
 }
 
 void Calc::memSubButtonPressed()
 {
 	const double curr_value = curr_display_->text().toDouble();
-	data_.subtractFromMemory(curr_value);
+	core_->data.subtractFromMemory(curr_value);
 	ui->statusbar->showMessage("Subtracted from memory.", 2000);
 }
