@@ -5,10 +5,55 @@
 
 #include "basicCore.h"
 
+#include <stdexcept>
+
+namespace core
+{
+	// Generates random real number between 0 and 1.
+	double rand()
+	{
+		const auto seed = std::chrono::steady_clock::now().time_since_epoch().count();
+	    std::minstd_rand eng(seed);
+		return static_cast<double>(eng()) / std::minstd_rand::max();
+	}
+
+	// Evaluates log base 2 logarithm.
+	inline double log2(const double r)
+	{
+		return std::log(r) / std::log(2.0);
+	}
+
+	// Evaluates factorial for any real number.
+	inline double real_fact(const double r)
+	{
+		return std::tgamma(r + 1);
+	}
+
+	// Exponential function (e base).
+	inline double exp(const double r)
+	{
+		return std::pow(std::numbers::e, r);
+	}
+
+	// Exponential function (10 base).
+	inline double _10_to_x(const double r)
+	{
+		return std::pow(10, r);
+	}
+
+	// Evaluates 1/x.
+	double inv(const double r)
+	{
+		[[unlikely]] if (r == 0)
+			throw std::runtime_error("Can't divide by zero!");
+		
+		return 1 / r;		
+	}
+}
+
 void CalcCore::loadConfig()
 {
-	QFile config_file("config.dat");
-	
+	QFile config_file("config.dat");	
 
 	if (config_file.open(QIODevice::ReadOnly | QIODevice::Text))
 	{
@@ -27,19 +72,6 @@ void CalcCore::loadConfig()
 	}
 
 	config_file.close();
-}
-	
-// Evaluates unary operation from data_.unary and shows result.
-double CalcCore::performUnaryOperation(const dbl_ptr func)
-{
-	data.resetSubsequentEqualPresses();
-	data.setLastResult(static_cast<double>(func(data.getUnary())));
-	
-	// Round to zero if unary result is less than epsilon.
-	double result = data.getLastResult();		
-	result = calc_core::nearly_equal(result, 0.0, std::fabs(data.getUnary())) ? 0.0 : result;
-	
-	return result;
 }
 
 // Core function performing operation stored in buffer.
@@ -96,4 +128,23 @@ double CalcCore::performUnaryOperation(const dbl_ptr func)
 	}
 
 	return str_result;
+}
+
+// Evaluates unary operation from data_.unary and shows result.
+double CalcCore::performUnaryOperation(const dbl_ptr func)
+{
+	data.resetSubsequentEqualPresses();
+	data.setLastResult(static_cast<double>(func(data.getUnary())));
+	
+	// Round to zero if unary result is less than epsilon.
+	double result = data.getLastResult();		
+	result = core::nearly_equal(result, 0.0, std::fabs(data.getUnary())) ? 0.0 : result;
+	
+	return result;
+}
+
+QString CalcCore::toQString(const double dbl_result) const
+{
+	QString str_result{};
+	return str_result.setNum(dbl_result, config.disp_format, Config::display_prec);
 }

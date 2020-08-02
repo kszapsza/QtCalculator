@@ -251,23 +251,6 @@ void Calc::percentButtonPressed()
 //	SINGLE-ARGUMENT OPERATIONS (BASIC)					 //
 ///////////////////////////////////////////////////////////
 
-// Evaluates unary operation from core_->data.unary and shows result.
-void Calc::performUnaryOperation(const dbl_ptr func)
-{
-	core_->data.resetSubsequentEqualPresses();	
-	core_->data.setLastResult(static_cast<double>(func(core_->data.getUnary())));
-	
-	// Round to zero if unary result is less than epsilon.
-	double result = core_->data.getLastResult();
-	
-	result = calc_core::nearly_equal(result, 0.0, std::fabs(core_->data.getUnary())) ? 0.0 : result;
-	
-	QString str_result{};
-	str_result.setNum(result, core_->config.disp_format, Config::display_prec);
-	
-	curr_display_->setText(str_result);
-}
-
 // Square button [x²].
 void Calc::squareButtonPressed()
 {

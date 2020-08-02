@@ -82,16 +82,16 @@ public slots:
 	void eButtonPressed() const;
 	void randButtonPressed() const;
 	
-	void logBase2ButtonPressed();
-	void logBase10ButtonPressed();
-	void lnButtonPressed();
+	void logBase2ButtonPressed() const;
+	void logBase10ButtonPressed() const;
+	void lnButtonPressed() const;
 
-	void factorialButtonPressed();	
-	void expButtonPressed();
-	void e10ToXButtonPressed();
+	void factorialButtonPressed() const;	
+	void expButtonPressed() const;
+	void e10ToXButtonPressed() const;
 	
-	void absButtonPressed();
-	void inverseButtonPressed();
+	void absButtonPressed() const;
+	void inverseButtonPressed() const;
 
 	void sinClicked();
 	void cosClicked();

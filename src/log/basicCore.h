@@ -1,4 +1,8 @@
 ﻿#pragma once
+#include <chrono>
+#include <numbers>
+#include <random>
+
 #include <QLineEdit>
 #include <QString>
 
@@ -26,7 +30,7 @@ enum class mode : int
 	basic = 0, scientific = 1
 };
 
-namespace calc_core
+namespace core
 {
 	/// UTILITY FUNCTIONS ///
 
@@ -71,9 +75,11 @@ namespace calc_core
 			<= std::numeric_limits<Float>::epsilon() * eps_factor;
 	}
 
-	
-	[[nodiscard]] QString performBinaryOperation(double lhs, double rhs, operation op);
-	
+	double rand();
+	inline double log2(double r);
+	inline double real_fact(double r);
+	inline double exp(double r);
+	inline double _10_to_x(double r);
 }
 
 /// CONFIGURATION ///
@@ -167,8 +173,9 @@ struct CalcCore
 	Config config{};
 
 	CalcCore() { loadConfig(); }
-	void loadConfig();
+	void loadConfig();	
 	
-	[[nodiscard]] double performUnaryOperation(dbl_ptr func);
 	[[nodiscard]] QString performBinaryOperation(double lhs, double rhs, operation op);
+	[[nodiscard]] double performUnaryOperation(dbl_ptr func);
+	[[nodiscard]] QString CalcCore::toQString(double dbl_result) const;
 };
