@@ -17,9 +17,7 @@
 
 Calc::Calc(CalcCore* core, QWidget *parent) :
 	core_(core), QMainWindow(parent), ui(new Ui::Calc)
-{
-	loadConfig();
-	
+{	
 	// UI initialization.
     ui->setupUi(this);
 	ui->modes->setCurrentIndex(static_cast<int>(core_->config.init_mode));

@@ -187,7 +187,7 @@ void Calc::equalButtonPressed()
 
 // Procedure when pressing [%] button. The method of calculation is different than usual.
 // Pressing [%] ends sequential operation the same way as [=].
-void Calc::percentButtonPressed()
+void Calc::percentButtonPressed() const
 {
 	// Reset [=] presses count.
 	core_->data.resetSubsequentEqualPresses();
@@ -254,16 +254,13 @@ void Calc::percentButtonPressed()
 // Square button [x²].
 void Calc::squareButtonPressed()
 {
-	const dbl_ptr square = [](const double x){ return std::pow(x, 2); };
-	core_->data.takeUnaryFromDisp(curr_display_);
-	performUnaryOperation(square);
+	unaryButtonPressed(core::square);
 }
 
 // Square root button [√‾].
-void Calc::sqrtButtonPressed()
+void Calc::sqrtButtonPressed() const
 {
-	core_->data.takeUnaryFromDisp(curr_display_);
-	performUnaryOperation(std::sqrt);
+	unaryButtonPressed(std::sqrt);
 }
 
 // [⌫] (Backspace) button functionality.

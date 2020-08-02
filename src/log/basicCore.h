@@ -75,16 +75,24 @@ namespace core
 			<= std::numeric_limits<Float>::epsilon() * eps_factor;
 	}
 
+	inline double square(double r) noexcept;
 	double rand();
-	inline double log2(double r);
+	inline double log2(double r) noexcept;
 	inline double real_fact(double r);
-	inline double exp(double r);
-	inline double _10_to_x(double r);
+	inline double exp(double r) noexcept;
+	inline double _10_to_x(double r) noexcept;
 	double inv(double r);
+	
 	double tan(double r);
 	double cot(double r);
 	double sec(double r);
 	double csc(double r);
+	
+	double asin(double r);
+	double acos(double r);
+	inline double acot(double r) noexcept;
+	double asec(double r);
+	double acsc(double r);
 }
 
 /// CONFIGURATION ///

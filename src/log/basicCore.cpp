@@ -9,6 +9,11 @@
 
 namespace core
 {
+	inline double square(const double r) noexcept
+	{
+		return r * r;
+	}
+	
 	// Generates random real number between 0 and 1.
 	double rand()
 	{
@@ -18,7 +23,7 @@ namespace core
 	}
 
 	// Evaluates log base 2 logarithm.
-	inline double log2(const double r)
+	inline double log2(const double r) noexcept
 	{
 		return std::log(r) / std::log(2.0);
 	}
@@ -30,13 +35,13 @@ namespace core
 	}
 
 	// Exponential function (e base).
-	inline double exp(const double r)
+	inline double exp(const double r) noexcept
 	{
 		return std::pow(std::numbers::e, r);
 	}
 
 	// Exponential function (10 base).
-	inline double _10_to_x(const double r)
+	inline double _10_to_x(const double r) noexcept
 	{
 		return std::pow(10, r);
 	}
@@ -80,6 +85,43 @@ namespace core
 			throw std::runtime_error("Cosecant is indeterminate for multiples of pi!");
 		
 		return 1 / std::sin(r);
+	}
+
+	double asin(const double r)
+	{
+		[[unlikely]] if (r < -1 || r > 1)
+			throw std::runtime_error("Arcsine is is only definite in [-1, 1]!");
+		
+		return std::asin(r);
+	}
+
+	double acos(const double r)
+	{
+		[[unlikely]] if (r < -1 || r > 1)
+			throw std::runtime_error("Arccosine is only definite in [-1, 1]!");
+		
+		return std::acos(r);
+	}
+
+	inline double acot(const double r) noexcept
+	{		
+		return (std::numbers::pi / 2) - std::atan(r);
+	}
+
+	double asec(const double r)
+	{		
+		[[unlikely]] if (r == 0 || 1 / r <= -1 || 1 / r >= 1)
+			throw std::runtime_error("Arcsecant is only definite in (-infty, -1] u [1, +infty)!");
+
+		return std::acos(1 / r );
+	}
+
+	double acsc(const double r)
+	{		
+		[[unlikely]] if (r == 0 || 1 / r <= -1 || 1 / r >= 1)
+			throw std::runtime_error("Arccosecant is only definite in (-infty, -1] u [1, +infty)!");
+
+		return std::asin(1 / r );
 	}
 }
 

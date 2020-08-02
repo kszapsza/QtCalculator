@@ -39,6 +39,8 @@ public:
     [[nodiscard]] Ui::Calc* getUi() const				{ return ui; }
     [[nodiscard]] QActionGroup* getCalcModes() const	{ return calc_modes_; }
     [[nodiscard]] QLineEdit* getCurrDisplay() const		{ return curr_display_; }
+	
+	friend class Settings;
 
 private:
 	
@@ -48,8 +50,7 @@ private:
 	QActionGroup* calc_modes_;
 	QLineEdit* curr_display_;
 
-	void loadConfig();	
-	friend class Settings;
+	void unaryButtonPressed(dbl_ptr func) const;
 
 public slots:
 // basicCalc.cpp
@@ -59,10 +60,10 @@ public slots:
 	void mathButtonPressed();
 	
 	void equalButtonPressed();
-	void percentButtonPressed();	
+	void percentButtonPressed() const;	
 
 	void squareButtonPressed();
-	void sqrtButtonPressed();
+	void sqrtButtonPressed() const;
 
 	void backspaceButtonPressed() const;
 	void clearButtonPressed();
@@ -100,25 +101,25 @@ public slots:
 	void secClicked() const;
 	void cscClicked() const;
 
-	void arcsinClicked();
-	void arccosClicked();
-	void arctanClicked();
-	void arccotClicked();
-	void arcsecClicked();
-	void arccscClicked();
+	void arcsinClicked() const;
+	void arccosClicked() const;
+	void arctanClicked() const;
+	void arccotClicked() const;
+	void arcsecClicked() const;
+	void arccscClicked() const;
 
-	void sinhClicked();
-	void coshClicked();
-	void tanhClicked();
-	void cothClicked();
-	void sechClicked();
-	void cschClicked();
+	void sinhClicked() const;
+	void coshClicked() const;
+	void tanhClicked() const;
+	void cothClicked() const;
+	void sechClicked() const;
+	void cschClicked() const;
 
-	void arsinhClicked();
-	void arcoshClicked();
-	void artanhClicked();
-	void arcothClicked();
-	void arsechClicked();
-	void arcschClicked();
+	void arsinhClicked() const;
+	void arcoshClicked() const;
+	void artanhClicked() const;
+	void arcothClicked() const;
+	void arsechClicked() const;
+	void arcschClicked() const;
 };
 #endif // CALC_H

@@ -17,10 +17,30 @@
 ///////////////////////////////////////////////////////////
 */
 
+// Calls core functions saving input from display, performs requested operation,
+// converts result to QString and catches possible runtime exceptions.
+void Calc::unaryButtonPressed(const dbl_ptr func) const
+{
+	core_->data.takeUnaryFromDisp(curr_display_);
+
+	try
+	{
+		const auto res = core_->performUnaryOperation(func);
+		const auto res_str = core_->toQString(res);
+		curr_display_->setText(res_str);
+	}
+	catch (const std::runtime_error& except)
+	{
+		curr_display_->setText("Err");
+		ui->statusbar->showMessage(except.what(), 2000);
+	}
+}
+
 ///////////////////////////////////////////////////////////
 //	SCIENTIFIC BUTTONS									 //
 ///////////////////////////////////////////////////////////
 
+// Inserts pi.
 void Calc::piButtonPressed() const
 {
 	QString pi_str{};
@@ -28,6 +48,7 @@ void Calc::piButtonPressed() const
 	curr_display_->setText(pi_str);
 }
 
+// Inserts e.
 void Calc::eButtonPressed() const
 {
 	QString e_str{};
@@ -35,6 +56,7 @@ void Calc::eButtonPressed() const
 	curr_display_->setText(e_str);
 }
 
+// Generates random number from 0 to 1.
 void Calc::randButtonPressed() const
 {
 	const auto rand = core::rand();
@@ -45,89 +67,42 @@ void Calc::randButtonPressed() const
 
 void Calc::logBase2ButtonPressed() const
 {	
-	core_->data.takeUnaryFromDisp(curr_display_);
-	
-	const auto res = core_->performUnaryOperation(core::log2);
-	const auto res_str = core_->toQString(res);
-	
-	curr_display_->setText(res_str);
+	unaryButtonPressed(core::log2);
 }
 
 void Calc::logBase10ButtonPressed() const
 {
-	core_->data.takeUnaryFromDisp(curr_display_);
-
-	const auto res = core_->performUnaryOperation(std::log10);
-	const auto res_str = core_->toQString(res);
-	
-	curr_display_->setText(res_str);
+	unaryButtonPressed(std::log10);
 }
 
 void Calc::lnButtonPressed() const
 {
-	core_->data.takeUnaryFromDisp(curr_display_);
-
-	const auto res = core_->performUnaryOperation(std::log);
-	const auto res_str = core_->toQString(res);
-	
-	curr_display_->setText(res_str);
+	unaryButtonPressed(std::log);
 }
 
 void Calc::factorialButtonPressed() const
 {
-	core_->data.takeUnaryFromDisp(curr_display_);
-
-	const auto res = core_->performUnaryOperation(core::real_fact);
-	const auto res_str = core_->toQString(res);
-	
-	curr_display_->setText(res_str);
+	unaryButtonPressed(core::real_fact);
 }
 
 void Calc::expButtonPressed() const
 {		
-	core_->data.takeUnaryFromDisp(curr_display_);
-
-	const auto res = core_->performUnaryOperation(core::exp);
-	const auto res_str = core_->toQString(res);
-	
-	curr_display_->setText(res_str);
+	unaryButtonPressed(core::exp);
 }
 
 void Calc::e10ToXButtonPressed() const
 {
-	core_->data.takeUnaryFromDisp(curr_display_);
-
-	const auto res = core_->performUnaryOperation(core::_10_to_x);
-	const auto res_str = core_->toQString(res);
-	
-	curr_display_->setText(res_str);
+	unaryButtonPressed(core::_10_to_x);
 }
 
 void Calc::absButtonPressed() const
 {
-	core_->data.takeUnaryFromDisp(curr_display_);
-
-	const auto res = core_->performUnaryOperation(std::fabs);
-	const auto res_str = core_->toQString(res);
-	
-	curr_display_->setText(res_str);
+	unaryButtonPressed(std::fabs);
 }
 
 void Calc::inverseButtonPressed() const
 {
-	core_->data.takeUnaryFromDisp(curr_display_);
-	
-	try
-	{
-		const auto res = core_->performUnaryOperation(std::fabs);
-		const auto res_str = core_->toQString(res);
-		curr_display_->setText(res_str);
-	}
-	catch (const std::runtime_error& except)
-	{
-		curr_display_->setText("Err");
-		ui->statusbar->showMessage(except.what(), 2000);
-	}
+	unaryButtonPressed(std::fabs);
 }
 
 ///////////////////////////////////////////////////////////
@@ -136,165 +111,60 @@ void Calc::inverseButtonPressed() const
 
 void Calc::sinClicked() const
 {
-	core_->data.takeUnaryFromDisp(curr_display_);
-
-	// Sine is defined for all reals, std::sin is enough.
-	const auto res = core_->performUnaryOperation(std::sin);
-	const auto res_str = core_->toQString(res);
-	
-	curr_display_->setText(res_str);
+	unaryButtonPressed(std::sin);
 }
 
 void Calc::cosClicked() const
 {
-	core_->data.takeUnaryFromDisp(curr_display_);
-
-	// Cosine is defined for all reals, std::cos is enough.
-	const auto res = core_->performUnaryOperation(std::cos);
-	const auto res_str = core_->toQString(res);
-	
-	curr_display_->setText(res_str);
+	unaryButtonPressed(std::cos);
 }
 
 void Calc::tanClicked() const
 {
-	core_->data.takeUnaryFromDisp(curr_display_);
-
-	try
-	{
-		const auto res = core_->performUnaryOperation(core::tan);
-		const auto res_str = core_->toQString(res);
-		curr_display_->setText(res_str);
-	}
-	catch (const std::runtime_error& except)
-	{
-		curr_display_->setText("Err");
-		ui->statusbar->showMessage(except.what(), 2000);
-	}	
+	unaryButtonPressed(core::tan);
 }
 
 void Calc::cotClicked() const
 {
-	core_->data.takeUnaryFromDisp(curr_display_);
-
-	try
-	{
-		const auto res = core_->performUnaryOperation(core::cot);
-		const auto res_str = core_->toQString(res);
-		curr_display_->setText(res_str);
-	}
-	catch (const std::runtime_error& except)
-	{
-		curr_display_->setText("Err");
-		ui->statusbar->showMessage(except.what(), 2000);
-	}
+	unaryButtonPressed(core::cot);
 }
 
 void Calc::secClicked() const
 {
-	core_->data.takeUnaryFromDisp(curr_display_);
-
-	try
-	{
-		const auto res = core_->performUnaryOperation(core::sec);
-		const auto res_str = core_->toQString(res);
-		curr_display_->setText(res_str);
-	}
-	catch (const std::runtime_error& except)
-	{
-		curr_display_->setText("Err");
-		ui->statusbar->showMessage(except.what(), 2000);
-	}
+	unaryButtonPressed(core::sec);
 }
 
 void Calc::cscClicked() const
 {
-	core_->data.takeUnaryFromDisp(curr_display_);
-
-	try
-	{
-		const auto res = core_->performUnaryOperation(core::csc);
-		const auto res_str = core_->toQString(res);
-		curr_display_->setText(res_str);
-	}
-	catch (const std::runtime_error& except)
-	{
-		curr_display_->setText("Err");
-		ui->statusbar->showMessage(except.what(), 2000);
-	}
+	unaryButtonPressed(core::csc);
 }
 
-void Calc::arcsinClicked()
+void Calc::arcsinClicked() const
 {
-	core_->data.takeUnaryFromDisp(curr_display_);
-	
-	[[unlikely]] if (core_->data.getUnary() < -1 || core_->data.getUnary() > 1)
-	{
-		ui->statusbar->showMessage("Arcsine is only definite in [-1, 1]", 2000);
-		curr_display_->setText("Err");
-	}
-	else
-	{
-		performUnaryOperation(std::asin);
-	}
+	unaryButtonPressed(core::asin);
 }
 
-void Calc::arccosClicked()
+void Calc::arccosClicked() const
 {
-	core_->data.takeUnaryFromDisp(curr_display_);
-	
-	[[unlikely]] if (core_->data.getUnary() < -1 || core_->data.getUnary() > 1)
-	{
-		ui->statusbar->showMessage("Arccosine is only definite in [-1, 1]", 2000);
-		curr_display_->setText("Err");
-	}
-	else
-	{
-		performUnaryOperation(std::acos);
-	}
+	unaryButtonPressed(core::asin);
 }
 
-void Calc::arctanClicked()
+void Calc::arctanClicked() const
 {
-	core_->data.takeUnaryFromDisp(curr_display_);
-	performUnaryOperation(std::atan);
+	unaryButtonPressed(std::atan);
 }
 
-void Calc::arccotClicked()
+void Calc::arccotClicked() const
 {
-	const dbl_ptr arccot = [](const double r) -> double { return (std::numbers::pi / 2) - std::atan(r); };
-	core_->data.takeUnaryFromDisp(curr_display_);
-	performUnaryOperation(arccot);
+	unaryButtonPressed(core::acot);
 }
 
-void Calc::arcsecClicked()
+void Calc::arcsecClicked() const
 {
-	const dbl_ptr arcsec = [](const double r) -> double { return std::acos(1 / r ); };	
-	core_->data.takeUnaryFromDisp(curr_display_);
-
-	[[likely]] if (core_->data.getUnary() != 0)
-	{
-		[[likely]] if (const double curr_display_inverted_dbl = 1 / core_->data.getUnary();
-			curr_display_inverted_dbl >= -1 && curr_display_inverted_dbl <= 1)
-		{
-			performUnaryOperation(arcsec);
-		}
-		else
-		{
-			ui->statusbar->showMessage("Arcsecant is only definite in "
-				" (-infty, -1) u (1, +infty)", 2000);
-			curr_display_->setText("Err");
-		}
-	}
-	else
-	{
-		ui->statusbar->showMessage("Arcsecant is only definite in "
-			"(-infty, -1) u (1, +infty)", 2000);
-		curr_display_->setText("Err");
-	}
+	unaryButtonPressed(core::asec);
 }
 
-void Calc::arccscClicked()
+void Calc::arccscClicked() const
 {
 	const dbl_ptr arccsc = [](const double r) -> double { return std::asin(1 / r ); };	
 	core_->data.takeUnaryFromDisp(curr_display_);
@@ -321,25 +191,22 @@ void Calc::arccscClicked()
 	}
 }
 
-void Calc::sinhClicked()
+void Calc::sinhClicked() const
 {
-	core_->data.takeUnaryFromDisp(curr_display_);
-	performUnaryOperation(std::sinh);
+	unaryButtonPressed(std::sinh);
 }
 
-void Calc::coshClicked()
+void Calc::coshClicked() const
 {
-	core_->data.takeUnaryFromDisp(curr_display_);
-	performUnaryOperation(std::cosh);
+	unaryButtonPressed(std::cosh);
 }
 
-void Calc::tanhClicked()
+void Calc::tanhClicked() const
 {
-	core_->data.takeUnaryFromDisp(curr_display_);
-	performUnaryOperation(std::tanh);
+	unaryButtonPressed(std::tanh);
 }
 
-void Calc::cothClicked()
+void Calc::cothClicked() const
 {
 	const dbl_ptr coth = [](const double r) -> double { return std::cosh(r) / std::sinh(r); };
 	core_->data.takeUnaryFromDisp(curr_display_);
@@ -355,14 +222,14 @@ void Calc::cothClicked()
 	}
 }
 
-void Calc::sechClicked()
+void Calc::sechClicked() const
 {
 	const dbl_ptr sech = [](const double r) noexcept -> double { return 1 / std::coshl(r); };
 	core_->data.takeUnaryFromDisp(curr_display_);
 	performUnaryOperation(sech);
 }
 
-void Calc::cschClicked()
+void Calc::cschClicked() const
 {
 	const dbl_ptr csch = [](const double r) -> double { return 1.0 / std::sinh(r); };
 	core_->data.takeUnaryFromDisp(curr_display_);
@@ -378,13 +245,12 @@ void Calc::cschClicked()
 	}
 }
 
-void Calc::arsinhClicked()
+void Calc::arsinhClicked() const
 {
-	core_->data.takeUnaryFromDisp(curr_display_);
-	performUnaryOperation(std::asinh);
+	unaryButtonPressed(std::asinh);
 }
 
-void Calc::arcoshClicked()
+void Calc::arcoshClicked() const
 {
 	core_->data.takeUnaryFromDisp(curr_display_);
 	
@@ -400,7 +266,7 @@ void Calc::arcoshClicked()
 	}
 }
 
-void Calc::artanhClicked()
+void Calc::artanhClicked() const
 {
 	core_->data.takeUnaryFromDisp(curr_display_);
 	
@@ -416,7 +282,7 @@ void Calc::artanhClicked()
 	}
 }
 
-void Calc::arcothClicked()
+void Calc::arcothClicked() const
 {
 	const dbl_ptr arcoth = [](const double r) -> double
 	{
@@ -437,7 +303,7 @@ void Calc::arcothClicked()
 	}
 }
 
-void Calc::arsechClicked()
+void Calc::arsechClicked() const
 {
 	const dbl_ptr arsech = [](const double r) -> double
 	{
@@ -458,7 +324,7 @@ void Calc::arsechClicked()
 	}
 }
 
-void Calc::arcschClicked()
+void Calc::arcschClicked() const
 {
 	const dbl_ptr arcsch = [](const double r) -> double
 	{
