@@ -49,6 +49,38 @@ namespace core
 		
 		return 1 / r;		
 	}
+
+	double tan(const double r)
+	{
+		[[unlikely]] if (nearly_equal(std::cos(r), 0.0, std::fabs(r)))
+			throw std::runtime_error("Tangent is indeterminate for multiples of pi/2!");
+		
+		return std::tan(r);
+	}
+
+	double cot(const double r)
+	{
+		[[unlikely]] if (nearly_equal(std::sin(r), 0.0, std::fabs(r)))
+			throw std::runtime_error("Cotangent is indeterminate for multiples of pi!");
+		
+		return 1 / std::tan(r);
+	}
+
+	double sec(const double r)
+	{
+		[[unlikely]] if (nearly_equal(std::cos(r), 0.0, std::fabs(r)))
+			throw std::runtime_error("Secant is indeterminate for multiples of pi/2!");
+		
+		return 1 / std::cos(r);
+	}
+
+	double csc(const double r)
+	{
+		[[unlikely]] if (nearly_equal(std::sin(r), 0.0, std::fabs(r)))
+			throw std::runtime_error("Cosecant is indeterminate for multiples of pi!");
+		
+		return 1 / std::sin(r);
+	}
 }
 
 void CalcCore::loadConfig()

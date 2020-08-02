@@ -80,6 +80,11 @@ namespace core
 	inline double real_fact(double r);
 	inline double exp(double r);
 	inline double _10_to_x(double r);
+	double inv(double r);
+	double tan(double r);
+	double cot(double r);
+	double sec(double r);
+	double csc(double r);
 }
 
 /// CONFIGURATION ///

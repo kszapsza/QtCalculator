@@ -93,12 +93,12 @@ public slots:
 	void absButtonPressed() const;
 	void inverseButtonPressed() const;
 
-	void sinClicked();
-	void cosClicked();
-	void tanClicked();
-	void cotClicked();
-	void secClicked();
-	void cscClicked();
+	void sinClicked() const;
+	void cosClicked() const;
+	void tanClicked() const;
+	void cotClicked() const;
+	void secClicked() const;
+	void cscClicked() const;
 
 	void arcsinClicked();
 	void arccosClicked();

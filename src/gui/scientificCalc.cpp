@@ -134,82 +134,93 @@ void Calc::inverseButtonPressed() const
 //	SCIENTIFIC FUNCTIONS (MENU BAR)						 //
 ///////////////////////////////////////////////////////////
 
-void Calc::sinClicked()
-{
-	core_->data.takeUnaryFromDisp(curr_display_);
-	performUnaryOperation(std::sin);
-}
-
-void Calc::cosClicked()
-{
-	core_->data.takeUnaryFromDisp(curr_display_);
-	performUnaryOperation(std::cos);
-}
-
-void Calc::tanClicked()
+void Calc::sinClicked() const
 {
 	core_->data.takeUnaryFromDisp(curr_display_);
 
-	// Factor is display value or pi (whichever is greater) because modulo precision
-	// depends on those two (and pi decision is constant).
-	[[unlikely]] if (core::nearly_equal(std::cos(core_->data.getUnary()), 0.0, std::fabs(core_->data.getUnary())))
-	{
-		curr_display_->setText("Err");
-		ui->statusbar->showMessage("Tangent is indeterminate for multiples of pi/2!", 2000);
-	}
-	else
-	{
-		performUnaryOperation(std::tan);
-	}
-}
-
-void Calc::cotClicked()
-{
-	const dbl_ptr cot = [](const double r) { return 1 / std::tan(r); };
-	core_->data.takeUnaryFromDisp(curr_display_);
-
-	// Factor is display value or pi (whichever is greater) because modulo precision
-	// depends on those two (and pi decision is constant).
-	[[unlikely]] if (core::nearly_equal(std::sin(core_->data.getUnary()), 0.0, std::fabs(core_->data.getUnary())))
-	{		
-		ui->statusbar->showMessage("Cotangent is indeterminate for multiples of pi!", 2000);
-		curr_display_->setText("Err");
-	}
-	else
-	{
-		performUnaryOperation(cot);
-	}
-}
-
-void Calc::secClicked()
-{
-	const dbl_ptr sec = [](const double r) { return 1 / std::cos(r); };
-	core_->data.takeUnaryFromDisp(curr_display_);
+	// Sine is defined for all reals, std::sin is enough.
+	const auto res = core_->performUnaryOperation(std::sin);
+	const auto res_str = core_->toQString(res);
 	
-	[[unlikely]] if (core::nearly_equal(std::cos(core_->data.getUnary()), 0.0, std::fabs(core_->data.getUnary())))
+	curr_display_->setText(res_str);
+}
+
+void Calc::cosClicked() const
+{
+	core_->data.takeUnaryFromDisp(curr_display_);
+
+	// Cosine is defined for all reals, std::cos is enough.
+	const auto res = core_->performUnaryOperation(std::cos);
+	const auto res_str = core_->toQString(res);
+	
+	curr_display_->setText(res_str);
+}
+
+void Calc::tanClicked() const
+{
+	core_->data.takeUnaryFromDisp(curr_display_);
+
+	try
 	{
-		ui->statusbar->showMessage("Secant is indeterminate for multiples of pi/2!", 2000);
-		curr_display_->setText("Err");
+		const auto res = core_->performUnaryOperation(core::tan);
+		const auto res_str = core_->toQString(res);
+		curr_display_->setText(res_str);
 	}
-	else
+	catch (const std::runtime_error& except)
 	{
-		performUnaryOperation(sec);
+		curr_display_->setText("Err");
+		ui->statusbar->showMessage(except.what(), 2000);
+	}	
+}
+
+void Calc::cotClicked() const
+{
+	core_->data.takeUnaryFromDisp(curr_display_);
+
+	try
+	{
+		const auto res = core_->performUnaryOperation(core::cot);
+		const auto res_str = core_->toQString(res);
+		curr_display_->setText(res_str);
+	}
+	catch (const std::runtime_error& except)
+	{
+		curr_display_->setText("Err");
+		ui->statusbar->showMessage(except.what(), 2000);
 	}
 }
 
-void Calc::cscClicked()
+void Calc::secClicked() const
 {
-	const dbl_ptr csc = [](const double r) { return 1 / std::sin(r); };
 	core_->data.takeUnaryFromDisp(curr_display_);
-	
-	[[unlikely]] if (core::nearly_equal(std::sin(core_->data.getUnary()), 0.0, std::fabs(core_->data.getUnary())))
+
+	try
 	{
-		ui->statusbar->showMessage("Secant is indeterminate for multiples of pi!", 2000);
-		curr_display_->setText("Err");
+		const auto res = core_->performUnaryOperation(core::sec);
+		const auto res_str = core_->toQString(res);
+		curr_display_->setText(res_str);
 	}
-	else
+	catch (const std::runtime_error& except)
 	{
-		performUnaryOperation(csc);		
+		curr_display_->setText("Err");
+		ui->statusbar->showMessage(except.what(), 2000);
+	}
+}
+
+void Calc::cscClicked() const
+{
+	core_->data.takeUnaryFromDisp(curr_display_);
+
+	try
+	{
+		const auto res = core_->performUnaryOperation(core::csc);
+		const auto res_str = core_->toQString(res);
+		curr_display_->setText(res_str);
+	}
+	catch (const std::runtime_error& except)
+	{
+		curr_display_->setText("Err");
+		ui->statusbar->showMessage(except.what(), 2000);
 	}
 }
 
