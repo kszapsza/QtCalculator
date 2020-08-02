@@ -2,8 +2,8 @@
 #include <QMessageBox>
 #include <QDialog>
 
-#include "Settings.h"
-#include "Calc.h"
+#include "./gui/Calc.h"
+#include "./gui/Settings.h"
 
 #ifdef QT_DEBUG
 #include <QDebug>
@@ -25,15 +25,15 @@ Settings::Settings(Calc *parent) :
     ui->setupUi(this);
 
 	calc_ = parent;
-	unsaved_config_ = *parent->config_;
+	unsaved_config_ = parent->core_->config;
 
-	ui->settingsInitValue->setValue(parent->config_->init_value);
-	ui->settingsInitMode->setCurrentIndex(static_cast<int>(parent->config_->init_mode));
+	ui->settingsInitValue->setValue(parent->core_->config.init_value);
+	ui->settingsInitMode->setCurrentIndex(static_cast<int>(parent->core_->config.init_mode));
 
 	const QMap<char, int> disp_format_ctoi = { {'e', 0}, {'E', 1}, {'f', 2}, {'g', 3}, {'G', 4} };
 	const QMap<int, char> disp_format_itoc = { {0, 'e'}, {1, 'E'}, {2, 'f'}, {3, 'g'}, {4, 'G'} };
 
-	ui->settingsDispFormat->setCurrentIndex(disp_format_ctoi[parent->config_->disp_format]);
+	ui->settingsDispFormat->setCurrentIndex(disp_format_ctoi[parent->core_->config.disp_format]);
 
 	connect(ui->settingsInitValue, QOverload<double>::of(&QDoubleSpinBox::valueChanged),
 		[=](const double settings_init_value)
@@ -69,9 +69,9 @@ void Settings::saveConfig() const
 {	
 	if (changes_made_)
 	{
-		calc_->config_.init_value = unsaved_config_.init_value;
-		calc_->config_.init_mode = unsaved_config_.init_mode;
-		calc_->config_.disp_format = unsaved_config_.disp_format;
+		calc_->core_->config.init_value = unsaved_config_.init_value;
+		calc_->core_->config.init_mode = unsaved_config_.init_mode;
+		calc_->core_->config.disp_format = unsaved_config_.disp_format;
 		
 		QFile config_file("config.dat");
 
@@ -79,9 +79,9 @@ void Settings::saveConfig() const
 		{
 			QTextStream config_str(&config_file);
 			
-			config_str << calc_->config_.init_value << '\n';
-			config_str << static_cast<int>(calc_->config_.init_mode) << '\n';
-			config_str << calc_->config_.disp_format << '\n';
+			config_str << calc_->core_->config.init_value << '\n';
+			config_str << static_cast<int>(calc_->core_->config.init_mode) << '\n';
+			config_str << calc_->core_->config.disp_format << '\n';
 		}
 		
 		// Clear input as operations can work bad after changing formatting.

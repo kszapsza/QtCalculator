@@ -1,10 +1,12 @@
-#include "Calc.h"
-#include "Settings.h"
-
 #include <QPushButton>
 #include <QtMath>
 #include <QMap>
 #include <QStackedWidget>
+
+#include "./gui/Calc.h"
+#include "./gui/Settings.h"
+#include "./core/core.h"
+#include "./core/utility.h"
 
 #ifdef QT_DEBUG
 #include <QDebug>
@@ -67,7 +69,7 @@ void Calc::menuViewScientificTriggered()
 ///////////////////////////////////////////////////////////
 
 // Putting numbers in using [0~9] buttons.
-void Calc::numButtonPressed()
+void Calc::numButtonPressed() const
 {	
 	// Establish pointer to the button pressed.
 	const auto *button = dynamic_cast<QPushButton*>(sender());
@@ -105,7 +107,7 @@ void Calc::numButtonPressed()
 	core_->data.resetSubsequentEqualPresses();
 }
 
-void Calc::commaButtonPressed()
+void Calc::commaButtonPressed() const
 {
 	core_->data.resetSubsequentEqualPresses();
 	
@@ -118,7 +120,7 @@ void Calc::commaButtonPressed()
 ///////////////////////////////////////////////////////////
 
 // Math two-argument operation buttons: [/], [*], [−], [+].
-void Calc::mathButtonPressed()
+void Calc::mathButtonPressed() const
 {
 	core_->data.resetSubsequentEqualPresses();
 	
@@ -129,9 +131,11 @@ void Calc::mathButtonPressed()
 		// The lhs is already saved, save rhs from display,
 		// perform operation and put the result on screen.
 		core_->data.takeRhsFromDisp(curr_display_);
+
+		const double prev_op_result = core_->performBinaryOperation();
+		const QString prev_op_result_str = core_->toQString(prev_op_result);
 		
-		const QString prev_op_result = performBinaryOperation();
-		curr_display_->setText(prev_op_result); 
+		curr_display_->setText(prev_op_result_str);
 	}
 
 	// If first operation, lhs = previously put number,
@@ -165,7 +169,7 @@ void Calc::mathButtonPressed()
 }
 
 // Procedure when pressing [=] button.
-void Calc::equalButtonPressed()
+void Calc::equalButtonPressed() const
 {
 	// Record [=] presses count.
 	core_->data.subsequentEqualPressesIncrement();
@@ -179,9 +183,12 @@ void Calc::equalButtonPressed()
 	else
 	{
 		core_->data.takeRhsFromDisp(curr_display_);
-	}	
-	
-	curr_display_->setText(performBinaryOperation());
+	}
+
+	const double prev_op_result = core_->performBinaryOperation();
+	const QString prev_op_result_str = core_->toQString(prev_op_result);
+		
+	curr_display_->setText(prev_op_result_str);
 	core_->data.endSequential();
 }
 

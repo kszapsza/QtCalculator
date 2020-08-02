@@ -1,5 +1,5 @@
 #include "gui/Calc.h"
-#include <QApplication>
+#include "core/core.h"
 
 /*
 ///////////////////////////////////////////////////////////

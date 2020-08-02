@@ -1,5 +1,4 @@
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#pragma once
 
 #ifndef CALC_TESTS
 #include "./ui_Settings.h"
@@ -7,7 +6,8 @@
 // ?
 #endif // CALC_TESTS
 
-#include "Calc.h"
+#include "./gui/Calc.h"
+#include "./core/core.h"
 
 namespace Ui { class Settings; }
 
@@ -37,5 +37,3 @@ public slots:
 //private slots:
 	
 };
-
-#endif // SETTINGS_H

@@ -1,11 +1,10 @@
-﻿#include "Calc.h"
-#include "./ui_Calc.h"
-
-#include <cmath>
-#include <random>
-#include <chrono>
-#include <numbers>
+﻿#include <numbers>
 #include <stdexcept>
+
+#include "./ui_Calc.h"
+#include "./gui/Calc.h"
+#include "./core/core.h"
+#include "./core/utility.h"
 
 /*
 ///////////////////////////////////////////////////////////
@@ -19,7 +18,7 @@
 
 // Calls core functions saving input from display, performs requested operation,
 // converts result to QString and catches possible runtime exceptions.
-void Calc::unaryButtonPressed(const dbl_ptr func) const
+void Calc::unaryButtonPressed(double (*func)(double)) const
 {
 	core_->data.takeUnaryFromDisp(curr_display_);
 
@@ -166,29 +165,7 @@ void Calc::arcsecClicked() const
 
 void Calc::arccscClicked() const
 {
-	const dbl_ptr arccsc = [](const double r) -> double { return std::asin(1 / r ); };	
-	core_->data.takeUnaryFromDisp(curr_display_);
-
-	[[likely]] if (core_->data.getUnary() != 0)
-	{
-		[[likely]] if (const double curr_display_inverted_dbl = 1 / core_->data.getUnary();
-			curr_display_inverted_dbl >= -1 && curr_display_inverted_dbl <= 1)
-		{
-			performUnaryOperation(arccsc);
-		}
-		else
-		{
-			ui->statusbar->showMessage("Arccosecant is only definite in "
-				"(-infty, -1) u (1, +infty)", 2000);
-			curr_display_->setText("Err");
-		}
-	}
-	else
-	{
-		ui->statusbar->showMessage("Arccosecant is only definite in "
-			"(-infty, -1) u (1, +infty)", 2000);
-		curr_display_->setText("Err");
-	}
+	unaryButtonPressed(core::acsc);
 }
 
 void Calc::sinhClicked() const
@@ -208,41 +185,17 @@ void Calc::tanhClicked() const
 
 void Calc::cothClicked() const
 {
-	const dbl_ptr coth = [](const double r) -> double { return std::cosh(r) / std::sinh(r); };
-	core_->data.takeUnaryFromDisp(curr_display_);
-
-	[[likely]] if (std::sinhl(core_->data.getUnary()) != 0)
-	{
-		performUnaryOperation(coth);
-	}
-	else
-	{
-		ui->statusbar->showMessage("Cannot divide by zero!", 2000);
-		curr_display_->setText("Err");
-	}
+	unaryButtonPressed(core::coth);
 }
 
 void Calc::sechClicked() const
 {
-	const dbl_ptr sech = [](const double r) noexcept -> double { return 1 / std::coshl(r); };
-	core_->data.takeUnaryFromDisp(curr_display_);
-	performUnaryOperation(sech);
+	unaryButtonPressed(core::sech);
 }
 
 void Calc::cschClicked() const
 {
-	const dbl_ptr csch = [](const double r) -> double { return 1.0 / std::sinh(r); };
-	core_->data.takeUnaryFromDisp(curr_display_);
-
-	[[likely]] if (std::sinhl(core_->data.getUnary()) != 0)
-	{
-		performUnaryOperation(csch);
-	}
-	else
-	{
-		ui->statusbar->showMessage("Cannot divide by zero!", 2000);
-		curr_display_->setText("Err");
-	}
+	unaryButtonPressed(core::csch);
 }
 
 void Calc::arsinhClicked() const
@@ -252,95 +205,25 @@ void Calc::arsinhClicked() const
 
 void Calc::arcoshClicked() const
 {
-	core_->data.takeUnaryFromDisp(curr_display_);
-	
-	[[unlikely]] if (core_->data.getUnary() < 1)
-	{
-		ui->statusbar->showMessage("Area hyperbolic cosinus is only "
-		                           "definite in [1, infty]", 2000);
-		curr_display_->setText("Err");
-	}
-	else
-	{
-		performUnaryOperation(std::acosh);
-	}
+	unaryButtonPressed(core::acosh);
 }
 
 void Calc::artanhClicked() const
 {
-	core_->data.takeUnaryFromDisp(curr_display_);
-	
-	[[unlikely]] if (core_->data.getUnary() <= -1 || core_->data.getUnary() >= 1)
-	{
-		ui->statusbar->showMessage("Area hyperbolic tangent is only "
-		                           "definite in (-1, 1)", 2000);
-		curr_display_->setText("Err");
-	}
-	else
-	{
-		performUnaryOperation(std::atanh);
-	}
+	unaryButtonPressed(core::atanh);
 }
 
 void Calc::arcothClicked() const
 {
-	const dbl_ptr arcoth = [](const double r) -> double
-	{
-		return 0.5 * std::log((r+1)/(r-1));
-	};
-	
-	core_->data.takeUnaryFromDisp(curr_display_);
-	
-	[[unlikely]] if (core_->data.getUnary() >= -1 && core_->data.getUnary() <= 1)
-	{
-		ui->statusbar->showMessage("Area hyperbolic cotangent is only "
-		                           "definite in (-infty, -1) u (1, infty)", 2000);
-		curr_display_->setText("Err");
-	}
-	else
-	{
-		performUnaryOperation(arcoth);
-	}
+	unaryButtonPressed(core::acoth);
 }
 
 void Calc::arsechClicked() const
 {
-	const dbl_ptr arsech = [](const double r) -> double
-	{
-		return std::log(std::sqrt((1/r) - 1) * std::sqrt((1/r) + 1) + (1/r));
-	};
-
-	core_->data.takeUnaryFromDisp(curr_display_);
-
-	[[unlikely]] if (core_->data.getUnary() <= 0 || core_->data.getUnary() > 1)
-	{
-		ui->statusbar->showMessage("Area hyperbolic secant is only "
-		                           "definite in (0, 1]", 2000);
-		curr_display_->setText("Err");
-	}
-	else
-	{
-		performUnaryOperation(arsech);
-	}
+	unaryButtonPressed(core::asech);
 }
 
 void Calc::arcschClicked() const
 {
-	const dbl_ptr arcsch = [](const double r) -> double
-	{
-		return std::log(std::sqrt(1 + (1 / (r*r))) + (1/r));
-	};
-
-	core_->data.takeUnaryFromDisp(curr_display_);
-
-	[[unlikely]] if (core_->data.getUnary() == 0)
-	{
-		ui->statusbar->showMessage("Area hyperbolic cosecant is "
-		                           "indefinite for 0", 2000);
-		curr_display_->setText("Err");
-	}
-	else
-	{
-		performUnaryOperation(arcsch);
-	}
+	unaryButtonPressed(core::acsch);
 }

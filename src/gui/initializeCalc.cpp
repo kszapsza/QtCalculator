@@ -1,9 +1,9 @@
 ﻿#include <QFile>
 #include <QtMath>
-#include <QMap>
 
-#include "Calc.h"
 #include "./ui_Calc.h"
+#include "./gui/Calc.h"
+#include "./core/core.h"
 
 /*
 ///////////////////////////////////////////////////////////

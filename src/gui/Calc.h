@@ -1,5 +1,4 @@
-﻿#ifndef CALC_H
-#define CALC_H
+﻿#pragma once
 
 #ifndef CALC_TESTS
 #include "./ui_Calc.h"
@@ -7,11 +6,8 @@
 // ?
 #endif // CALC_TESTS
 
-#include "log/basicCore.h"
-
 #include <QMainWindow>
 #include <QActionGroup>
-#include <QLineEdit>
 
 /*
 ///////////////////////////////////////////////////////////
@@ -26,6 +22,8 @@
 QT_BEGIN_NAMESPACE
 namespace Ui { class Calc; }
 QT_END_NAMESPACE
+
+struct CalcCore;
 
 class Calc final : public QMainWindow
 {
@@ -50,16 +48,16 @@ private:
 	QActionGroup* calc_modes_;
 	QLineEdit* curr_display_;
 
-	void unaryButtonPressed(dbl_ptr func) const;
+	void unaryButtonPressed(double (*func)(double)) const;
 
 public slots:
 // basicCalc.cpp
 	
-	void numButtonPressed();
-	void commaButtonPressed();	
-	void mathButtonPressed();
+	void numButtonPressed() const;
+	void commaButtonPressed() const;	
+	void mathButtonPressed() const;
 	
-	void equalButtonPressed();
+	void equalButtonPressed() const;
 	void percentButtonPressed() const;	
 
 	void squareButtonPressed();
@@ -122,4 +120,3 @@ public slots:
 	void arsechClicked() const;
 	void arcschClicked() const;
 };
-#endif // CALC_H
