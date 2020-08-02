@@ -1,6 +1,7 @@
 # tst
 
 set(CMAKE_PREFIX_PATH "D:\\Qt\\5.9.9\\msvc2017_64\\bin")
+set(CMAKE_CXX_FLAGS_DEBUG "/MDd")
 
 add_executable(Calc_tst 
 	tests.cpp

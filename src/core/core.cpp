@@ -88,12 +88,11 @@ void CalcCore::loadConfig()
 double CalcCore::performUnaryOperation(double (*func)(double))
 {
 	data.resetSubsequentEqualPresses();
-	data.setLastResult(static_cast<double>(func(data.getUnary())));
 	
-	// Round to zero if unary result is less than epsilon.
-	double result = data.getLastResult();		
+	auto result = static_cast<double>(func(data.getUnary()));
 	result = core::nearly_equal(result, 0.0, std::fabs(data.getUnary())) ? 0.0 : result;
 	
+	data.setLastResult(result);	
 	return result;
 }
 
@@ -101,4 +100,10 @@ QString CalcCore::toQString(const double dbl_result) const
 {
 	QString str_result{};
 	return str_result.setNum(dbl_result, config.disp_format, Config::display_prec);
+}
+
+double CalcCore::round(const double dbl_result) const
+{
+	QString str_result{};
+	return str_result.setNum(dbl_result, config.disp_format, Config::display_prec).toDouble();
 }

@@ -122,4 +122,5 @@ struct CalcCore
 	[[nodiscard]] double performBinaryOperation() const;
 	[[nodiscard]] double performUnaryOperation(double (*func)(double));
 	[[nodiscard]] QString toQString(double dbl_result) const;
+	[[nodiscard]] double round(const double dbl_result) const;
 };
