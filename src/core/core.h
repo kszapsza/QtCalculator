@@ -119,8 +119,9 @@ struct CalcCore
 	CalcCore() { loadConfig(); }
 	void loadConfig();	
 	
-	[[nodiscard]] double performBinaryOperation() const;
-	[[nodiscard]] double performUnaryOperation(double (*func)(double));
-	[[nodiscard]] QString toQString(double dbl_result) const;
-	[[nodiscard]] double round(const double dbl_result) const;
+	double performBinaryOperation() const;
+	double performBinaryPercentOperation() const;
+	double performUnaryOperation(double (*func)(double));
+	QString toQString(double dbl_result) const;
+	double round(double dbl_result) const;
 };

@@ -4,6 +4,9 @@
 #include <QStackedWidget>
 
 #include "./gui/Calc.h"
+
+#include <stdexcept>
+
 #include "./gui/Settings.h"
 #include "./core/core.h"
 #include "./core/utility.h"
@@ -200,66 +203,49 @@ void Calc::percentButtonPressed() const
 	core_->data.resetSubsequentEqualPresses();
 	
 	// Save current display state as rhs value.
-	core_->data.takeRhsFromDisp(curr_display_);
+	core_->data.takeRhsFromDisp(curr_display_);	
 
-	double result{};
-	QString str_result{};
-	bool err{ false };
-	
-	union
+	try
 	{
-		double percentage_fraction{};
-		double percentage_of_lhs;
-	};
-
-	switch (core_->data.getOpDecision())
+		const double prev_op_result = core_->performBinaryPercentOperation();
+		const QString prev_op_result_str = core_->toQString(prev_op_result);
+		
+		curr_display_->setText(prev_op_result_str);		
+	}
+	catch (const std::runtime_error& except)
 	{
-	case operation::division:
-		percentage_fraction = core_->data.getRhs() / 100;
-		[[unlikely]] if (percentage_fraction == 0)			
-			err = true;
-		else
-			result = core_->data.getLhs() / percentage_fraction;
-		break;
-	case operation::multiplication:
-		percentage_fraction = core_->data.getRhs() / 100;
-		result = core_->data.getLhs() * percentage_fraction;
-		break;
-	case operation::subtraction:
-		percentage_of_lhs = (core_->data.getRhs() / 100) * core_->data.getLhs();
-		result = core_->data.getLhs() - percentage_of_lhs;
-		break;
-	case operation::addition:
-		percentage_of_lhs = (core_->data.getRhs() / 100) * core_->data.getLhs();
-		result = core_->data.getLhs() + percentage_of_lhs;
-		break;
-	case operation::none:		
-	default:
-		str_result = curr_display_->text();
-		break;
+		curr_display_->setText("Err");
+		ui->statusbar->showMessage(except.what(), 2000);
 	}
 
-	if (!err)
-	{
-		core_->data.setLastResult(result);
-		str_result.setNum(result, core_->config.disp_format, Config::display_prec);
-	}
-	else
-	{
-		str_result = "Err";
-		ui->statusbar->showMessage("Cannot divide by zero!", 2000);		
-	}
-	
 	core_->data.endSequential();
-	curr_display_->setText(str_result);
 }
 
 ///////////////////////////////////////////////////////////
 //	SINGLE-ARGUMENT OPERATIONS (BASIC)					 //
 ///////////////////////////////////////////////////////////
 
+// Calls core functions saving input from display, performs requested operation,
+// converts result to QString and catches possible runtime exceptions.
+void Calc::unaryButtonPressed(double (*func)(double)) const
+{
+	core_->data.takeUnaryFromDisp(curr_display_);
+
+	try
+	{
+		const auto res = core_->performUnaryOperation(func);
+		const auto res_str = core_->toQString(res);
+		curr_display_->setText(res_str);
+	}
+	catch (const std::runtime_error& except)
+	{
+		curr_display_->setText("Err");
+		ui->statusbar->showMessage(except.what(), 2000);
+	}
+}
+
 // Square button [x²].
-void Calc::squareButtonPressed()
+void Calc::squareButtonPressed() const
 {
 	unaryButtonPressed(core::square);
 }
@@ -285,14 +271,14 @@ void Calc::backspaceButtonPressed() const
 }
 
 // Clearing the display and buffer with [C] button.
-void Calc::clearButtonPressed()
+void Calc::clearButtonPressed() const
 {
 	curr_display_->setText(QString::number(core_->config.init_value));
 	core_->data.reset();
 }
 
 // Changing display value sign with [±] button.
-void Calc::signButtonPressed()
+void Calc::signButtonPressed() const
 {
 	// Reset [=] presses count.
 	core_->data.resetSubsequentEqualPresses();
@@ -317,7 +303,7 @@ void Calc::signButtonPressed()
 //	MEMORY												 //
 ///////////////////////////////////////////////////////////
 
-void Calc::memButtonPressed()
+void Calc::memButtonPressed() const
 {
 	const QString curr_value = curr_display_->text();
 
@@ -334,14 +320,14 @@ void Calc::memButtonPressed()
 	curr_display_->setText(QString::number(core_->data.getMemory()));
 }
 
-void Calc::memAddButtonPressed()
+void Calc::memAddButtonPressed() const
 {
 	const double curr_value = curr_display_->text().toDouble();
 	core_->data.addToMemory(curr_value);
 	ui->statusbar->showMessage("Added to memory.", 2000);	
 }
 
-void Calc::memSubButtonPressed()
+void Calc::memSubButtonPressed() const
 {
 	const double curr_value = curr_display_->text().toDouble();
 	core_->data.subtractFromMemory(curr_value);

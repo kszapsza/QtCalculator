@@ -16,25 +16,6 @@
 ///////////////////////////////////////////////////////////
 */
 
-// Calls core functions saving input from display, performs requested operation,
-// converts result to QString and catches possible runtime exceptions.
-void Calc::unaryButtonPressed(double (*func)(double)) const
-{
-	core_->data.takeUnaryFromDisp(curr_display_);
-
-	try
-	{
-		const auto res = core_->performUnaryOperation(func);
-		const auto res_str = core_->toQString(res);
-		curr_display_->setText(res_str);
-	}
-	catch (const std::runtime_error& except)
-	{
-		curr_display_->setText("Err");
-		ui->statusbar->showMessage(except.what(), 2000);
-	}
-}
-
 ///////////////////////////////////////////////////////////
 //	SCIENTIFIC BUTTONS									 //
 ///////////////////////////////////////////////////////////

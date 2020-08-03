@@ -60,16 +60,16 @@ public slots:
 	void equalButtonPressed() const;
 	void percentButtonPressed() const;	
 
-	void squareButtonPressed();
+	void squareButtonPressed() const;
 	void sqrtButtonPressed() const;
 
 	void backspaceButtonPressed() const;
-	void clearButtonPressed();
-	void signButtonPressed();
+	void clearButtonPressed() const;
+	void signButtonPressed() const;
 
-	void memButtonPressed();
-	void memAddButtonPressed();
-	void memSubButtonPressed();
+	void memButtonPressed() const;
+	void memAddButtonPressed() const;
+	void memSubButtonPressed() const;
 
 	void menuFileOptions();
 	void menuViewBasicTriggered();
