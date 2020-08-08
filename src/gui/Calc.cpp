@@ -1,12 +1,9 @@
-#include <QPushButton>
-#include <QtMath>
-#include <QMap>
-#include <QStackedWidget>
-
-#include "./gui/Calc.h"
-
 #include <stdexcept>
 
+#include <QPushButton>
+#include <QtMath>
+
+#include "./gui/Calc.h"
 #include "./gui/Settings.h"
 #include "./core/core.h"
 #include "./core/utility.h"

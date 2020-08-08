@@ -129,7 +129,9 @@ double CalcCore::performUnaryOperation(double (*func)(double))
 	data.resetSubsequentEqualPresses();
 	
 	auto result = static_cast<double>(func(data.getUnary()));
-	result = core::nearly_equal(result, 0.0, std::fabs(data.getUnary())) ? 0.0 : result;
+
+	if (core::nearly_equal(result, 0.0, std::fabs(data.getUnary())))
+		result = 0.0;
 	
 	data.setLastResult(result);	
 	return result;

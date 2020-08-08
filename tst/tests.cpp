@@ -73,15 +73,6 @@ namespace calc_tests
 			ASSERT_EQ(actual, expected) << "\n\n\n"
 				<< "Expected: " << expected.toStdString() << "\nActual: " << actual.toStdString();
 		}
-		TEST(sin, sin_test)
-		{
-			auto core = std::make_unique<CalcCore>();
-
-			core->data.setUnary(0.564);			
-			const double res = core->performUnaryOperation(std::sin);
-			
-			const QString actual = core->toQString(res);
-		}
 		TEST(sin, sin_pi_6)
 		{
 			auto core = std::make_unique<CalcCore>();

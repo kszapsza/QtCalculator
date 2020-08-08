@@ -1,5 +1,4 @@
 ﻿#include <numbers>
-#include <stdexcept>
 
 #include "./ui_Calc.h"
 #include "./gui/Calc.h"
@@ -24,7 +23,7 @@
 void Calc::piButtonPressed() const
 {
 	QString pi_str{};
-	pi_str.setNum(std::numbers::pi, core_->config.disp_format, Config::display_prec);
+	pi_str.setNum(std::numbers::pi, core_->config.disp_format, Config::display_prec);	
 	curr_display_->setText(pi_str);
 }
 
