@@ -47,25 +47,28 @@ private:
 	
 	QActionGroup* calc_modes_;
 	QLineEdit* curr_display_;
+	
+	enum class input_mode { concatenate = 0, substitute = 1 }
+		curr_display_input_mode_ = input_mode::substitute;
 
-	void unaryButtonPressed(double (*func)(double)) const;
+	void unaryButtonPressed(double (*func)(double));
 
 public slots:
 // basicCalc.cpp
 	
-	void numButtonPressed() const;
-	void commaButtonPressed() const;	
-	void mathButtonPressed() const;
+	void numButtonPressed();
+	void commaButtonPressed();	
+	void mathButtonPressed();
 	
-	void equalButtonPressed() const;
-	void percentButtonPressed() const;	
+	void equalButtonPressed();
+	void percentButtonPressed();	
 
-	void squareButtonPressed() const;
-	void sqrtButtonPressed() const;
+	void squareButtonPressed();
+	void sqrtButtonPressed();
 
 	void backspaceButtonPressed() const;
-	void clearButtonPressed() const;
-	void signButtonPressed() const;
+	void clearButtonPressed();
+	void signButtonPressed();
 
 	void memButtonPressed() const;
 	void memAddButtonPressed() const;
@@ -77,46 +80,46 @@ public slots:
 
 // scientificCalc.cpp
 
-	void piButtonPressed() const;
-	void eButtonPressed() const;
-	void randButtonPressed() const;
+	void piButtonPressed();
+	void eButtonPressed();
+	void randButtonPressed();
 	
-	void logBase2ButtonPressed() const;
-	void logBase10ButtonPressed() const;
-	void lnButtonPressed() const;
+	void logBase2ButtonPressed();
+	void logBase10ButtonPressed();
+	void lnButtonPressed();
 
-	void factorialButtonPressed() const;	
-	void expButtonPressed() const;
-	void e10ToXButtonPressed() const;
+	void factorialButtonPressed();	
+	void expButtonPressed();
+	void e10ToXButtonPressed();
 	
-	void absButtonPressed() const;
-	void inverseButtonPressed() const;
+	void absButtonPressed();
+	void inverseButtonPressed();
 
-	void sinClicked() const;
-	void cosClicked() const;
-	void tanClicked() const;
-	void cotClicked() const;
-	void secClicked() const;
-	void cscClicked() const;
+	void sinClicked();
+	void cosClicked();
+	void tanClicked();
+	void cotClicked();
+	void secClicked();
+	void cscClicked();
 
-	void arcsinClicked() const;
-	void arccosClicked() const;
-	void arctanClicked() const;
-	void arccotClicked() const;
-	void arcsecClicked() const;
-	void arccscClicked() const;
+	void arcsinClicked();
+	void arccosClicked();
+	void arctanClicked();
+	void arccotClicked();
+	void arcsecClicked();
+	void arccscClicked();
 
-	void sinhClicked() const;
-	void coshClicked() const;
-	void tanhClicked() const;
-	void cothClicked() const;
-	void sechClicked() const;
-	void cschClicked() const;
+	void sinhClicked();
+	void coshClicked();
+	void tanhClicked();
+	void cothClicked();
+	void sechClicked();
+	void cschClicked();
 
-	void arsinhClicked() const;
-	void arcoshClicked() const;
-	void artanhClicked() const;
-	void arcothClicked() const;
-	void arsechClicked() const;
-	void arcschClicked() const;
+	void arsinhClicked();
+	void arcoshClicked();
+	void artanhClicked();
+	void arcothClicked();
+	void arsechClicked();
+	void arcschClicked();
 };

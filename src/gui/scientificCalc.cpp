@@ -20,66 +20,69 @@
 ///////////////////////////////////////////////////////////
 
 // Inserts pi.
-void Calc::piButtonPressed() const
+void Calc::piButtonPressed()
 {
 	QString pi_str{};
 	pi_str.setNum(std::numbers::pi, core_->config.disp_format, Config::display_prec);	
 	curr_display_->setText(pi_str);
+	curr_display_input_mode_ = input_mode::substitute;
 }
 
 // Inserts e.
-void Calc::eButtonPressed() const
+void Calc::eButtonPressed()
 {
 	QString e_str{};
 	e_str.setNum(std::numbers::e, core_->config.disp_format, Config::display_prec);
 	curr_display_->setText(e_str);
+	curr_display_input_mode_ = input_mode::substitute;
 }
 
 // Generates random number from 0 to 1.
-void Calc::randButtonPressed() const
+void Calc::randButtonPressed()
 {
 	const auto rand = core::rand();
 	const auto rand_str = core_->toQString(rand);
 	
 	curr_display_->setText(rand_str);
+	curr_display_input_mode_ = input_mode::substitute;
 }
 
-void Calc::logBase2ButtonPressed() const
+void Calc::logBase2ButtonPressed()
 {	
 	unaryButtonPressed(core::log2);
 }
 
-void Calc::logBase10ButtonPressed() const
+void Calc::logBase10ButtonPressed()
 {
 	unaryButtonPressed(std::log10);
 }
 
-void Calc::lnButtonPressed() const
+void Calc::lnButtonPressed()
 {
 	unaryButtonPressed(std::log);
 }
 
-void Calc::factorialButtonPressed() const
+void Calc::factorialButtonPressed()
 {
 	unaryButtonPressed(core::real_fact);
 }
 
-void Calc::expButtonPressed() const
+void Calc::expButtonPressed()
 {		
 	unaryButtonPressed(core::exp);
 }
 
-void Calc::e10ToXButtonPressed() const
+void Calc::e10ToXButtonPressed()
 {
 	unaryButtonPressed(core::_10_to_x);
 }
 
-void Calc::absButtonPressed() const
+void Calc::absButtonPressed()
 {
 	unaryButtonPressed(std::fabs);
 }
 
-void Calc::inverseButtonPressed() const
+void Calc::inverseButtonPressed()
 {
 	unaryButtonPressed(std::fabs);
 }
@@ -88,122 +91,122 @@ void Calc::inverseButtonPressed() const
 //	SCIENTIFIC FUNCTIONS (MENU BAR)						 //
 ///////////////////////////////////////////////////////////
 
-void Calc::sinClicked() const
+void Calc::sinClicked()
 {
 	unaryButtonPressed(std::sin);
 }
 
-void Calc::cosClicked() const
+void Calc::cosClicked()
 {
 	unaryButtonPressed(std::cos);
 }
 
-void Calc::tanClicked() const
+void Calc::tanClicked()
 {
 	unaryButtonPressed(core::tan);
 }
 
-void Calc::cotClicked() const
+void Calc::cotClicked()
 {
 	unaryButtonPressed(core::cot);
 }
 
-void Calc::secClicked() const
+void Calc::secClicked()
 {
 	unaryButtonPressed(core::sec);
 }
 
-void Calc::cscClicked() const
+void Calc::cscClicked()
 {
 	unaryButtonPressed(core::csc);
 }
 
-void Calc::arcsinClicked() const
+void Calc::arcsinClicked()
 {
 	unaryButtonPressed(core::asin);
 }
 
-void Calc::arccosClicked() const
+void Calc::arccosClicked()
 {
 	unaryButtonPressed(core::asin);
 }
 
-void Calc::arctanClicked() const
+void Calc::arctanClicked()
 {
 	unaryButtonPressed(std::atan);
 }
 
-void Calc::arccotClicked() const
+void Calc::arccotClicked()
 {
 	unaryButtonPressed(core::acot);
 }
 
-void Calc::arcsecClicked() const
+void Calc::arcsecClicked()
 {
 	unaryButtonPressed(core::asec);
 }
 
-void Calc::arccscClicked() const
+void Calc::arccscClicked()
 {
 	unaryButtonPressed(core::acsc);
 }
 
-void Calc::sinhClicked() const
+void Calc::sinhClicked()
 {
 	unaryButtonPressed(std::sinh);
 }
 
-void Calc::coshClicked() const
+void Calc::coshClicked()
 {
 	unaryButtonPressed(std::cosh);
 }
 
-void Calc::tanhClicked() const
+void Calc::tanhClicked()
 {
 	unaryButtonPressed(std::tanh);
 }
 
-void Calc::cothClicked() const
+void Calc::cothClicked()
 {
 	unaryButtonPressed(core::coth);
 }
 
-void Calc::sechClicked() const
+void Calc::sechClicked()
 {
 	unaryButtonPressed(core::sech);
 }
 
-void Calc::cschClicked() const
+void Calc::cschClicked()
 {
 	unaryButtonPressed(core::csch);
 }
 
-void Calc::arsinhClicked() const
+void Calc::arsinhClicked()
 {
 	unaryButtonPressed(std::asinh);
 }
 
-void Calc::arcoshClicked() const
+void Calc::arcoshClicked()
 {
 	unaryButtonPressed(core::acosh);
 }
 
-void Calc::artanhClicked() const
+void Calc::artanhClicked()
 {
 	unaryButtonPressed(core::atanh);
 }
 
-void Calc::arcothClicked() const
+void Calc::arcothClicked()
 {
 	unaryButtonPressed(core::acoth);
 }
 
-void Calc::arsechClicked() const
+void Calc::arsechClicked()
 {
 	unaryButtonPressed(core::asech);
 }
 
-void Calc::arcschClicked() const
+void Calc::arcschClicked()
 {
 	unaryButtonPressed(core::acsch);
 }

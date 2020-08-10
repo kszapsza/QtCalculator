@@ -69,7 +69,7 @@ void Calc::menuViewScientificTriggered()
 ///////////////////////////////////////////////////////////
 
 // Putting numbers in using [0~9] buttons.
-void Calc::numButtonPressed() const
+void Calc::numButtonPressed()
 {	
 	// Establish pointer to the button pressed.
 	const auto *button = dynamic_cast<QPushButton*>(sender());
@@ -82,33 +82,24 @@ void Calc::numButtonPressed() const
 	QString formatted_last_result{};
 	formatted_last_result.setNum(core_->data.getLastResult(), core_->config.disp_format, Config::display_prec);
 
-	// SUBSTITUTION CONDITIONS: compare display value...
-	// 1st: ...to lhs ignoring formatting mode (user input is always in basic format),
-	// 2nd: ...to lhs taking into account format (formatted results might be in lhs),
-	// 3rd: ...to initial value w/o formatting,
-	// 4th: ...to last result with formatting,
-	// 5th: ...errors.
-	 
-	if (display_value == QString::number(core_->data.getLhs())
-		|| display_value == formatted_lhs_value
-		|| display_value == QString::number(core_->config.init_value)
-		|| (display_value == formatted_last_result && core_->data.getSubsequentEqualPresses())
-		|| display_value == "Err" || display_value == "nan" || display_value == "Inf")
-	{
-		curr_display_->setText(button_value);
-	}
-	// ELSE CONCATENATE
-	else
+	// CONCATENATION CONDITIONS:	 
+	if (curr_display_input_mode_ == input_mode::concatenate)
 	{
 		const QString new_value = display_value + button_value;
 		curr_display_->setText(new_value);
 	}
-	
+	else
+	{
+		curr_display_->setText(button_value);
+	}
+
+	curr_display_input_mode_ = input_mode::concatenate;
 	core_->data.resetSubsequentEqualPresses();
 }
 
-void Calc::commaButtonPressed() const
-{
+void Calc::commaButtonPressed()
+{	
+	curr_display_input_mode_ = input_mode::concatenate;
 	core_->data.resetSubsequentEqualPresses();
 	
 	const QString display_value = curr_display_->text();
@@ -120,9 +111,10 @@ void Calc::commaButtonPressed() const
 ///////////////////////////////////////////////////////////
 
 // Math two-argument operation buttons: [/], [*], [−], [+].
-void Calc::mathButtonPressed() const
+void Calc::mathButtonPressed()
 {
 	core_->data.resetSubsequentEqualPresses();
+	curr_display_input_mode_ = input_mode::substitute;
 	
 	// If in sequential operation, evaluate queued operation and treat its result
 	// as lhs argument for the next operation now being entered.
@@ -169,9 +161,9 @@ void Calc::mathButtonPressed() const
 }
 
 // Procedure when pressing [=] button.
-void Calc::equalButtonPressed() const
+void Calc::equalButtonPressed()
 {
-	// Record [=] presses count.
+	curr_display_input_mode_ = input_mode::substitute;
 	core_->data.subsequentEqualPressesIncrement();
 
 	// Set result as lhs and leave rhs unchanged if [=] is pressed more than once.
@@ -194,10 +186,10 @@ void Calc::equalButtonPressed() const
 
 // Procedure when pressing [%] button. The method of calculation is different than usual.
 // Pressing [%] ends sequential operation the same way as [=].
-void Calc::percentButtonPressed() const
+void Calc::percentButtonPressed()
 {
-	// Reset [=] presses count.
-	core_->data.resetSubsequentEqualPresses();
+	curr_display_input_mode_ = input_mode::substitute;
+	core_->data.subsequentEqualPressesIncrement();
 	
 	// Save current display state as rhs value.
 	core_->data.takeRhsFromDisp(curr_display_);	
@@ -224,8 +216,9 @@ void Calc::percentButtonPressed() const
 
 // Calls core functions saving input from display, performs requested operation,
 // converts result to QString and catches possible runtime exceptions.
-void Calc::unaryButtonPressed(double (*func)(double)) const
+void Calc::unaryButtonPressed(double (*func)(double))
 {
+	curr_display_input_mode_ = input_mode::substitute;
 	core_->data.takeUnaryFromDisp(curr_display_);
 
 	try
@@ -242,13 +235,13 @@ void Calc::unaryButtonPressed(double (*func)(double)) const
 }
 
 // Square button [x²].
-void Calc::squareButtonPressed() const
+void Calc::squareButtonPressed()
 {
 	unaryButtonPressed(core::square);
 }
 
 // Square root button [√‾].
-void Calc::sqrtButtonPressed() const
+void Calc::sqrtButtonPressed()
 {
 	unaryButtonPressed(std::sqrt);
 }
@@ -268,16 +261,17 @@ void Calc::backspaceButtonPressed() const
 }
 
 // Clearing the display and buffer with [C] button.
-void Calc::clearButtonPressed() const
+void Calc::clearButtonPressed()
 {
 	curr_display_->setText(QString::number(core_->config.init_value));
+	curr_display_input_mode_ = input_mode::substitute;
 	core_->data.reset();
 }
 
 // Changing display value sign with [±] button.
-void Calc::signButtonPressed() const
+void Calc::signButtonPressed()
 {
-	// Reset [=] presses count.
+	curr_display_input_mode_ = input_mode::concatenate;
 	core_->data.resetSubsequentEqualPresses();
 
 	// Remove or add minus sign on display.	
