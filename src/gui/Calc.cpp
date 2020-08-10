@@ -89,7 +89,7 @@ void Calc::numButtonPressed() const
 	// 4th: ...to last result with formatting,
 	// 5th: ...errors.
 	 
-	if (display_value == QString::number(core_->data.getLhs()) 
+	if (display_value == QString::number(core_->data.getLhs())
 		|| display_value == formatted_lhs_value
 		|| display_value == QString::number(core_->config.init_value)
 		|| (display_value == formatted_last_result && core_->data.getSubsequentEqualPresses())

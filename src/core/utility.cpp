@@ -6,7 +6,7 @@
 #include "./core/utility.h"
 
 namespace core
-{
+{	
 	double square(const double r) noexcept
 	{
 		return r * r;
@@ -55,7 +55,7 @@ namespace core
 
 	double tan(const double r)
 	{
-		if (nearly_equal(std::cos(r), 0.0, std::fabs(r)))
+		if (nearly_equal(std::cos(r), 0.0, std::fabs(r) * 2))
 			throw std::runtime_error("Tangent is indeterminate for multiples of pi/2!");
 		
 		return std::tan(r);
@@ -63,7 +63,7 @@ namespace core
 
 	double cot(const double r)
 	{
-		if (nearly_equal(std::sin(r), 0.0, std::fabs(r)))
+		if (nearly_equal(std::sin(r), 0.0, std::fabs(r) * 2))
 			throw std::runtime_error("Cotangent is indeterminate for multiples of pi!");
 		
 		return 1 / std::tan(r);
@@ -71,7 +71,7 @@ namespace core
 
 	double sec(const double r)
 	{
-		if (nearly_equal(std::cos(r), 0.0, std::fabs(r)))
+		if (nearly_equal(std::cos(r), 0.0, std::fabs(r) * 2))
 			throw std::runtime_error("Secant is indeterminate for multiples of pi/2!");
 		
 		return 1 / std::cos(r);
@@ -79,7 +79,7 @@ namespace core
 
 	double csc(const double r)
 	{
-		if (nearly_equal(std::sin(r), 0.0, std::fabs(r)))
+		if (nearly_equal(std::sin(r), 0.0, std::fabs(r) * 2))
 			throw std::runtime_error("Cosecant is indeterminate for multiples of pi!");
 		
 		return 1 / std::sin(r);

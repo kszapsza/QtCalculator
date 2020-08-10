@@ -12,26 +12,7 @@
 namespace core
 {
 	/// UTILITY FUNCTIONS ///
-
-	// Compares if two floats (a, b) are nearly equal with precision of epsilon
-	// automatically multiplied by a or b, whichever is greater.
-	// This won't work accurately enough if a and b precision depends on
-	// some previous operations, use second overload with custom factor instead then.
-	//
-	// Gives satisfying results indepentently of order of magnitude of pair (a, b),
-	// but may work unexpectedly if their *individual* order of magnitude differs strongly.
-
-	template<typename Float>
-	bool nearly_equal(const Float a, const Float b)
-		requires std::is_floating_point_v<Float>
-	{
-		const auto abs_a = std::abs(a);
-		const auto abs_b = std::abs(b);
-		
-		return std::abs(abs_a - abs_b)
-			<= std::numeric_limits<Float>::epsilon() * std::max(abs_a, abs_b);
-	}
-
+	
 	// Compares if two floats (a, b) are nearly equal with precision of epsilon
 	// multiplied by custom factor (eps_factor). Useful, if either a or b
 	// precision is already result of some previous operation, consider:
@@ -49,9 +30,10 @@ namespace core
 	{
 		const auto abs_a = std::abs(a);
 		const auto abs_b = std::abs(b);
+
+		const auto epsilon = std::numeric_limits<Float>::epsilon() * eps_factor;
 		
-		return std::abs(abs_a - abs_b)
-			<= std::numeric_limits<Float>::epsilon() * eps_factor;
+		return std::fabs(abs_a - abs_b) <= epsilon;
 	}
 
 	double square(double r) noexcept;

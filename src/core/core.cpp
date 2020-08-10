@@ -123,15 +123,22 @@ double CalcCore::performBinaryPercentOperation() const
 	return result;
 }
 
-// Evaluates unary operation from data_.unary and shows result.
+// Evaluates unary operation from data.unary and shows result.
 double CalcCore::performUnaryOperation(double (*func)(double))
 {
 	data.resetSubsequentEqualPresses();
 	
 	auto result = static_cast<double>(func(data.getUnary()));
 
-	if (core::nearly_equal(result, 0.0, std::fabs(data.getUnary())))
+	// For trigonometric functions	
+	if (core::nearly_equal(result, 0.0, std::fabs(data.getUnary()) * 2))
+	{
 		result = 0.0;
+	}
+	if (core::nearly_equal(result, 0.5, std::fabs(data.getUnary()) * 2))
+	{
+		result = 0.5;
+	}
 	
 	data.setLastResult(result);	
 	return result;

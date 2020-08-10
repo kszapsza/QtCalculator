@@ -33,10 +33,7 @@ struct Config
 	double init_value{ 0.0 };
 	mode init_mode{ mode::scientific };
 	char disp_format{ 'g' };
-
-	// Higher precision doesn't make sense for doubles,
-	// lower precision causes severe problems with functions.
-	static constexpr int display_prec{ 17 };
+	static constexpr int display_prec{ 16 };
 };
 
 /// DATA ///
@@ -44,7 +41,7 @@ struct Config
 class Data
 {
 	// Allows to perform sequential operations such as 2*2*2 = 8
-	bool sequential_operation{ false };	
+	bool sequential_operation{ false };
 	// Allows to perform sequential operations such as 2*3[=][=][=] = 54.
 	uint8_t subsequent_equal_presses{ 0 };
 

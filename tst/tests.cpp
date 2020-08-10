@@ -114,8 +114,60 @@ namespace calc_tests
 
 			ASSERT_EQ(actual, expected) << "\n\n\n"
 				<< "Expected: " << expected.toStdString() << "\nActual: " << actual.toStdString();
-		}		
-		
+		}
+
+		TEST(cos, cos_0)
+		{
+			auto core = std::make_unique<CalcCore>();
+
+			const double pi_rounded = core->round(0);
+			core->data.setUnary(pi_rounded);
+			
+			const double res = core->performUnaryOperation(std::cos);	
+			const QString actual = core->toQString(res);			
+			const QString expected{ "1" };
+
+			ASSERT_EQ(actual, expected) << "\n\n\n"
+				<< "Expected: " << expected.toStdString() << "\nActual: " << actual.toStdString();
+		}
+		TEST(cos, cos_pi_2)
+		{
+			auto core = std::make_unique<CalcCore>();
+
+			const double pi_rounded = core->round(std::numbers::pi / 2);
+			core->data.setUnary(pi_rounded);
+			
+			const double res = core->performUnaryOperation(std::cos);	
+			const QString actual = core->toQString(res);			
+			const QString expected{ "0" };
+
+			ASSERT_EQ(actual, expected) << "\n\n\n"
+				<< "Expected: " << expected.toStdString() << "\nActual: " << actual.toStdString();
+		}
+		TEST(cos, cos_pi)
+		{
+			auto core = std::make_unique<CalcCore>();
+
+			const double pi_rounded = core->round(std::numbers::pi);
+			core->data.setUnary(pi_rounded);
+			
+			const double res = core->performUnaryOperation(std::cos);	
+			const QString actual = core->toQString(res);			
+			const QString expected{ "-1" };
+
+			ASSERT_EQ(actual, expected) << "\n\n\n"
+				<< "Expected: " << expected.toStdString() << "\nActual: " << actual.toStdString();
+		}
+
+		TEST(tan, tan_minus_pi_2)
+		{			
+			auto core = std::make_unique<CalcCore>();
+			
+			const double pi_rounded = core->round(std::numbers::pi);
+			core->data.setUnary(core->round(-pi_rounded / 2));
+
+			EXPECT_ANY_THROW(core->performUnaryOperation(core::tan));
+		}
 		TEST(tan, tan_0)
 		{
 			auto core = std::make_unique<CalcCore>();
@@ -168,7 +220,33 @@ namespace calc_tests
 
 			ASSERT_EQ(actual, expected) << "\n\n\n"
 				<< "Expected: " << expected.toStdString() << "\nActual: " << actual.toStdString();
-		}		
+		}
+
+		TEST(cot, cot_minus_pi)
+		{			
+			auto core = std::make_unique<CalcCore>();
+			
+			const double pi_rounded = core->round(std::numbers::pi);
+			core->data.setUnary(core->round(-pi_rounded));
+
+			EXPECT_ANY_THROW(core->performUnaryOperation(core::cot));
+		}
+		TEST(cot, cot_zero)
+		{			
+			auto core = std::make_unique<CalcCore>();			
+			core->data.setUnary(core->round(0));
+
+			EXPECT_ANY_THROW(core->performUnaryOperation(core::cot));
+		}
+		TEST(cot, cot_pi)
+		{			
+			auto core = std::make_unique<CalcCore>();
+			
+			const double pi_rounded = core->round(std::numbers::pi);
+			core->data.setUnary(core->round(pi_rounded));
+
+			EXPECT_ANY_THROW(core->performUnaryOperation(core::cot));
+		}
 	}
 }
 
