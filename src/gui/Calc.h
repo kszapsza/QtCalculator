@@ -14,7 +14,7 @@
 	Qt Calculator
  	2020, Karol Szapsza
  	
- 	Calc.h
+ 	gui/Calc.h
  	Calc class main header.
 ///////////////////////////////////////////////////////////
 */
@@ -33,10 +33,6 @@ public:
 	
 	explicit Calc(CalcCore* core, QWidget *parent = nullptr);
     ~Calc() override;
-	
-    [[nodiscard]] Ui::Calc* getUi() const				{ return ui; }
-    [[nodiscard]] QActionGroup* getCalcModes() const	{ return calc_modes_; }
-    [[nodiscard]] QLineEdit* getCurrDisplay() const		{ return curr_display_; }
 	
 	friend class Settings;
 

@@ -10,7 +10,7 @@
 	Qt Calculator
  	2020, Karol Szapsza
 
- 	scientificCalc.cpp
+ 	gui/scientificCalc.cpp
  	Calc definitions specific for Scientific mode.
 ///////////////////////////////////////////////////////////
 */
@@ -42,7 +42,7 @@ void Calc::randButtonPressed()
 {
 	const auto rand = core::rand();
 	const auto rand_str = core_->toQString(rand);
-	
+
 	curr_display_->setText(rand_str);
 	curr_display_input_mode_ = input_mode::substitute;
 }
@@ -84,7 +84,7 @@ void Calc::absButtonPressed()
 
 void Calc::inverseButtonPressed()
 {
-	unaryButtonPressed(std::fabs);
+	unaryButtonPressed(core::inv);
 }
 
 ///////////////////////////////////////////////////////////

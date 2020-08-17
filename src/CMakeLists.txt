@@ -16,7 +16,9 @@ add_executable(Calc
     core/core.h    
     core/core.cpp
     core/utility.h
-    core/utility.cpp)
+    core/utility.cpp
+    core/systems.cpp
+    core/systems.h)
 
 target_link_libraries(Calc PRIVATE
     Qt5::Widgets

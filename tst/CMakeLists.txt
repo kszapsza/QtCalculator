@@ -17,5 +17,7 @@ add_executable(Calc_tst
     ../src/core/core.h
     ../src/core/utility.h
     ../src/core/utility.cpp
-)
+	../src/core/systems.cpp
+	../src/core/systems.h tests_systems.cpp)
+
 target_link_libraries(Calc_tst PRIVATE ${SRC} gtest Qt5::Widgets)

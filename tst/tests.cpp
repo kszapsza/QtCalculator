@@ -9,6 +9,16 @@
 #include "core/utility.h"
 #include "gui/Calc.h"
 
+/*
+///////////////////////////////////////////////////////////
+	Qt Calculator
+ 	2020, Karol Szapsza
+
+ 	tst/tests.cpp
+ 	Unit tests for core part of application.
+///////////////////////////////////////////////////////////
+*/
+
 namespace calc_tests
 {
 	namespace binary
@@ -21,7 +31,7 @@ namespace calc_tests
 			core->data.setRhs(0);
 			core->data.setOpDecision(operation::division);
 			
-			EXPECT_ANY_THROW(core->performBinaryOperation());
+			EXPECT_ANY_THROW(const auto result = core->performBinaryOperation());
 		}
 		TEST(division, one_by_two)
 		{
@@ -166,7 +176,7 @@ namespace calc_tests
 			const double pi_rounded = core->round(std::numbers::pi);
 			core->data.setUnary(core->round(-pi_rounded / 2));
 
-			EXPECT_ANY_THROW(core->performUnaryOperation(core::tan));
+			EXPECT_ANY_THROW(const auto result = core->performUnaryOperation(core::tan));
 		}
 		TEST(tan, tan_0)
 		{
@@ -187,7 +197,7 @@ namespace calc_tests
 			const double pi_rounded = core->round(std::numbers::pi);
 			core->data.setUnary(core->round(pi_rounded / 2));
 
-			EXPECT_ANY_THROW(core->performUnaryOperation(core::tan));
+			EXPECT_ANY_THROW(const auto result = core->performUnaryOperation(core::tan));
 		}
 		TEST(tan, tan_pi_2_mult)
 		{
@@ -196,7 +206,7 @@ namespace calc_tests
 			const double pi_rounded = core->round(std::numbers::pi);
 			core->data.setUnary(core->round(pi_rounded * 15.5));
 
-			EXPECT_ANY_THROW(core->performUnaryOperation(core::tan));
+			EXPECT_ANY_THROW(const auto result = core->performUnaryOperation(core::tan));
 		}
 		TEST(tan, tan_pi_2_big)
 		{
@@ -205,7 +215,7 @@ namespace calc_tests
 			const double pi_rounded = core->round(std::numbers::pi);
 			core->data.setUnary(core->round(pi_rounded * 15000.5));
 
-			EXPECT_ANY_THROW(core->performUnaryOperation(core::tan));
+			EXPECT_ANY_THROW(const auto result = core->performUnaryOperation(core::tan));
 		}
 		TEST(tan, tan_pi)
 		{
@@ -229,14 +239,14 @@ namespace calc_tests
 			const double pi_rounded = core->round(std::numbers::pi);
 			core->data.setUnary(core->round(-pi_rounded));
 
-			EXPECT_ANY_THROW(core->performUnaryOperation(core::cot));
+			EXPECT_ANY_THROW(const auto result = core->performUnaryOperation(core::cot));
 		}
 		TEST(cot, cot_zero)
 		{			
 			auto core = std::make_unique<CalcCore>();			
 			core->data.setUnary(core->round(0));
 
-			EXPECT_ANY_THROW(core->performUnaryOperation(core::cot));
+			EXPECT_ANY_THROW(const auto result = core->performUnaryOperation(core::cot));
 		}
 		TEST(cot, cot_pi)
 		{			
@@ -245,7 +255,7 @@ namespace calc_tests
 			const double pi_rounded = core->round(std::numbers::pi);
 			core->data.setUnary(core->round(pi_rounded));
 
-			EXPECT_ANY_THROW(core->performUnaryOperation(core::cot));
+			EXPECT_ANY_THROW(const auto result = core->performUnaryOperation(core::cot));
 		}
 	}
 }

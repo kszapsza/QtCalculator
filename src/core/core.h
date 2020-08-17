@@ -21,6 +21,7 @@ enum class operation : int
 	addition = 4, log_base_y = 5, modulo = 6, power = 7
 };
 
+// Enum underlying indexes are connected with QStackWidget current tab indexes!
 enum class mode : int
 {
 	basic = 0, scientific = 1

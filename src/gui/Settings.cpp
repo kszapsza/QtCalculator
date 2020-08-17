@@ -1,6 +1,5 @@
 #include <QFile>
 #include <QMessageBox>
-#include <QDialog>
 
 #include "./gui/Calc.h"
 #include "./gui/Settings.h"

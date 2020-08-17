@@ -17,7 +17,7 @@
 	Qt Calculator
  	2020, Karol Szapsza
 
- 	basicCalc.cpp
+ 	gui/Calc.cpp
  	Common Calc definitions for both modes.
 ///////////////////////////////////////////////////////////
 */
