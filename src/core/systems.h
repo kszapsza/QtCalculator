@@ -15,3 +15,7 @@ std::string bin_hex(std::string& bin);
 std::int64_t hex_dec(std::string& hex);
 std::string hex_bin(std::string& hex);
 std::string hex_oct(std::string& hex);
+
+std::int64_t oct_dec(std::string& oct);
+std::string oct_bin(std::string& hex);
+std::string oct_hex(std::string& hex);

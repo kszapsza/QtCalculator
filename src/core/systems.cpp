@@ -46,7 +46,7 @@ std::string dec_oct(const std::int64_t dec)
 
 std::int64_t bin_dec(std::string& bin)
 {
-	if (bin.length() >= 2 && bin.at(0) == '0' && (bin.at(1) == 'B' || bin.at(1) == 'B'))
+	if (bin.length() >= 2 && bin.at(0) == '0' && (bin.at(1) == 'b' || bin.at(1) == 'B'))
 		bin.erase(0, 2);
 
 	std::int64_t result = 0;
