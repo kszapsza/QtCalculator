@@ -256,20 +256,35 @@ Calc::Calc(CalcCore* core, QWidget *parent) :
 	ui->button_C_prog->setToolTip("Clear display");
 
 	// Initialize [±] button.
-	//connect(ui->button_sign_prog, SIGNAL(released()), this, SLOT(signButtonPressed()));
-	//ui->button_sign_prog->setToolTip("Invert sign");
+	connect(ui->button_sign_prog, SIGNAL(released()), this, SLOT(programmerSignButtonPressed()));
+	ui->button_sign_prog->setToolTip("Invert sign");
 
 	// Initialize [Backspace] button.
 	connect(ui->button_backspace_prog, SIGNAL(released()), this, SLOT(backspaceButtonPressed()));
 	ui->button_backspace_prog->setToolTip("Backspace");
 
-	// Initialize numeric systems QComboBox.
+	// Initialize numeric systems combo box.
 	connect(ui->box_numeric_system, SIGNAL(currentIndexChanged(int)), this, SLOT(numericSystemBoxChanged()));
 	ui->box_numeric_system->setToolTip("Change numeric system");
+
+	// Initialize hex A-F buttons.
+	QPushButton *hex_buttons[10]{ nullptr };
+	QString button_name{};
+	char ch = 'A';
+
+	for (std::size_t i{}; i < 6 ; ++i)
+	{
+		button_name = "button_hex_";
+		button_name += ch;
+		hex_buttons[i] = findChild<QPushButton*>(button_name);
+		connect(hex_buttons[i], SIGNAL(released()), this, SLOT(numButtonPressed()));
+		ch++;
+	}
 	
 /// MENU BAR INIT ///
 
 	connect(ui->actionOptions, SIGNAL(triggered(bool)), this, SLOT(menuFileOptions()));
+	connect(ui->actionAbout, SIGNAL(triggered(bool)), this, SLOT(menuFileAbout()));
 
 	// Initialize [View] menu bar tab.
 	calc_modes_ = new QActionGroup(this);

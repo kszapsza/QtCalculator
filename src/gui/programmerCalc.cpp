@@ -83,3 +83,12 @@ void Calc::numericSystemBoxChanged()
 
 	changeNumericSystem(old_system, new_system, old_value);
 }
+
+void Calc::programmerSignButtonPressed()
+{
+	const auto old_val = static_cast<std::int64_t>(core_->data.inputFormatter(curr_display_));
+	const std::int64_t new_val = old_val * -1;
+
+	const QString new_val_str = core_->resultFormatter(new_val);
+	curr_display_->setText(new_val_str);
+}

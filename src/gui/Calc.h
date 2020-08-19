@@ -77,9 +77,11 @@ private:
 		enableButtons(buttons...);
 	}
 
+	void changeNumericSystem(numeric_systems old_system, numeric_systems new_system, QString old_value);
+
 public slots:
 
-// basicCalc.cpp
+// Calc.cpp
 	
 	void numButtonPressed();
 	void commaButtonPressed();	
@@ -100,6 +102,7 @@ public slots:
 	void memSubButtonPressed() const;
 
 	void menuFileOptions();
+	void menuFileAbout();
 
 	void menuViewBasicTriggered();
 	void menuViewScientificTriggered();
@@ -152,6 +155,6 @@ public slots:
 
 // programmerCalc.cpp
 
-	void changeNumericSystem(numeric_systems old_system, numeric_systems new_system, QString old_value);
 	void numericSystemBoxChanged();
+	void programmerSignButtonPressed();
 };

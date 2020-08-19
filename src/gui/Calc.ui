@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>505</width>
-    <height>249</height>
+    <height>251</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -638,6 +638,7 @@
        </property>
        <property name="font">
         <font>
+         <family>Segoe UI</family>
          <pointsize>9</pointsize>
          <weight>50</weight>
          <bold>false</bold>
@@ -1433,7 +1434,7 @@
        <property name="font">
         <font>
          <family>Segoe UI</family>
-         <pointsize>12</pointsize>
+         <pointsize>9</pointsize>
          <weight>50</weight>
          <bold>false</bold>
         </font>
@@ -1451,7 +1452,7 @@
         <locale language="English" country="UnitedKingdom"/>
        </property>
        <property name="maxLength">
-        <number>30</number>
+        <number>64</number>
        </property>
        <property name="readOnly">
         <bool>true</bool>
@@ -1657,7 +1658,7 @@
           </font>
          </property>
          <property name="text">
-          <string>CE</string>
+          <string>C</string>
          </property>
          <property name="shortcut">
           <string>Del</string>
@@ -2115,7 +2116,7 @@
           </font>
          </property>
          <property name="text">
-          <string>A</string>
+          <string>a</string>
          </property>
         </widget>
        </item>
@@ -2134,7 +2135,7 @@
           </font>
          </property>
          <property name="text">
-          <string>B</string>
+          <string>b</string>
          </property>
         </widget>
        </item>
@@ -2153,7 +2154,7 @@
           </font>
          </property>
          <property name="text">
-          <string>C</string>
+          <string>c</string>
          </property>
         </widget>
        </item>
@@ -2172,7 +2173,7 @@
           </font>
          </property>
          <property name="text">
-          <string>D</string>
+          <string>d</string>
          </property>
         </widget>
        </item>
@@ -2191,7 +2192,7 @@
           </font>
          </property>
          <property name="text">
-          <string>E</string>
+          <string>e</string>
          </property>
         </widget>
        </item>
@@ -2210,7 +2211,7 @@
           </font>
          </property>
          <property name="text">
-          <string>F</string>
+          <string>f</string>
          </property>
         </widget>
        </item>
@@ -2257,6 +2258,8 @@
      <string>File</string>
     </property>
     <addaction name="actionOptions"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuFunctions">
     <property name="title">
@@ -2493,6 +2496,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+P</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About…</string>
    </property>
   </action>
  </widget>

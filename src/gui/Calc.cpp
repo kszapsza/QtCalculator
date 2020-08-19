@@ -1,9 +1,9 @@
 #include <stdexcept>
 #include <unordered_map>
-#include <vector>
 
 #include <QPushButton>
 #include <QtMath>
+#include <QMessageBox>
 
 #include "./gui/Calc.h"
 #include "./gui/Settings.h"
@@ -32,6 +32,23 @@ void Calc::menuFileOptions()
 	Settings settings(this);
 	settings.setModal(true);
 	settings.exec();
+}
+
+void Calc::menuFileAbout()
+{
+	QMessageBox::about(this, "About Calculator",
+		R"(QtCalculator
+© 2020 Karol Szapsza
+
+This software utilizes the Qt framework, available under
+the GNU Lesser General Public License version 3.
+The Qt Toolkit is Copyright (C) 2018 The Qt Company Ltd.
+and other contributors.
+
+This software utilizes googletest library, licensed under
+BSD-3 Clause license. Copyright 2008, Google Inc.
+All rights reserved.)"
+);
 }
 
 // Changing view mode to Basic in [View] tab
