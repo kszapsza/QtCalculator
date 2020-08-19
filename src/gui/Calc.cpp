@@ -204,10 +204,19 @@ void Calc::equalButtonPressed()
 		core_->data.takeRhsFromDisp(curr_display_);
 	}
 
-	const double prev_op_result = core_->performBinaryOperation();
-	const QString prev_op_result_str = core_->resultFormatter(prev_op_result);
-		
-	curr_display_->setText(prev_op_result_str);
+	try
+	{
+		const double prev_op_result = core_->performBinaryOperation();
+		const QString prev_op_result_str = core_->resultFormatter(prev_op_result);
+
+		curr_display_->setText(prev_op_result_str);
+	}
+	catch (const std::runtime_error& except)
+	{
+		curr_display_->setText("Err");
+		ui->statusbar->showMessage(except.what(), 2000);
+	}
+
 	core_->data.endSequential();
 }
 
