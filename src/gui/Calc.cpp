@@ -197,7 +197,13 @@ void Calc::mathButtonPressed()
 		{ui->button_add_prog,	operation::addition},
 		{ui->button_log_basey,	operation::log_base_y},
 		{ui->button_modulo,		operation::modulo},
-		{ui->button_x_to_y,		operation::power}
+		{ui->button_x_to_y,		operation::power},
+		{ui->button_and,		operation::land},
+		{ui->button_or,         operation::lor},
+		{ui->button_not,        operation::lnot},
+		{ui->button_nand,       operation::lnand},
+		{ui->button_nor,        operation::lnor},
+		{ui->button_xor,        operation::lxor}
 	};
 
 	// Establish pointer to the button pressed.

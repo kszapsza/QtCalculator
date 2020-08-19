@@ -20,7 +20,7 @@ add_executable(Calc
     core/systems.cpp
     core/systems.h
     core/data.h
-    core/enums.h gui/programmerCalc.cpp)
+    core/enums.h gui/programmerCalc.cpp core/bitwise.cpp core/bitwise.h)
 
 target_link_libraries(Calc PRIVATE
     Qt5::Widgets

@@ -280,6 +280,26 @@ Calc::Calc(CalcCore* core, QWidget *parent) :
 		connect(hex_buttons[i], SIGNAL(released()), this, SLOT(numButtonPressed()));
 		ch++;
 	}
+
+	// Initialize bitwise operations buttons.
+	connect(ui->button_and, SIGNAL(released()), this, SLOT(mathButtonPressed()));
+	ui->button_and->setToolTip("Bitwise AND");
+
+	connect(ui->button_or, SIGNAL(released()), this, SLOT(mathButtonPressed()));
+	ui->button_or->setToolTip("Bitwise OR");
+
+	connect(ui->button_not, SIGNAL(released()), this, SLOT(mathButtonPressed()));
+	ui->button_not->setToolTip("Bitwise NOT");
+
+	connect(ui->button_nand, SIGNAL(released()), this, SLOT(mathButtonPressed()));
+	ui->button_nand->setToolTip("Bitwise NAND");
+
+	connect(ui->button_nor, SIGNAL(released()), this, SLOT(mathButtonPressed()));
+	ui->button_nor->setToolTip("Bitwise NOR");
+
+	connect(ui->button_xor, SIGNAL(released()), this, SLOT(mathButtonPressed()));
+	ui->button_xor->setToolTip("Bitwise XOR");
+
 	
 /// MENU BAR INIT ///
 

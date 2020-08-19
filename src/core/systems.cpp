@@ -33,7 +33,7 @@ namespace core
 
 	std::string dec_bin(std::int64_t dec)
 	{
-		std::string str = std::bitset<sizeof(std::int64_t) * 8>(dec).to_string();
+		std::string str = std::bitset<64>(dec).to_string();
 		str.erase(0, std::min(str.find('1'), str.size() - 1));
 		return str;
 	}

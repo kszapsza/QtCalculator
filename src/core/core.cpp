@@ -95,6 +95,9 @@ double CalcCore::performBinaryOperation() const
 
 	switch (data.getOpDecision())
 	{
+	case operation::none:
+	default:
+		break;
 	case operation::division:
 		if (data.getRhs() == 0)
 			throw std::runtime_error("Can't divide by zero!");
@@ -122,9 +125,6 @@ double CalcCore::performBinaryOperation() const
 	case operation::power:
 		result = std::pow(data.getLhs(), data.getRhs());
 		break;
-	case operation::none:
-	default:
-		break;
 	}
 
 	return result;
@@ -143,6 +143,9 @@ double CalcCore::performBinaryPercentOperation() const
 
 	switch (data.getOpDecision())
 	{
+	case operation::none:
+	default:
+		break;
 	case operation::division:
 		percentage_fraction = data.getRhs() / 100;
 		[[unlikely]] if (percentage_fraction == 0)			
@@ -161,9 +164,6 @@ double CalcCore::performBinaryPercentOperation() const
 	case operation::addition:
 		percentage_of_lhs = (data.getRhs() / 100) * data.getLhs();
 		result = data.getLhs() + percentage_of_lhs;
-		break;
-	case operation::none:		
-	default:
 		break;
 	}
 
