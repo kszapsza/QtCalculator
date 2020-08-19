@@ -170,10 +170,8 @@ void Calc::mathButtonPressed()
 		// perform operation and put the result on screen.
 		core_->data.takeRhsFromDisp(curr_display_);
 
-		const double prev_op_result = core_->performBinaryOperation();
-		const QString prev_op_result_str = core_->resultFormatter(prev_op_result);
-		
-		curr_display_->setText(prev_op_result_str);
+		const QString prev_op_result = core_->performBinaryOperation();
+		curr_display_->setText(prev_op_result);
 	}
 
 	// If first operation, lhs = previously put number,
@@ -200,7 +198,6 @@ void Calc::mathButtonPressed()
 		{ui->button_x_to_y,		operation::power},
 		{ui->button_and,		operation::land},
 		{ui->button_or,         operation::lor},
-		{ui->button_not,        operation::lnot},
 		{ui->button_nand,       operation::lnand},
 		{ui->button_nor,        operation::lnor},
 		{ui->button_xor,        operation::lxor}
@@ -235,10 +232,8 @@ void Calc::equalButtonPressed()
 
 	try
 	{
-		const double prev_op_result = core_->performBinaryOperation();
-		const QString prev_op_result_str = core_->resultFormatter(prev_op_result);
-
-		curr_display_->setText(prev_op_result_str);
+		const QString prev_op_result = core_->performBinaryOperation();
+		curr_display_->setText(prev_op_result);
 	}
 	catch (const std::runtime_error& except)
 	{
@@ -261,10 +256,8 @@ void Calc::percentButtonPressed()
 
 	try
 	{
-		const double prev_op_result = core_->performBinaryPercentOperation();
-		const QString prev_op_result_str = core_->resultFormatter(prev_op_result);
-		
-		curr_display_->setText(prev_op_result_str);		
+		const QString prev_op_result = core_->performBinaryPercentOperation();
+		curr_display_->setText(prev_op_result);
 	}
 	catch (const std::runtime_error& except)
 	{

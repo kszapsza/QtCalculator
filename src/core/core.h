@@ -36,8 +36,8 @@ struct CalcCore
 
 	[[nodiscard]] QString resultFormatter(double result) const;
 	
-	[[nodiscard]] double performBinaryOperation() const;
-	[[nodiscard]] double performBinaryPercentOperation() const;
+	[[nodiscard]] QString performBinaryOperation() const;
+	[[nodiscard]] QString performBinaryPercentOperation() const;
 	[[nodiscard]] double performUnaryOperation(const std::function<double(double)>& func);
 
 	[[nodiscard]] QString toQString(double dbl_result) const;

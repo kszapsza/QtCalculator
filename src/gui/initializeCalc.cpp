@@ -288,7 +288,7 @@ Calc::Calc(CalcCore* core, QWidget *parent) :
 	connect(ui->button_or, SIGNAL(released()), this, SLOT(mathButtonPressed()));
 	ui->button_or->setToolTip("Bitwise OR");
 
-	connect(ui->button_not, SIGNAL(released()), this, SLOT(mathButtonPressed()));
+	connect(ui->button_not, SIGNAL(released()), this, SLOT(notButtonPressed()));
 	ui->button_not->setToolTip("Bitwise NOT");
 
 	connect(ui->button_nand, SIGNAL(released()), this, SLOT(mathButtonPressed()));

@@ -17,7 +17,7 @@ enum class operation : int
 {
 	none = 0, division = 1, multiplication = 2, subtraction = 3,
 	addition = 4, log_base_y = 5, modulo = 6, power = 7,
-	land = 8, lor = 9, lnot = 10, lnand = 11, lnor = 12, lxor = 13
+	land = 8, lor = 9, lnand = 10, lnor = 11, lxor = 12
 };
 
 // Enum underlying indexes are connected with QStackWidget current tab indexes!

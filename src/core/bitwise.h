@@ -8,10 +8,10 @@ namespace core
 {
 	void remove_leading_zeroes(std::string& str);
 
-	std::string land(std::int64_t lhs, std::int64_t rhs);
-	std::string lor(std::int64_t lhs, std::int64_t rhs);
-	std::string lnot(std::int64_t unary);
-	std::string lnand(std::int64_t lhs, std::int64_t rhs);
-	std::string lnor(std::int64_t lhs, std::int64_t rhs);
-	std::string lxor(std::int64_t lhs, std::int64_t rhs);
+	double land(std::int64_t lhs, std::int64_t rhs);
+	std::int64_t lor(std::int64_t lhs, std::int64_t rhs);
+	std::int64_t lnot(std::int64_t unary);
+	std::int64_t lnand(std::int64_t lhs, std::int64_t rhs);
+	std::int64_t lnor(std::int64_t lhs, std::int64_t rhs);
+	std::int64_t lxor(std::int64_t lhs, std::int64_t rhs);
 }

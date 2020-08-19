@@ -6,6 +6,7 @@
 
 #include "./core/core.h"
 #include "./core/utility.h"
+#include "bitwise.h"
 
 /*
 ///////////////////////////////////////////////////////////
@@ -88,7 +89,7 @@ void CalcCore::loadConfig()
 
 // Core function performing operation stored in buffer.
 // Used both by [=] button and math buttons.
-double CalcCore::performBinaryOperation() const
+QString CalcCore::performBinaryOperation() const
 {
 	double result{};
 	QString str_result{};
@@ -125,12 +126,27 @@ double CalcCore::performBinaryOperation() const
 	case operation::power:
 		result = std::pow(data.getLhs(), data.getRhs());
 		break;
+	case operation::land:
+		result = core::land(data.getLhs(), data.getRhs());
+		break;
+	case operation::lor:
+		result = core::lor(data.getLhs(), data.getRhs());
+		break;
+	case operation::lnand:
+		result = core::lnand(data.getLhs(), data.getRhs());
+		break;
+	case operation::lnor:
+		result = core::lnor(data.getLhs(), data.getRhs());
+		break;
+	case operation::lxor:
+		result = core::lxor(data.getLhs(), data.getRhs());
+		break;
 	}
 
-	return result;
+	return resultFormatter(result);
 }
 
-double CalcCore::performBinaryPercentOperation() const
+QString CalcCore::performBinaryPercentOperation() const
 {
 	double result{};
 	QString str_result{};
@@ -167,7 +183,7 @@ double CalcCore::performBinaryPercentOperation() const
 		break;
 	}
 
-	return result;
+	return resultFormatter(result);
 }
 
 // Evaluates unary operation from data.unary and shows result.

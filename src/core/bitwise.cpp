@@ -7,73 +7,44 @@
 
 namespace core
 {
-	void remove_leading_zeroes(std::string &str)
-	{
-		str.erase(0, std::min(str.find('1'), str.size() - 1));
-	}
-
-	std::string land(const std::int64_t lhs, const std::int64_t rhs)
+	double land(const std::int64_t lhs, const std::int64_t rhs)
 	{
 		std::bitset<64> bit_lhs(lhs);
 		std::bitset<64> bit_rhs(rhs);
-
-		std::string result_str = std::bitset<64>(bit_lhs & bit_rhs).to_string();
-		remove_leading_zeroes(result_str);
-
-		return result_str;
+		return std::bitset<64>(bit_lhs & bit_rhs).to_ullong();;
 	}
 
-	std::string lor(const std::int64_t lhs, const std::int64_t rhs)
+	std::int64_t lor(const std::int64_t lhs, const std::int64_t rhs)
 	{
 		std::bitset<64> bit_lhs(lhs);
 		std::bitset<64> bit_rhs(rhs);
-
-		std::string result_str = std::bitset<64>(bit_lhs | bit_rhs).to_string();
-		remove_leading_zeroes(result_str);
-
-		return result_str;
+		return std::bitset<64>(bit_lhs | bit_rhs).to_ullong();
 	}
 
-	std::string lnot(const std::int64_t unary)
+	std::int64_t lnot(const std::int64_t unary)
 	{
 		std::bitset<64> bit_unary(unary);
-
-		std::string result_str = std::bitset<64>(~bit_unary).to_string();
-		remove_leading_zeroes(result_str);
-
-		return result_str;
+		return std::bitset<64>(~bit_unary).to_ullong();
 	}
 
-	std::string lnand(const std::int64_t lhs, const std::int64_t rhs)
+	std::int64_t lnand(const std::int64_t lhs, const std::int64_t rhs)
 	{
 		std::bitset<64> bit_lhs(lhs);
 		std::bitset<64> bit_rhs(rhs);
-
-		std::string result_str = std::bitset<64>(~(bit_lhs & bit_rhs)).to_string();
-		remove_leading_zeroes(result_str);
-
-		return result_str;
+		return std::bitset<64>(~(bit_lhs & bit_rhs)).to_ullong();
 	}
 
-	std::string lnor(const std::int64_t lhs, const std::int64_t rhs)
+	std::int64_t lnor(const std::int64_t lhs, const std::int64_t rhs)
 	{
 		std::bitset<64> bit_lhs(lhs);
 		std::bitset<64> bit_rhs(rhs);
-
-		std::string result_str = std::bitset<64>(~(bit_lhs | bit_rhs)).to_string();
-		remove_leading_zeroes(result_str);
-
-		return result_str;
+		return std::bitset<64>(~(bit_lhs | bit_rhs)).to_ullong();
 	}
 
-	std::string lxor(const std::int64_t lhs, const std::int64_t rhs)
+	std::int64_t lxor(const std::int64_t lhs, const std::int64_t rhs)
 	{
 		std::bitset<64> bit_lhs(lhs);
 		std::bitset<64> bit_rhs(rhs);
-
-		std::string result_str = std::bitset<64>(bit_lhs ^ bit_rhs).to_string();
-		remove_leading_zeroes(result_str);
-
-		return result_str;
+		return std::bitset<64>(bit_lhs ^ bit_rhs).to_ullong();
 	}
 }

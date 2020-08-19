@@ -157,4 +157,5 @@ public slots:
 
 	void numericSystemBoxChanged();
 	void programmerSignButtonPressed();
+	void notButtonPressed();
 };

@@ -5,6 +5,7 @@
 #include <stdexcept>
 
 #include "./gui/Calc.h"
+#include "./core/bitwise.h"
 #include "./core/core.h"
 
 /*
@@ -91,4 +92,21 @@ void Calc::programmerSignButtonPressed()
 
 	const QString new_val_str = core_->resultFormatter(new_val);
 	curr_display_->setText(new_val_str);
+}
+
+// Performing steps manually because we don't want to create
+// separate additional performUnary overload for int64_t.
+void Calc::notButtonPressed()
+{
+	// As seen on performUnaryOperation @ core.h.
+	curr_display_input_mode_ = input_mode::substitute;
+	core_->data.takeUnaryFromDisp(curr_display_);
+	core_->data.resetSubsequentEqualPresses();
+
+	// noexcept
+	const auto res = core::lnot(core_->data.getUnary());
+	const auto res_str = core_->resultFormatter(res);
+
+	curr_display_->setText(res_str);
+	core_->data.setLastResult(res);
 }
