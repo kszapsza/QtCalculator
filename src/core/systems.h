@@ -3,6 +3,9 @@
 //
 #pragma once
 #include <string>
+#include <QString>
+
+#include "./core/enums.h"
 
 namespace core
 {
@@ -21,4 +24,6 @@ namespace core
 	std::int64_t oct_dec(std::string& oct);
 	std::string oct_bin(std::string& hex);
 	std::string oct_hex(std::string& hex);
+
+	QString converter(numeric_systems old_system, numeric_systems new_system, QString& old_value);
 }

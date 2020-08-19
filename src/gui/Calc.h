@@ -6,6 +6,8 @@
 // ?
 #endif // CALC_TESTS
 
+#include "./core/enums.h"
+
 #include <QMainWindow>
 #include <QActionGroup>
 
@@ -47,9 +49,36 @@ private:
 	enum class input_mode { concatenate = 0, substitute = 1 }
 		curr_display_input_mode_ = input_mode::substitute;
 
-	void unaryButtonPressed(double (*func)(double));
+	void unaryButtonPressed(const std::function<double(double)>& func);
+
+// Enable / disable buttons:
+
+	static void disableButtons(QPushButton* button)
+	{
+		button->setDisabled(true);
+	}
+
+	template <typename... Args>
+	static void disableButtons(QPushButton* button, Args... buttons)
+	{
+		button->setDisabled(true);
+		disableButtons(buttons...);
+	}
+
+	static void enableButtons(QPushButton* button)
+	{
+		button->setDisabled(false);
+	}
+
+	template <typename... Args>
+	static void enableButtons(QPushButton* button, Args... buttons)
+	{
+		button->setDisabled(false);
+		enableButtons(buttons...);
+	}
 
 public slots:
+
 // basicCalc.cpp
 	
 	void numButtonPressed();
@@ -75,7 +104,6 @@ public slots:
 	void menuViewBasicTriggered();
 	void menuViewScientificTriggered();
 	void menuViewProgrammerTriggered();
-
 
 // scientificCalc.cpp
 
@@ -121,4 +149,9 @@ public slots:
 	void arcothClicked();
 	void arsechClicked();
 	void arcschClicked();
+
+// programmerCalc.cpp
+
+	void changeNumericSystem(numeric_systems old_system, numeric_systems new_system, QString old_value);
+	void numericSystemBoxChanged();
 };

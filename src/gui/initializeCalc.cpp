@@ -32,6 +32,9 @@ Calc::Calc(CalcCore* core, QWidget *parent) :
 		break;
 	case mode::programmer:
 		curr_display_ = ui->display_prog;
+		core_->data.setNumsys(numeric_systems::dec);
+		disableButtons<QPushButton*>(ui->button_hex_A, ui->button_hex_B, ui->button_hex_C,
+			ui->button_hex_D, ui->button_hex_E, ui->button_hex_F);
 		break;
 	default:
 	case mode::basic:
@@ -259,6 +262,10 @@ Calc::Calc(CalcCore* core, QWidget *parent) :
 	// Initialize [Backspace] button.
 	connect(ui->button_backspace_prog, SIGNAL(released()), this, SLOT(backspaceButtonPressed()));
 	ui->button_backspace_prog->setToolTip("Backspace");
+
+	// Initialize numeric systems QComboBox.
+	connect(ui->box_numeric_system, SIGNAL(currentIndexChanged(int)), this, SLOT(numericSystemBoxChanged()));
+	ui->box_numeric_system->setToolTip("Change numeric system");
 	
 /// MENU BAR INIT ///
 

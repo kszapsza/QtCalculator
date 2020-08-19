@@ -75,7 +75,7 @@ namespace calc_tests
 			auto core = std::make_unique<CalcCore>();
 
 			core->data.setUnary(0);			
-			const double res = core->performUnaryOperation(std::sin);
+			const double res = core->performUnaryOperation(std::sinl);
 			
 			const QString actual = core->toQString(res);			
 			const QString expected{ "0" };
@@ -90,7 +90,7 @@ namespace calc_tests
 			const double pi_rounded = core->round(std::numbers::pi);
 			core->data.setUnary(core->round(pi_rounded / 6));
 			
-			const double res = core->performUnaryOperation(std::sin);			
+			const double res = core->performUnaryOperation(std::sinl);
 			const QString actual = core->toQString(res);			
 			const QString expected{ "0.5" };
 
@@ -104,7 +104,7 @@ namespace calc_tests
 			const double pi_rounded = core->round(std::numbers::pi);
 			core->data.setUnary(core->round(pi_rounded / 2));
 			
-			const double res = core->performUnaryOperation(std::sin);			
+			const double res = core->performUnaryOperation(std::sinl);
 			const QString actual = core->toQString(res);			
 			const QString expected{ "1" };
 
@@ -118,7 +118,7 @@ namespace calc_tests
 			const double pi_rounded = core->round(std::numbers::pi);
 			core->data.setUnary(pi_rounded);
 			
-			const double res = core->performUnaryOperation(std::sin);			
+			const double res = core->performUnaryOperation(std::sinl);
 			const QString actual = core->toQString(res);			
 			const QString expected{ "0" };
 
@@ -133,7 +133,7 @@ namespace calc_tests
 			const double pi_rounded = core->round(0);
 			core->data.setUnary(pi_rounded);
 			
-			const double res = core->performUnaryOperation(std::cos);	
+			const double res = core->performUnaryOperation(std::cosl);
 			const QString actual = core->toQString(res);			
 			const QString expected{ "1" };
 
@@ -147,7 +147,7 @@ namespace calc_tests
 			const double pi_rounded = core->round(std::numbers::pi / 2);
 			core->data.setUnary(pi_rounded);
 			
-			const double res = core->performUnaryOperation(std::cos);	
+			const double res = core->performUnaryOperation(std::cosl);
 			const QString actual = core->toQString(res);			
 			const QString expected{ "0" };
 
@@ -161,7 +161,7 @@ namespace calc_tests
 			const double pi_rounded = core->round(std::numbers::pi);
 			core->data.setUnary(pi_rounded);
 			
-			const double res = core->performUnaryOperation(std::cos);	
+			const double res = core->performUnaryOperation(std::cosl);
 			const QString actual = core->toQString(res);			
 			const QString expected{ "-1" };
 

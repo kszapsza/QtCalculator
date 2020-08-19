@@ -83,7 +83,6 @@ void CalcCore::loadConfig()
 		}
 	}
 
-	;
 	return converted_qstr;
 }
 
@@ -172,7 +171,7 @@ double CalcCore::performBinaryPercentOperation() const
 }
 
 // Evaluates unary operation from data.unary and shows result.
-double CalcCore::performUnaryOperation(double (*func)(double))
+double CalcCore::performUnaryOperation(const std::function<double(double)>& func)
 {
 	data.resetSubsequentEqualPresses();
 	

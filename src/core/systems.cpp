@@ -25,11 +25,23 @@
 
 namespace core
 {
+	std::string dec_bin(std::string& dec)
+	{
+		const int dec_int = std::stoi(dec);
+		return dec_bin(dec_int);
+	}
+
 	std::string dec_bin(std::int64_t dec)
 	{
 		std::string str = std::bitset<sizeof(std::int64_t) * 8>(dec).to_string();
 		str.erase(0, std::min(str.find('1'), str.size() - 1));
 		return str;
+	}
+
+	std::string dec_hex(std::string& dec)
+	{
+		const int dec_int = std::stoi(dec);
+		return dec_hex(dec_int);
 	}
 
 	std::string dec_hex(const std::int64_t dec)
@@ -39,11 +51,33 @@ namespace core
 		return ss.str();
 	}
 
+	std::string dec_oct(std::string& dec)
+	{
+		const int dec_int = std::stoi(dec);
+		return dec_oct(dec_int);
+	}
+
 	std::string dec_oct(const std::int64_t dec)
 	{
 		std::stringstream ss;
 		ss << std::oct << dec;
 		return ss.str();
+	}
+
+	std::string from_dec(numeric_systems new_system, std::string& old_value)
+	{
+		switch (new_system)
+		{
+		default:
+		case numeric_systems::dec:
+			return old_value;
+		case numeric_systems::bin:
+			return dec_bin(old_value);
+		case numeric_systems::hex:
+			return dec_hex(old_value);
+		case numeric_systems::oct:
+			return dec_oct(old_value);
+		}
 	}
 
 	std::int64_t bin_dec(std::string& bin)
@@ -80,6 +114,22 @@ namespace core
 	{
 		const std::int64_t dec = bin_dec(bin);
 		return dec_hex(dec);
+	}
+
+	std::string from_bin(numeric_systems new_system, std::string& old_value)
+	{
+		switch (new_system)
+		{
+		case numeric_systems::dec:
+			return std::to_string(bin_dec(old_value));
+		default:
+		case numeric_systems::bin:
+			return old_value;
+		case numeric_systems::hex:
+			return bin_hex(old_value);
+		case numeric_systems::oct:
+			return bin_oct(old_value);
+		}
 	}
 
 	std::int64_t hex_dec(std::string& hex)
@@ -125,6 +175,22 @@ namespace core
 		return dec_oct(dec);
 	}
 
+	std::string from_hex(numeric_systems new_system, std::string& old_value)
+	{
+		switch (new_system)
+		{
+		case numeric_systems::dec:
+			return std::to_string(hex_dec(old_value));
+		case numeric_systems::bin:
+			return hex_bin(old_value);
+		default:
+		case numeric_systems::hex:
+			return old_value;
+		case numeric_systems::oct:
+			return hex_oct(old_value);
+		}
+	}
+
 	std::int64_t oct_dec(std::string& oct)
 	{
 		std::int64_t result = 0;
@@ -159,5 +225,40 @@ namespace core
 	{
 		const std::int64_t dec = oct_dec(hex);
 		return dec_hex(dec);
+	}
+
+	std::string from_oct(numeric_systems new_system, std::string& old_value)
+	{
+		switch (new_system)
+		{
+		case numeric_systems::dec:
+			return std::to_string(oct_dec(old_value));
+		case numeric_systems::bin:
+			return oct_bin(old_value);
+		case numeric_systems::hex:
+			return oct_hex(old_value);
+		default:
+		case numeric_systems::oct:
+			return old_value;
+		}
+	}
+
+	QString converter(numeric_systems old_system, numeric_systems new_system, QString& old_value)
+	{
+		std::string old_value_std = old_value.toStdString();
+
+		switch (old_system)
+		{
+		case numeric_systems::dec:
+			return QString::fromStdString(from_dec(new_system, old_value_std));
+		case numeric_systems::bin:
+			return QString::fromStdString(from_bin(new_system, old_value_std));
+		case numeric_systems::hex:
+			return QString::fromStdString(from_hex(new_system, old_value_std));
+		case numeric_systems::oct:
+			return QString::fromStdString(from_oct(new_system, old_value_std));
+		default:
+			return old_value;
+		}
 	}
 }

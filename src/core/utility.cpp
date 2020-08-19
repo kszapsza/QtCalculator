@@ -5,6 +5,16 @@
 
 #include "./core/utility.h"
 
+/*
+///////////////////////////////////////////////////////////
+	Qt Calculator
+ 	2020, Karol Szapsza
+
+ 	core/utility.cpp
+ 	Utility math functions.
+///////////////////////////////////////////////////////////
+*/
+
 namespace core
 {	
 	double square(const double r) noexcept
@@ -16,8 +26,8 @@ namespace core
 	double rand()
 	{	
 		const auto seed = std::chrono::steady_clock::now().time_since_epoch().count();
-	    std::minstd_rand eng(seed);
-		return static_cast<double>(eng()) / std::minstd_rand::max();
+	    std::minstd_rand engine(seed);
+		return static_cast<double>(engine()) / std::minstd_rand::max();
 	}
 
 	// Evaluates log base 2 logarithm.

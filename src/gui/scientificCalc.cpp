@@ -54,12 +54,12 @@ void Calc::logBase2ButtonPressed()
 
 void Calc::logBase10ButtonPressed()
 {
-	unaryButtonPressed(std::log10);
+	unaryButtonPressed(std::log10l);
 }
 
 void Calc::lnButtonPressed()
 {
-	unaryButtonPressed(std::log);
+	unaryButtonPressed(std::logl);
 }
 
 void Calc::factorialButtonPressed()
@@ -79,7 +79,7 @@ void Calc::e10ToXButtonPressed()
 
 void Calc::absButtonPressed()
 {
-	unaryButtonPressed(std::fabs);
+	unaryButtonPressed(std::fabsl);
 }
 
 void Calc::inverseButtonPressed()
@@ -93,12 +93,12 @@ void Calc::inverseButtonPressed()
 
 void Calc::sinClicked()
 {
-	unaryButtonPressed(std::sin);
+	unaryButtonPressed(std::sinl);
 }
 
 void Calc::cosClicked()
 {
-	unaryButtonPressed(std::cos);
+	unaryButtonPressed(std::cosl);
 }
 
 void Calc::tanClicked()
@@ -133,7 +133,7 @@ void Calc::arccosClicked()
 
 void Calc::arctanClicked()
 {
-	unaryButtonPressed(std::atan);
+	unaryButtonPressed(std::atanl);
 }
 
 void Calc::arccotClicked()
@@ -153,17 +153,17 @@ void Calc::arccscClicked()
 
 void Calc::sinhClicked()
 {
-	unaryButtonPressed(std::sinh);
+	unaryButtonPressed(std::sinhl);
 }
 
 void Calc::coshClicked()
 {
-	unaryButtonPressed(std::cosh);
+	unaryButtonPressed(std::coshl);
 }
 
 void Calc::tanhClicked()
 {
-	unaryButtonPressed(std::tanh);
+	unaryButtonPressed(std::tanhl);
 }
 
 void Calc::cothClicked()
@@ -183,7 +183,7 @@ void Calc::cschClicked()
 
 void Calc::arsinhClicked()
 {
-	unaryButtonPressed(std::asinh);
+	unaryButtonPressed(std::asinhl);
 }
 
 void Calc::arcoshClicked()

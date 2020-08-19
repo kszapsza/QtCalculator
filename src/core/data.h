@@ -41,6 +41,7 @@ class Data
 
 public:
 
+	// TODO: encapsulating calc_mode field
 	// Current calc mode.
 	mode calc_mode{ mode::basic };
 
@@ -112,6 +113,11 @@ public:
 	void resetNumsys()
 	{
 		numsys = numeric_systems::dec;
+	}
+
+	void setNumsys(const numeric_systems new_numsys)
+	{
+		numsys = new_numsys;
 	}
 
 	void addToMemory (const double mem)						{ memory += mem; }

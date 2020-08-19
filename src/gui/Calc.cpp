@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <unordered_map>
+#include <vector>
 
 #include <QPushButton>
 #include <QtMath>
@@ -78,8 +79,13 @@ void Calc::menuViewProgrammerTriggered()
 		core_->data.resetNumsys();
 
 		ui->modes->setCurrentIndex(static_cast<int>(mode::programmer));
-		core_->data.calc_mode = mode::programmer;
 		ui->menuFunctions->menuAction()->setVisible(false);
+
+		core_->data.calc_mode = mode::programmer;
+
+		core_->data.setNumsys(numeric_systems::dec);
+		disableButtons<QPushButton*>(ui->button_hex_A, ui->button_hex_B, ui->button_hex_C,
+			ui->button_hex_D, ui->button_hex_E, ui->button_hex_F);
 
 		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::programmer");
 		ui->statusbar->showMessage("Changed mode to Programmer.", 2000);
@@ -252,7 +258,7 @@ void Calc::percentButtonPressed()
 
 // Calls core functions saving input from display, performs requested operation,
 // converts result to QString and catches possible runtime exceptions.
-void Calc::unaryButtonPressed(double (*func)(double))
+void Calc::unaryButtonPressed(const std::function<double(double)>& func)
 {
 	curr_display_input_mode_ = input_mode::substitute;
 	core_->data.takeUnaryFromDisp(curr_display_);
@@ -279,7 +285,7 @@ void Calc::squareButtonPressed()
 // Square root button [√‾].
 void Calc::sqrtButtonPressed()
 {
-	unaryButtonPressed(std::sqrt);
+	unaryButtonPressed(std::sqrtl);
 }
 
 // [⌫] (Backspace) button functionality.
