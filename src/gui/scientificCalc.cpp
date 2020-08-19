@@ -41,7 +41,7 @@ void Calc::eButtonPressed()
 void Calc::randButtonPressed()
 {
 	const auto rand = core::rand();
-	const auto rand_str = core_->toQString(rand);
+	const auto rand_str = core_->resultFormatter(rand);
 
 	curr_display_->setText(rand_str);
 	curr_display_input_mode_ = input_mode::substitute;

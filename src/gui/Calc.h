@@ -71,8 +71,11 @@ public slots:
 	void memSubButtonPressed() const;
 
 	void menuFileOptions();
+
 	void menuViewBasicTriggered();
 	void menuViewScientificTriggered();
+	void menuViewProgrammerTriggered();
+
 
 // scientificCalc.cpp
 

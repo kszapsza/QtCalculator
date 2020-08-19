@@ -39,6 +39,54 @@ void CalcCore::loadConfig()
 	config_file.close();
 }
 
+// Result formatter rounding result and changing number system if neccessary.
+[[nodiscard]] QString CalcCore::resultFormatter(double result) const
+{
+	QString converted_qstr{};
+
+	if (data.calc_mode == mode::programmer)
+	{
+		auto int_result{ static_cast<std::int64_t>(result) };
+
+		switch (data.getNumsys())
+		{
+		case numeric_systems::dec:
+			converted_qstr = QString::fromStdString(std::to_string(int_result));
+			break;
+		case numeric_systems::bin:
+			converted_qstr = QString::fromStdString(core::dec_bin(int_result));
+			break;
+		case numeric_systems::hex:
+			converted_qstr = QString::fromStdString(core::dec_hex(int_result));
+			break;
+		case numeric_systems::oct:
+			converted_qstr = QString::fromStdString(core::dec_oct(int_result));
+			break;
+		}
+	}
+	else
+	{
+		switch (data.getNumsys())
+		{
+		case numeric_systems::dec:
+			converted_qstr.setNum(result, config.disp_format, Config::display_prec);
+			break;
+		case numeric_systems::bin:
+			converted_qstr = QString::fromStdString(core::dec_bin(result));
+			break;
+		case numeric_systems::hex:
+			converted_qstr = QString::fromStdString(core::dec_hex(result));
+			break;
+		case numeric_systems::oct:
+			converted_qstr = QString::fromStdString(core::dec_oct(result));
+			break;
+		}
+	}
+
+	;
+	return converted_qstr;
+}
+
 // Core function performing operation stored in buffer.
 // Used both by [=] button and math buttons.
 double CalcCore::performBinaryOperation() const

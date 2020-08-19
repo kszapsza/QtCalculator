@@ -6,13 +6,12 @@
  	2020, Karol Szapsza
  	
  	core/utility.h
+ 	Utility math functions.
 ///////////////////////////////////////////////////////////
 */
 
 namespace core
 {
-	/// UTILITY FUNCTIONS ///
-
 	// Compares if two floats (a, b) are nearly equal with precision of epsilon	
 	// automatically multiplied by a or b, whichever is greater.	
 	// This won't work accurately enough if a and b precision depends on	

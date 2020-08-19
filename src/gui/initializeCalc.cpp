@@ -20,29 +20,35 @@ Calc::Calc(CalcCore* core, QWidget *parent) :
 {	
 	// UI initialization.
     ui->setupUi(this);
+
 	ui->modes->setCurrentIndex(static_cast<int>(core_->config.init_mode));
+	core_->data.calc_mode = core_->config.init_mode;
 
 	// Set current mode based on config.
 	switch(core_->config.init_mode)
 	{
 	case mode::scientific:
 		curr_display_ = ui->display_sci;
-		break;		
+		break;
+	case mode::programmer:
+		curr_display_ = ui->display_prog;
+		break;
 	default:
 	case mode::basic:
 		curr_display_ = ui->display;
 		break;
 	}
 	
-    // Initialize both displays with init value.
+    // Initialize displays with init value.
     ui->display->setText(QString::number(core_->config.init_value));
 	ui->display_sci->setText(QString::number(core_->config.init_value));
+	ui->display_prog->setText(QString::number(core_->config.init_value));
 
 /// BASIC MODE BUTTONS INIT ///
 
     // Initialize number buttons.
     QPushButton *number_buttons[10]{ nullptr };
-    for (size_t i = 0; i < 10; ++i)
+    for (std::size_t i = 0; i < 10; ++i)
 	{
     	QString button_name = "button_" + QString::number(i);
     	number_buttons[i] = findChild<QPushButton*>(button_name);
@@ -67,20 +73,18 @@ Calc::Calc(CalcCore* core, QWidget *parent) :
 	ui->button_add->setToolTip("Add...");
 
 	// Initialize [x²] and [√‾] buttons.
-	connect(ui->button_square, SIGNAL(released()),
-		this, SLOT(squareButtonPressed()));
+	connect(ui->button_square, SIGNAL(released()), this, SLOT(squareButtonPressed()));
 	ui->button_square->setToolTip("Square");
 	
 	connect(ui->button_sqrt, SIGNAL(released()), this, SLOT(sqrtButtonPressed()));
 	ui->button_sqrt->setToolTip("Square root");
 
 	// Initialize result buttons: [=] and [%].
-	connect(ui->button_equal, SIGNAL(released()),
-		this, SLOT(equalButtonPressed()));
+	connect(ui->button_equal, SIGNAL(released()), this, SLOT(equalButtonPressed()));
 	ui->button_equal->setToolTip("Evaluate operation");
 	
 	connect(ui->button_percent, SIGNAL(released()), this, SLOT(percentButtonPressed()));
-	ui->button_sqrt->setToolTip("Evaluate percent operation");
+	ui->button_percent->setToolTip("Evaluate percent operation");
 
     // Initialize [C] button.
     connect(ui->button_C, SIGNAL(released()), this, SLOT(clearButtonPressed()));
@@ -108,7 +112,7 @@ Calc::Calc(CalcCore* core, QWidget *parent) :
 
 	// Initialize number buttons.
     QPushButton *number_buttons_sci[10]{ nullptr };
-    for (size_t i = 0; i < 10; ++i)
+    for (std::size_t i = 0; i < 10; ++i)
 	{
     	QString button_name = "button_" + QString::number(i) + "_sci";
     	number_buttons_sci[i] = findChild<QPushButton*>(button_name);
@@ -207,6 +211,54 @@ Calc::Calc(CalcCore* core, QWidget *parent) :
 	// Initialize [Backspace] button.
     connect(ui->button_backspace_sci, SIGNAL(released()), this, SLOT(backspaceButtonPressed()));
 	ui->button_backspace_sci->setToolTip("Backspace");
+
+/// PROGRAMMER MODE BUTTONS INIT ///
+
+	// Initialize number buttons.
+	QPushButton *number_buttons_prog[10]{ nullptr };
+	for (std::size_t i = 0; i < 10; ++i)
+	{
+		QString button_name = "button_" + QString::number(i) + "_prog";
+		number_buttons_prog[i] = findChild<QPushButton*>(button_name);
+		connect(number_buttons_prog[i], SIGNAL(released()), this, SLOT(numButtonPressed()));
+	}
+
+	// Initialize [.] comma button.
+	connect(ui->button_comma_prog, SIGNAL(released()), this, SLOT(commaButtonPressed()));
+	ui->button_comma_prog->setToolTip("Insert comma");
+	ui->button_comma_prog->setDisabled(true);
+
+	// Initialize math operations buttons.
+	connect(ui->button_div_prog, SIGNAL(released()), this, SLOT(mathButtonPressed()));
+	ui->button_div_prog->setToolTip("Divide by...");
+
+	connect(ui->button_mul_prog, SIGNAL(released()), this, SLOT(mathButtonPressed()));
+	ui->button_mul_prog->setToolTip("Multiply by...");
+
+	connect(ui->button_sub_prog, SIGNAL(released()), this, SLOT(mathButtonPressed()));
+	ui->button_sub_prog->setToolTip("Subtract...");
+
+	connect(ui->button_add_prog, SIGNAL(released()), this, SLOT(mathButtonPressed()));
+	ui->button_add_prog->setToolTip("Add...");
+
+	// Initialize result buttons: [=] and [%].
+	connect(ui->button_equal_prog, SIGNAL(released()), this, SLOT(equalButtonPressed()));
+	ui->button_equal_prog->setToolTip("Evaluate operation");
+
+	connect(ui->button_percent_prog, SIGNAL(released()), this, SLOT(percentButtonPressed()));
+	ui->button_percent_prog->setToolTip("Evaluate percent operation");
+
+	// Initialize [C] button.
+	connect(ui->button_C_prog, SIGNAL(released()), this, SLOT(clearButtonPressed()));
+	ui->button_C_prog->setToolTip("Clear display");
+
+	// Initialize [±] button.
+	//connect(ui->button_sign_prog, SIGNAL(released()), this, SLOT(signButtonPressed()));
+	//ui->button_sign_prog->setToolTip("Invert sign");
+
+	// Initialize [Backspace] button.
+	connect(ui->button_backspace_prog, SIGNAL(released()), this, SLOT(backspaceButtonPressed()));
+	ui->button_backspace_prog->setToolTip("Backspace");
 	
 /// MENU BAR INIT ///
 
@@ -215,7 +267,8 @@ Calc::Calc(CalcCore* core, QWidget *parent) :
 	// Initialize [View] menu bar tab.
 	calc_modes_ = new QActionGroup(this);
 	calc_modes_->addAction(ui->actionBasic);
-	calc_modes_->addAction(ui->actionScientific);	
+	calc_modes_->addAction(ui->actionScientific);
+	calc_modes_->addAction(ui->actionProgrammer);
 	
 	// Set current mode based on config.
 	switch(core_->config.init_mode)
@@ -223,7 +276,11 @@ Calc::Calc(CalcCore* core, QWidget *parent) :
 	case mode::scientific:
 		ui->actionScientific->setChecked(true);
 		ui->menuFunctions->menuAction()->setVisible(true);
-		break;		
+		break;
+	case mode::programmer:
+		ui->actionProgrammer->setChecked(true);
+		ui->menuFunctions->menuAction()->setVisible(false);
+		break;
 	default:
 	case mode::basic:
 		ui->actionBasic->setChecked(true);
@@ -233,6 +290,7 @@ Calc::Calc(CalcCore* core, QWidget *parent) :
 
 	connect(ui->actionBasic, SIGNAL(triggered(bool)), this, SLOT(menuViewBasicTriggered()));
 	connect(ui->actionScientific, SIGNAL(triggered(bool)), this, SLOT(menuViewScientificTriggered()));
+	connect(ui->actionProgrammer, SIGNAL(triggered(bool)), this, SLOT(menuViewProgrammerTriggered()));
 
 	// FUNCTIONS //
 

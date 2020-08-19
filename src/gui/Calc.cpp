@@ -1,11 +1,11 @@
 #include <stdexcept>
+#include <unordered_map>
 
 #include <QPushButton>
 #include <QtMath>
 
 #include "./gui/Calc.h"
 #include "./gui/Settings.h"
-#include "./core/core.h"
 #include "./core/utility.h"
 
 #ifdef QT_DEBUG
@@ -38,8 +38,11 @@ void Calc::menuViewBasicTriggered()
 {
 	if (ui->modes->currentIndex() != static_cast<int>(mode::basic))
 	{
-		clearButtonPressed();		
+		clearButtonPressed();
+		core_->data.resetNumsys();
+
 		ui->modes->setCurrentIndex(static_cast<int>(mode::basic));
+		core_->data.calc_mode = mode::basic;
 		ui->menuFunctions->menuAction()->setVisible(false);
 
 		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::basic");
@@ -54,13 +57,33 @@ void Calc::menuViewScientificTriggered()
 	if (ui->modes->currentIndex() != static_cast<int>(mode::scientific))
 	{
 		clearButtonPressed();
+		core_->data.resetNumsys();
 		
 		ui->modes->setCurrentIndex(static_cast<int>(mode::scientific));
+		core_->data.calc_mode = mode::scientific;
 		ui->menuFunctions->menuAction()->setVisible(true);
 		
 		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::scientific");
 		ui->statusbar->showMessage("Changed mode to Scientific.", 2000);
 		curr_display_ = ui->display_sci;
+	}
+}
+
+// Changing view mode to Programmer in [View] tab
+void Calc::menuViewProgrammerTriggered()
+{
+	if (ui->modes->currentIndex() != static_cast<int>(mode::programmer))
+	{
+		clearButtonPressed();
+		core_->data.resetNumsys();
+
+		ui->modes->setCurrentIndex(static_cast<int>(mode::programmer));
+		core_->data.calc_mode = mode::programmer;
+		ui->menuFunctions->menuAction()->setVisible(false);
+
+		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::programmer");
+		ui->statusbar->showMessage("Changed mode to Programmer.", 2000);
+		curr_display_ = ui->display_prog;
 	}
 }
 
@@ -125,7 +148,7 @@ void Calc::mathButtonPressed()
 		core_->data.takeRhsFromDisp(curr_display_);
 
 		const double prev_op_result = core_->performBinaryOperation();
-		const QString prev_op_result_str = core_->toQString(prev_op_result);
+		const QString prev_op_result_str = core_->resultFormatter(prev_op_result);
 		
 		curr_display_->setText(prev_op_result_str);
 	}
@@ -135,16 +158,20 @@ void Calc::mathButtonPressed()
 	core_->data.takeLhsFromDisp(curr_display_);
 
 	// Operation enum mapping to key labels.
-	const QMap<QPushButton*, operation> op_names
+	const std::unordered_map<QPushButton*, operation> op_names
 	{
 		{ui->button_div,		operation::division},
 		{ui->button_div_sci,	operation::division},
+		{ui->button_div_prog,	operation::division},
 		{ui->button_mul,		operation::multiplication},
 		{ui->button_mul_sci,	operation::multiplication},
+		{ui->button_mul_prog,	operation::multiplication},
 		{ui->button_sub,		operation::subtraction},
 		{ui->button_sub_sci,	operation::subtraction},
+		{ui->button_sub_prog,	operation::subtraction},
 		{ui->button_add,		operation::addition},
 		{ui->button_add_sci,	operation::addition},
+		{ui->button_add_prog,	operation::addition},
 		{ui->button_log_basey,	operation::log_base_y},
 		{ui->button_modulo,		operation::modulo},
 		{ui->button_x_to_y,		operation::power}
@@ -154,7 +181,7 @@ void Calc::mathButtonPressed()
 	auto *button = qobject_cast<QPushButton*>(sender());
 
 	// Set op_decision basing on the label of the button pressed.
-	core_->data.setOpDecision(op_names[button]);
+	core_->data.setOpDecision(op_names.at(button));
 
 	// Begin (or maintain) sequential operation state until [=] is pressed.
 	core_->data.beginSequential();
@@ -178,7 +205,7 @@ void Calc::equalButtonPressed()
 	}
 
 	const double prev_op_result = core_->performBinaryOperation();
-	const QString prev_op_result_str = core_->toQString(prev_op_result);
+	const QString prev_op_result_str = core_->resultFormatter(prev_op_result);
 		
 	curr_display_->setText(prev_op_result_str);
 	core_->data.endSequential();
@@ -197,7 +224,7 @@ void Calc::percentButtonPressed()
 	try
 	{
 		const double prev_op_result = core_->performBinaryPercentOperation();
-		const QString prev_op_result_str = core_->toQString(prev_op_result);
+		const QString prev_op_result_str = core_->resultFormatter(prev_op_result);
 		
 		curr_display_->setText(prev_op_result_str);		
 	}
@@ -224,7 +251,7 @@ void Calc::unaryButtonPressed(double (*func)(double))
 	try
 	{
 		const auto res = core_->performUnaryOperation(func);
-		const auto res_str = core_->toQString(res);
+		const auto res_str = core_->resultFormatter(res);
 		curr_display_->setText(res_str);
 	}
 	catch (const std::runtime_error& except)
