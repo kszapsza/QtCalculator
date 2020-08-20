@@ -7,11 +7,11 @@
 
 namespace core
 {
-	double land(const std::int64_t lhs, const std::int64_t rhs)
+	std::int64_t land(const std::int64_t lhs, const std::int64_t rhs)
 	{
 		std::bitset<64> bit_lhs(lhs);
 		std::bitset<64> bit_rhs(rhs);
-		return std::bitset<64>(bit_lhs & bit_rhs).to_ullong();;
+		return std::bitset<64>(bit_lhs & bit_rhs).to_ullong();
 	}
 
 	std::int64_t lor(const std::int64_t lhs, const std::int64_t rhs)

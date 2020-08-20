@@ -20,7 +20,7 @@ class Settings final : public QDialog
 
 public:
     explicit Settings(Calc *parent = nullptr);
-    ~Settings();
+    ~Settings() override;
 
 private:
     Ui::Settings *ui;
