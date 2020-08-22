@@ -21,5 +21,10 @@ inverting numbers (1/x). It also delivers additional menu tab with trigonometric
 
 ![Calculator window screenshot – scientific mode](https://github.com/kszapsza/QtCalculator/raw/master/calc_sci.png)
 
+### Programmer’s mode
+Allows performing decimal/binary/hexadecimal/octal conversions, bitwise AND, OR, NOT, NOT, NAND, XOR operations. To be done: bit shifts.
+
+![Calculator window screenshot – programmer mode](https://github.com/kszapsza/QtCalculator/raw/master/calc_prog.png)
+
 ## To be done
-- [ ] deg/rad/grad modes, dec/bin/oct/hex conversions.
+- [ ] deg/rad/grad modes in Scientific mode (for trigonometric functions).
