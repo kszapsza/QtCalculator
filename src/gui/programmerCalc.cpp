@@ -64,6 +64,8 @@ void Calc::changeNumericSystem(numeric_systems old_system, numeric_systems new_s
 			curr_display_->setText(core::converter(old_system, numeric_systems::oct, old_value));
 			ui->statusbar->showMessage("Changed numeric system to Octal.", 2000);
 
+			enableButtons<QPushButton*>(ui->button_2_prog, ui->button_3_prog, ui->button_4_prog, ui->button_5_prog,
+				ui->button_6_prog, ui->button_7_prog);
 			disableButtons<QPushButton*>(ui->button_8_prog, ui->button_9_prog, ui->button_hex_A, ui->button_hex_B,
 				ui->button_hex_C, ui->button_hex_D, ui->button_hex_E, ui->button_hex_F);
 			break;
