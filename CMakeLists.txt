@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(test LANGUAGES CXX)
+project(Calc LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_PREFIX_PATH "D:\\Qt\\5.9.9\\msvc2017_64\\bin")
+set(CMAKE_PREFIX_PATH "D:\\Qt\\5.15.1\\msvc2019")
 
 set(CMAKE_CXX_FLAGS_DEBUG "/MDd")
 

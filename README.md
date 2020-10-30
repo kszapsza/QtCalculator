@@ -28,3 +28,9 @@ Allows performing decimal/binary/hexadecimal/octal conversions, bitwise AND, OR,
 
 ## To be done
 - [ ] deg/rad/grad modes in Scientific mode (for trigonometric functions).
+
+## Disclaimer
+Qt5Cored, Qt5Guid, Qt5Widgetsd DLLs, as well as plugins/platforms, plugins/styles DLLs have to be included in
+executable's directory in order to run the app successfully (all DLLs included in `\dll`).
+
+Compiled with MSVC 2019 64-bit.
