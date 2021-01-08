@@ -31,9 +31,9 @@ void Calc::changeNumericSystem(numeric_systems old_system, numeric_systems new_s
 			ui->statusbar->showMessage("Changed numeric system to Decimal.", 2000);
 
 			enableButtons<QPushButton*>(ui->button_2_prog, ui->button_3_prog, ui->button_4_prog, ui->button_5_prog,
-				ui->button_6_prog, ui->button_7_prog, ui->button_8_prog, ui->button_9_prog);
+					ui->button_6_prog, ui->button_7_prog, ui->button_8_prog, ui->button_9_prog);
 			disableButtons<QPushButton*>(ui->button_hex_A, ui->button_hex_B, ui->button_hex_C, ui->button_hex_D,
-				ui->button_hex_E, ui->button_hex_F);
+					ui->button_hex_E, ui->button_hex_F);
 			break;
 
 		case numeric_systems::bin:
@@ -43,8 +43,8 @@ void Calc::changeNumericSystem(numeric_systems old_system, numeric_systems new_s
 			ui->statusbar->showMessage("Changed numeric system to Binary.", 2000);
 
 			disableButtons<QPushButton*>(ui->button_2_prog, ui->button_3_prog, ui->button_4_prog, ui->button_5_prog,
-				ui->button_6_prog, ui->button_7_prog, ui->button_8_prog, ui->button_9_prog, ui->button_hex_A,
-				ui->button_hex_B, ui->button_hex_C, ui->button_hex_D, ui->button_hex_E, ui->button_hex_F);
+					ui->button_6_prog, ui->button_7_prog, ui->button_8_prog, ui->button_9_prog, ui->button_hex_A,
+					ui->button_hex_B, ui->button_hex_C, ui->button_hex_D, ui->button_hex_E, ui->button_hex_F);
 			break;
 
 		case numeric_systems::hex:
@@ -54,8 +54,8 @@ void Calc::changeNumericSystem(numeric_systems old_system, numeric_systems new_s
 			ui->statusbar->showMessage("Changed numeric system to Hexadecimal.", 2000);
 
 			enableButtons<QPushButton*>(ui->button_2_prog, ui->button_3_prog, ui->button_4_prog, ui->button_5_prog,
-				ui->button_6_prog, ui->button_7_prog, ui->button_8_prog, ui->button_9_prog, ui->button_hex_A,
-				ui->button_hex_B, ui->button_hex_C, ui->button_hex_D, ui->button_hex_E, ui->button_hex_F);
+					ui->button_6_prog, ui->button_7_prog, ui->button_8_prog, ui->button_9_prog, ui->button_hex_A,
+					ui->button_hex_B, ui->button_hex_C, ui->button_hex_D, ui->button_hex_E, ui->button_hex_F);
 			break;
 
 		case numeric_systems::oct:
@@ -65,9 +65,9 @@ void Calc::changeNumericSystem(numeric_systems old_system, numeric_systems new_s
 			ui->statusbar->showMessage("Changed numeric system to Octal.", 2000);
 
 			enableButtons<QPushButton*>(ui->button_2_prog, ui->button_3_prog, ui->button_4_prog, ui->button_5_prog,
-				ui->button_6_prog, ui->button_7_prog);
+					ui->button_6_prog, ui->button_7_prog);
 			disableButtons<QPushButton*>(ui->button_8_prog, ui->button_9_prog, ui->button_hex_A, ui->button_hex_B,
-				ui->button_hex_C, ui->button_hex_D, ui->button_hex_E, ui->button_hex_F);
+					ui->button_hex_C, ui->button_hex_D, ui->button_hex_E, ui->button_hex_F);
 			break;
 		}
 	}
@@ -81,7 +81,7 @@ void Calc::changeNumericSystem(numeric_systems old_system, numeric_systems new_s
 void Calc::numericSystemBoxChanged()
 {
 	const numeric_systems old_system{ core_->data.getNumsys() };
-	const numeric_systems new_system { static_cast<numeric_systems>(ui->box_numeric_system->currentIndex()) };
+	const numeric_systems new_system{ static_cast<numeric_systems>(ui->box_numeric_system->currentIndex()) };
 	QString old_value{ curr_display_->text() };
 
 	changeNumericSystem(old_system, new_system, old_value);

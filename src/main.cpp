@@ -23,10 +23,8 @@
 
 int main(int argc, char* argv[])
 {
-	CalcCore calc_core{};
-
 	QApplication a(argc, argv);
-	Calc w(&calc_core, nullptr);
+	Calc w(nullptr);
 
 	w.show();
 	return QApplication::exec();

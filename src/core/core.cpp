@@ -19,12 +19,16 @@
 
 void CalcCore::loadConfig()
 {
-	QFile config_file("config.dat");	
+	QFile config_file("config.dat");
 
 	if (config_file.open(QIODevice::ReadOnly | QIODevice::Text))
 	{
 		QTextStream config_str(&config_file);
-		auto nl_flush = [&](){ char nl{}; config_str >> nl; };
+		auto nl_flush = [&]()
+		{
+		  char nl{};
+		  config_str >> nl;
+		};
 
 		config_str >> config.init_value;
 
@@ -32,7 +36,7 @@ void CalcCore::loadConfig()
 		config_str >> init_mode_in;
 		config.init_mode = static_cast<mode>(init_mode_in);
 
-		nl_flush();			
+		nl_flush();
 		config_str >> config.disp_format;
 		nl_flush();
 	}
@@ -150,7 +154,7 @@ QString CalcCore::performBinaryPercentOperation() const
 {
 	double result{};
 	QString str_result{};
-	
+
 	union
 	{
 		double percentage_fraction{};
@@ -164,7 +168,7 @@ QString CalcCore::performBinaryPercentOperation() const
 		break;
 	case operation::division:
 		percentage_fraction = data.getRhs() / 100;
-		[[unlikely]] if (percentage_fraction == 0)			
+		[[unlikely]] if (percentage_fraction == 0)
 			throw std::runtime_error("Can't divide by zero!");
 		else
 			result = data.getLhs() / percentage_fraction;
@@ -190,7 +194,7 @@ QString CalcCore::performBinaryPercentOperation() const
 double CalcCore::performUnaryOperation(const std::function<double(double)>& func)
 {
 	data.resetSubsequentEqualPresses();
-	
+
 	auto result = static_cast<double>(func(data.getUnary()));
 
 	// For trigonometric functions	
@@ -202,8 +206,8 @@ double CalcCore::performUnaryOperation(const std::function<double(double)>& func
 	{
 		result = 0.5;
 	}
-	
-	data.setLastResult(result);	
+
+	data.setLastResult(result);
 	return result;
 }
 

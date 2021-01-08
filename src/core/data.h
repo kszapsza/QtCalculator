@@ -47,15 +47,42 @@ public:
 
 /// GETTERS ///
 
-	[[nodiscard]] bool isInSequentialOperation() const				{ return sequential_operation; }
-	[[nodiscard]] std::uint8_t getSubsequentEqualPresses() const	{ return subsequent_equal_presses; }
-	[[nodiscard]] double getLastResult() const						{ return last_result; }
-	[[nodiscard]] double getLhs() const								{ return lhs; }
-	[[nodiscard]] double getRhs() const								{ return rhs; }
-	[[nodiscard]] double getUnary() const							{ return unary; }
-	[[nodiscard]] double getMemory() const							{ return memory; }
-	[[nodiscard]] operation getOpDecision() const					{ return op_decision; }
-	[[nodiscard]] numeric_systems getNumsys() const 				{ return numsys; }
+	[[nodiscard]] bool isInSequentialOperation() const
+	{
+		return sequential_operation;
+	}
+	[[nodiscard]] std::uint8_t getSubsequentEqualPresses() const
+	{
+		return subsequent_equal_presses;
+	}
+	[[nodiscard]] double getLastResult() const
+	{
+		return last_result;
+	}
+	[[nodiscard]] double getLhs() const
+	{
+		return lhs;
+	}
+	[[nodiscard]] double getRhs() const
+	{
+		return rhs;
+	}
+	[[nodiscard]] double getUnary() const
+	{
+		return unary;
+	}
+	[[nodiscard]] double getMemory() const
+	{
+		return memory;
+	}
+	[[nodiscard]] operation getOpDecision() const
+	{
+		return op_decision;
+	}
+	[[nodiscard]] numeric_systems getNumsys() const
+	{
+		return numsys;
+	}
 
 /// SETTERS ///
 
@@ -85,18 +112,45 @@ public:
 	}
 
 	// We only want to set values in data if shown on display!
-	void takeLhsFromDisp(const QLineEdit* const disp) 		{ lhs = inputFormatter(disp); }
-	void takeRhsFromDisp(const QLineEdit* const disp)		{ rhs = inputFormatter(disp); }
-	void takeUnaryFromDisp(const QLineEdit* const disp)		{ unary = inputFormatter(disp); }
+	void takeLhsFromDisp(const QLineEdit* const disp)
+	{
+		lhs = inputFormatter(disp);
+	}
+	void takeRhsFromDisp(const QLineEdit* const disp)
+	{
+		rhs = inputFormatter(disp);
+	}
+	void takeUnaryFromDisp(const QLineEdit* const disp)
+	{
+		unary = inputFormatter(disp);
+	}
 
-	void setLastResult(const double result)					{ this->last_result = result; }
-	void setOpDecision(const operation op)					{ op_decision = op; }
+	void setLastResult(const double result)
+	{
+		this->last_result = result;
+	}
+	void setOpDecision(const operation op)
+	{
+		op_decision = op;
+	}
 
-	void beginSequential()									{ sequential_operation = true; }
-	void endSequential()									{ sequential_operation = false; }
+	void beginSequential()
+	{
+		sequential_operation = true;
+	}
+	void endSequential()
+	{
+		sequential_operation = false;
+	}
 
-	void subsequentEqualPressesIncrement()					{ ++subsequent_equal_presses; }
-	void resetSubsequentEqualPresses()						{ subsequent_equal_presses = 0; }
+	void subsequentEqualPressesIncrement()
+	{
+		++subsequent_equal_presses;
+	}
+	void resetSubsequentEqualPresses()
+	{
+		subsequent_equal_presses = 0;
+	}
 
 	void reset()
 	{
@@ -120,7 +174,16 @@ public:
 		numsys = new_numsys;
 	}
 
-	void addToMemory (const double mem)						{ memory += mem; }
-	void subtractFromMemory (const double mem)				{ memory -= mem; }
-	void resetMemory()										{ memory = 0.0; }
+	void addToMemory(const double mem)
+	{
+		memory += mem;
+	}
+	void subtractFromMemory(const double mem)
+	{
+		memory -= mem;
+	}
+	void resetMemory()
+	{
+		memory = 0.0;
+	}
 };

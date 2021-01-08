@@ -23,7 +23,7 @@
 void Calc::piButtonPressed()
 {
 	QString pi_str{};
-	pi_str.setNum(std::numbers::pi, core_->config.disp_format, Config::display_prec);	
+	pi_str.setNum(std::numbers::pi, core_->config.disp_format, Config::display_prec);
 	curr_display_->setText(pi_str);
 	curr_display_input_mode_ = input_mode::substitute;
 }
@@ -48,7 +48,7 @@ void Calc::randButtonPressed()
 }
 
 void Calc::logBase2ButtonPressed()
-{	
+{
 	unaryButtonPressed(core::log2);
 }
 
@@ -68,7 +68,7 @@ void Calc::factorialButtonPressed()
 }
 
 void Calc::expButtonPressed()
-{		
+{
 	unaryButtonPressed(core::exp);
 }
 

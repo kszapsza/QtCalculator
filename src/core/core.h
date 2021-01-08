@@ -31,11 +31,14 @@ struct CalcCore
 	Data data{};
 	Config config{};
 
-	CalcCore() { loadConfig(); }
+	CalcCore()
+	{
+		loadConfig();
+	}
 	void loadConfig();
 
 	[[nodiscard]] QString resultFormatter(double result) const;
-	
+
 	[[nodiscard]] QString performBinaryOperation() const;
 	[[nodiscard]] QString performBinaryPercentOperation() const;
 	[[nodiscard]] double performUnaryOperation(const std::function<double(double)>& func);

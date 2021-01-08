@@ -9,22 +9,25 @@
 #include "./gui/Calc.h"
 #include "./core/core.h"
 
-namespace Ui { class Settings; }
+namespace Ui
+{
+	class Settings;
+}
 
 struct Config;
 class Calc;
 
 class Settings final : public QDialog
 {
-    Q_OBJECT
+Q_OBJECT
 
 public:
-    explicit Settings(Calc *parent = nullptr);
-    ~Settings() override;
+	explicit Settings(Calc* parent = nullptr);
+	~Settings() override;
 
 private:
-    Ui::Settings *ui;
-	
+	Ui::Settings* ui;
+
 	Calc* calc_;
 	Config unsaved_config_;
 
@@ -35,5 +38,5 @@ public slots:
 	void reject() override;
 
 //private slots:
-	
+
 };

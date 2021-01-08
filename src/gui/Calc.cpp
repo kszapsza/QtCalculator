@@ -37,7 +37,7 @@ void Calc::menuFileOptions()
 void Calc::menuFileAbout()
 {
 	QMessageBox::about(this, "About Calculator",
-		R"(QtCalculator
+			R"(QtCalculator
 © 2020 Karol Szapsza
 
 This software utilizes the Qt framework, available under
@@ -48,7 +48,7 @@ and other contributors.
 This software utilizes googletest library, licensed under
 BSD-3 Clause license. Copyright 2008, Google Inc.
 All rights reserved.)"
-);
+	);
 }
 
 // Changing view mode to Basic in [View] tab
@@ -76,11 +76,11 @@ void Calc::menuViewScientificTriggered()
 	{
 		clearButtonPressed();
 		core_->data.resetNumsys();
-		
+
 		ui->modes->setCurrentIndex(static_cast<int>(mode::scientific));
 		core_->data.calc_mode = mode::scientific;
 		ui->menuFunctions->menuAction()->setVisible(true);
-		
+
 		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::scientific");
 		ui->statusbar->showMessage("Changed mode to Scientific.", 2000);
 		curr_display_ = ui->display_sci;
@@ -102,7 +102,7 @@ void Calc::menuViewProgrammerTriggered()
 
 		core_->data.setNumsys(numeric_systems::dec);
 		disableButtons<QPushButton*>(ui->button_hex_A, ui->button_hex_B, ui->button_hex_C,
-			ui->button_hex_D, ui->button_hex_E, ui->button_hex_F);
+				ui->button_hex_D, ui->button_hex_E, ui->button_hex_F);
 
 		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::programmer");
 		ui->statusbar->showMessage("Changed mode to Programmer.", 2000);
@@ -116,12 +116,12 @@ void Calc::menuViewProgrammerTriggered()
 
 // Putting numbers in using [0~9] buttons.
 void Calc::numButtonPressed()
-{	
+{
 	// Establish pointer to the button pressed.
-	const auto *button = dynamic_cast<QPushButton*>(sender());
+	const auto* button = dynamic_cast<QPushButton*>(sender());
 	const QString button_value = button->text();
 	const QString display_value = curr_display_->text();
-	
+
 	QString formatted_lhs_value{};
 	formatted_lhs_value.setNum(core_->data.getLhs(), core_->config.disp_format, Config::display_prec);
 
@@ -144,10 +144,10 @@ void Calc::numButtonPressed()
 }
 
 void Calc::commaButtonPressed()
-{	
+{
 	curr_display_input_mode_ = input_mode::concatenate;
 	core_->data.resetSubsequentEqualPresses();
-	
+
 	const QString display_value = curr_display_->text();
 	curr_display_->setText(display_value + '.');
 }
@@ -161,7 +161,7 @@ void Calc::mathButtonPressed()
 {
 	core_->data.resetSubsequentEqualPresses();
 	curr_display_input_mode_ = input_mode::substitute;
-	
+
 	// If in sequential operation, evaluate queued operation and treat its result
 	// as lhs argument for the next operation now being entered.
 	if (core_->data.isInSequentialOperation())
@@ -180,31 +180,31 @@ void Calc::mathButtonPressed()
 
 	// Operation enum mapping to key labels.
 	const std::unordered_map<QPushButton*, operation> op_names
-	{
-		{ui->button_div,		operation::division},
-		{ui->button_div_sci,	operation::division},
-		{ui->button_div_prog,	operation::division},
-		{ui->button_mul,		operation::multiplication},
-		{ui->button_mul_sci,	operation::multiplication},
-		{ui->button_mul_prog,	operation::multiplication},
-		{ui->button_sub,		operation::subtraction},
-		{ui->button_sub_sci,	operation::subtraction},
-		{ui->button_sub_prog,	operation::subtraction},
-		{ui->button_add,		operation::addition},
-		{ui->button_add_sci,	operation::addition},
-		{ui->button_add_prog,	operation::addition},
-		{ui->button_log_basey,	operation::log_base_y},
-		{ui->button_modulo,		operation::modulo},
-		{ui->button_x_to_y,		operation::power},
-		{ui->button_and,		operation::land},
-		{ui->button_or,         operation::lor},
-		{ui->button_nand,       operation::lnand},
-		{ui->button_nor,        operation::lnor},
-		{ui->button_xor,        operation::lxor}
-	};
+			{
+					{ ui->button_div, operation::division },
+					{ ui->button_div_sci, operation::division },
+					{ ui->button_div_prog, operation::division },
+					{ ui->button_mul, operation::multiplication },
+					{ ui->button_mul_sci, operation::multiplication },
+					{ ui->button_mul_prog, operation::multiplication },
+					{ ui->button_sub, operation::subtraction },
+					{ ui->button_sub_sci, operation::subtraction },
+					{ ui->button_sub_prog, operation::subtraction },
+					{ ui->button_add, operation::addition },
+					{ ui->button_add_sci, operation::addition },
+					{ ui->button_add_prog, operation::addition },
+					{ ui->button_log_basey, operation::log_base_y },
+					{ ui->button_modulo, operation::modulo },
+					{ ui->button_x_to_y, operation::power },
+					{ ui->button_and, operation::land },
+					{ ui->button_or, operation::lor },
+					{ ui->button_nand, operation::lnand },
+					{ ui->button_nor, operation::lnor },
+					{ ui->button_xor, operation::lxor }
+			};
 
 	// Establish pointer to the button pressed.
-	auto *button = qobject_cast<QPushButton*>(sender());
+	auto* button = qobject_cast<QPushButton*>(sender());
 
 	// Set op_decision basing on the label of the button pressed.
 	core_->data.setOpDecision(op_names.at(button));
@@ -224,7 +224,7 @@ void Calc::equalButtonPressed()
 	{
 		core_->data.takeLhsFromDisp(curr_display_);
 	}
-	// Otherwise, current value on display is normally treated as rhs.
+		// Otherwise, current value on display is normally treated as rhs.
 	else
 	{
 		core_->data.takeRhsFromDisp(curr_display_);
@@ -250,9 +250,9 @@ void Calc::percentButtonPressed()
 {
 	curr_display_input_mode_ = input_mode::substitute;
 	core_->data.subsequentEqualPressesIncrement();
-	
+
 	// Save current display state as rhs value.
-	core_->data.takeRhsFromDisp(curr_display_);	
+	core_->data.takeRhsFromDisp(curr_display_);
 
 	try
 	{
@@ -335,7 +335,7 @@ void Calc::signButtonPressed()
 	// Remove or add minus sign on display.	
 	QString curr_value = curr_display_->text();
 	QString new_value;
-	
+
 	if (curr_value[0] == '-')
 	{
 		new_value = curr_value.remove(0, 1);
@@ -344,7 +344,7 @@ void Calc::signButtonPressed()
 	{
 		new_value = '-' + curr_value;
 	}
-	
+
 	curr_display_->setText(new_value);
 }
 
@@ -373,7 +373,7 @@ void Calc::memAddButtonPressed() const
 {
 	const double curr_value = curr_display_->text().toDouble();
 	core_->data.addToMemory(curr_value);
-	ui->statusbar->showMessage("Added to memory.", 2000);	
+	ui->statusbar->showMessage("Added to memory.", 2000);
 }
 
 void Calc::memSubButtonPressed() const

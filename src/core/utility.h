@@ -20,17 +20,17 @@ namespace core
 	// Gives satisfying results indepentently of order of magnitude of pair (a, b),	
 	// but may work unexpectedly if their *individual* order of magnitude differs strongly.	
 
-	template<typename Float>	
-	bool nearly_equal(const Float a, const Float b)	
-		requires std::is_floating_point_v<Float>	
-	{	
-		const auto abs_a = std::abs(a);	
-		const auto abs_b = std::abs(b);	
+	template<typename Float>
+	bool nearly_equal(const Float a, const Float b)
+	requires std::is_floating_point_v<Float>
+	{
+		const auto abs_a = std::abs(a);
+		const auto abs_b = std::abs(b);
 
-		return std::abs(abs_a - abs_b)	
-			<= std::numeric_limits<Float>::epsilon() * std::max(abs_a, abs_b);	
+		return std::abs(abs_a - abs_b)
+				<= std::numeric_limits<Float>::epsilon() * std::max(abs_a, abs_b);
 	}
-	
+
 	// Compares if two floats (a, b) are nearly equal with precision of epsilon
 	// multiplied by custom factor (eps_factor). Useful, if either a or b
 	// precision is already result of some previous operation, consider:
@@ -44,13 +44,13 @@ namespace core
 
 	template<typename Float>
 	bool nearly_equal(const Float a, const Float b, const Float eps_factor)
-		requires std::is_floating_point_v<Float>
+	requires std::is_floating_point_v<Float>
 	{
 		const auto abs_a = std::abs(a);
 		const auto abs_b = std::abs(b);
 
 		const auto epsilon = std::numeric_limits<Float>::epsilon() * eps_factor;
-		
+
 		return std::fabs(abs_a - abs_b) <= epsilon;
 	}
 
@@ -61,22 +61,22 @@ namespace core
 	double exp(double r) noexcept;
 	double _10_to_x(double r) noexcept;
 	double inv(double r);
-	
+
 	double tan(double r);
 	double cot(double r);
 	double sec(double r);
 	double csc(double r);
-	
+
 	double asin(double r);
 	double acos(double r);
 	double acot(double r) noexcept;
 	double asec(double r);
 	double acsc(double r);
-	
+
 	double coth(double r);
 	double sech(double r) noexcept;
 	double csch(double r);
-	
+
 	double acosh(double r);
 	double atanh(double r);
 	double acoth(double r);

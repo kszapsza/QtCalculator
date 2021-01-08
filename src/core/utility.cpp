@@ -16,17 +16,17 @@
 */
 
 namespace core
-{	
+{
 	double square(const double r) noexcept
 	{
 		return r * r;
 	}
-	
+
 	// Generates random real number between 0 and 1.
 	double rand()
-	{	
+	{
 		const auto seed = std::chrono::steady_clock::now().time_since_epoch().count();
-	    std::minstd_rand engine(seed);
+		std::minstd_rand engine(seed);
 		return static_cast<double>(engine()) / std::minstd_rand::max();
 	}
 
@@ -59,15 +59,15 @@ namespace core
 	{
 		if (r == 0)
 			throw std::runtime_error("Can't divide by zero!");
-		
-		return 1 / r;		
+
+		return 1 / r;
 	}
 
 	double tan(const double r)
 	{
 		if (nearly_equal(std::cos(r), 0.0, std::fabs(r) * 2))
 			throw std::runtime_error("Tangent is indeterminate for multiples of pi/2!");
-		
+
 		return std::tan(r);
 	}
 
@@ -75,7 +75,7 @@ namespace core
 	{
 		if (nearly_equal(std::sin(r), 0.0, std::fabs(r) * 2))
 			throw std::runtime_error("Cotangent is indeterminate for multiples of pi!");
-		
+
 		return 1 / std::tan(r);
 	}
 
@@ -83,7 +83,7 @@ namespace core
 	{
 		if (nearly_equal(std::cos(r), 0.0, std::fabs(r) * 2))
 			throw std::runtime_error("Secant is indeterminate for multiples of pi/2!");
-		
+
 		return 1 / std::cos(r);
 	}
 
@@ -91,7 +91,7 @@ namespace core
 	{
 		if (nearly_equal(std::sin(r), 0.0, std::fabs(r) * 2))
 			throw std::runtime_error("Cosecant is indeterminate for multiples of pi!");
-		
+
 		return 1 / std::sin(r);
 	}
 
@@ -99,7 +99,7 @@ namespace core
 	{
 		if (r < -1 || r > 1)
 			throw std::runtime_error("Arcsine is is only definite in [-1, 1]!");
-		
+
 		return std::asin(r);
 	}
 
@@ -107,29 +107,29 @@ namespace core
 	{
 		if (r < -1 || r > 1)
 			throw std::runtime_error("Arccosine is only definite in [-1, 1]!");
-		
+
 		return std::acos(r);
 	}
 
 	double acot(const double r) noexcept
-	{		
+	{
 		return std::numbers::pi / 2 - std::atan(r);
 	}
 
 	double asec(const double r)
-	{		
+	{
 		if (r == 0 || 1 / r <= -1 || 1 / r >= 1)
 			throw std::runtime_error("Arcsecant is only definite in (-infty, -1] u [1, +infty)!");
 
-		return std::acos(1 / r );
+		return std::acos(1 / r);
 	}
 
 	double acsc(const double r)
-	{		
+	{
 		if (r == 0 || 1 / r <= -1 || 1 / r >= 1)
 			throw std::runtime_error("Arccosecant is only definite in (-infty, -1] u [1, +infty)!");
 
-		return std::asin(1 / r );
+		return std::asin(1 / r);
 	}
 
 	double coth(const double r)
@@ -139,9 +139,9 @@ namespace core
 
 		return std::cosh(r) / std::sinh(r);
 	}
-	
+
 	double sech(const double r) noexcept
-	{		
+	{
 		return 1 / std::cosh(r);
 	}
 
@@ -149,7 +149,7 @@ namespace core
 	{
 		if (std::sinh(r) == 0)
 			throw std::runtime_error("Hyperbolic cosecant is indefinite for 0!");
-		
+
 		return 1.0 / std::sinh(r);
 	}
 
@@ -173,23 +173,23 @@ namespace core
 	{
 		if (r >= -1 && r <= 1)
 			throw std::runtime_error("Area hyperbolic cotangent is only definite in (-infty, -1) u (1, infty)!");
-		
-		return 0.5 * std::log((r+1)/(r-1));
+
+		return 0.5 * std::log((r + 1) / (r - 1));
 	}
 
 	double asech(const double r)
 	{
 		if (r <= 0 || r > 1)
 			throw std::runtime_error("Area hyperbolic secant is only definite in (0, 1]!");
-		
-		return std::log(std::sqrt((1/r) - 1) * std::sqrt((1/r) + 1) + (1/r));
+
+		return std::log(std::sqrt((1 / r) - 1) * std::sqrt((1 / r) + 1) + (1 / r));
 	}
 
 	double acsch(const double r)
 	{
 		if (r == 0)
 			throw std::runtime_error("Area hyperbolic cosecant is indefinite for 0!");
-		
-		return std::log(std::sqrt(1 + (1 / (r*r))) + (1/r));
+
+		return std::log(std::sqrt(1 + (1 / (r * r))) + (1 / r));
 	}
 } // namespace core

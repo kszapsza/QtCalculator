@@ -137,12 +137,12 @@ namespace core
 		if (hex.length() >= 2 && hex.at(0) == '0' && (hex.at(1) == 'x' || hex.at(1) == 'X'))
 			hex.erase(0, 2);
 
-		std::transform(hex.begin(), hex.end(), hex.begin(), [](char c)
-		{ return std::tolower(c); });
+		std::transform(hex.begin(), hex.end(), hex.begin(), [](char c) { return std::tolower(c); });
 
 		const std::unordered_map<char, std::size_t> mapping = {
-			{ '0', 0 }, { '1', 1 }, { '2', 2 }, { '3', 3 }, { '4', 4 }, { '5', 5 }, { '6', 6 }, { '7', 7 }, { '8', 8 },
-			{ '9', 9 }, { 'a', 10 }, { 'b', 11 }, { 'c', 12 }, { 'd', 13 }, { 'e', 14 }, { 'f', 15 }};
+				{ '0', 0 }, { '1', 1 }, { '2', 2 }, { '3', 3 }, { '4', 4 }, { '5', 5 }, { '6', 6 }, { '7', 7 },
+				{ '8', 8 },
+				{ '9', 9 }, { 'a', 10 }, { 'b', 11 }, { 'c', 12 }, { 'd', 13 }, { 'e', 14 }, { 'f', 15 }};
 
 		std::int64_t result = 0;
 		std::int64_t power = 0;
@@ -196,8 +196,7 @@ namespace core
 		std::int64_t result = 0;
 		std::int64_t power = 0;
 
-		const auto char_to_numb = [](char ch)
-		{ return ch - '0'; };
+		const auto char_to_numb = [](char ch) { return ch - '0'; };
 
 		for (auto it = oct.rbegin(); it != oct.rend(); it++)
 		{

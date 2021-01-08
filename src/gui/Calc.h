@@ -33,16 +33,13 @@ struct CalcCore;
 class Calc final : public QMainWindow
 {
 Q_OBJECT
-
 public:
-
-	explicit Calc(CalcCore* core, QWidget* parent = nullptr);
+	explicit Calc(QWidget* parent = nullptr);
 	~Calc() override;
 
 	friend class Settings;
 
 private:
-
 	Ui::Calc* ui;
 	CalcCore* core_{};
 
@@ -52,8 +49,7 @@ private:
 	enum class input_mode
 	{
 		concatenate = 0, substitute = 1
-	}
-			curr_display_input_mode_ = input_mode::substitute;
+	} curr_display_input_mode_ = input_mode::substitute;
 
 	void unaryButtonPressed(const std::function<double(double)>& func);
 
