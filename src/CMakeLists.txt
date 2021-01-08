@@ -1,27 +1,30 @@
 # src
 
-set(CMAKE_PREFIX_PATH "D:\\Qt\\5.15.1\\msvc2019")
+set(CMAKE_PREFIX_PATH "D:\\Qt\\6.0.0\\msvc2019_64")
 set(CMAKE_CXX_FLAGS_DEBUG "/MDd")
 
 add_executable(Calc
     main.cpp
-    gui/initializeCalc.cpp
+    core/bitwise.cpp
+    core/bitwise.h
+    core/core.cpp
+    core/core.h
+    core/data.h
+    core/enums.h
+    core/systems.cpp
+    core/systems.h
+    core/utility.cpp
+    core/utility.h
     gui/Calc.cpp
     gui/Calc.h
     gui/Calc.ui
-    gui/scientificCalc.cpp
     gui/Settings.cpp
     gui/Settings.h
     gui/Settings.ui
-    core/core.h    
-    core/core.cpp
-    core/utility.h
-    core/utility.cpp
-    core/systems.cpp
-    core/systems.h
-    core/data.h
-    core/enums.h gui/programmerCalc.cpp core/bitwise.cpp core/bitwise.h)
+    gui/initializeCalc.cpp
+    gui/programmerCalc.cpp
+    gui/scientificCalc.cpp)
 
 target_link_libraries(Calc PRIVATE
-    Qt5::Widgets
+    Qt6::Widgets
 )

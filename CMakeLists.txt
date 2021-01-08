@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.5)
 project(Calc LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_PREFIX_PATH "D:\\Qt\\5.15.1\\msvc2019")
+set(CMAKE_PREFIX_PATH "D:\\Qt\\6.0.0\\msvc2019_64")
 
 set(CMAKE_CXX_FLAGS_DEBUG "/MDd")
 
@@ -14,7 +14,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
+find_package(Qt6 COMPONENTS Core Gui Widgets REQUIRED)
 include_directories(src)
 
 add_subdirectory(src)

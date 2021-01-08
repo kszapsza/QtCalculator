@@ -22,32 +22,38 @@
 */
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class Calc; }
+namespace Ui
+{
+	class Calc;
+}
 QT_END_NAMESPACE
 
 struct CalcCore;
 
 class Calc final : public QMainWindow
 {
-    Q_OBJECT
+Q_OBJECT
 
 public:
-	
-	explicit Calc(CalcCore* core, QWidget *parent = nullptr);
-    ~Calc() override;
-	
+
+	explicit Calc(CalcCore* core, QWidget* parent = nullptr);
+	~Calc() override;
+
 	friend class Settings;
 
 private:
-	
-	Ui::Calc *ui;
+
+	Ui::Calc* ui;
 	CalcCore* core_{};
-	
+
 	QActionGroup* calc_modes_;
 	QLineEdit* curr_display_;
-	
-	enum class input_mode { concatenate = 0, substitute = 1 }
-		curr_display_input_mode_ = input_mode::substitute;
+
+	enum class input_mode
+	{
+		concatenate = 0, substitute = 1
+	}
+			curr_display_input_mode_ = input_mode::substitute;
 
 	void unaryButtonPressed(const std::function<double(double)>& func);
 
@@ -58,7 +64,7 @@ private:
 		button->setDisabled(true);
 	}
 
-	template <typename... Args>
+	template<typename... Args>
 	static void disableButtons(QPushButton* button, Args... buttons)
 	{
 		button->setDisabled(true);
@@ -70,7 +76,7 @@ private:
 		button->setDisabled(false);
 	}
 
-	template <typename... Args>
+	template<typename... Args>
 	static void enableButtons(QPushButton* button, Args... buttons)
 	{
 		button->setDisabled(false);
@@ -82,13 +88,13 @@ private:
 public slots:
 
 // Calc.cpp
-	
+
 	void numButtonPressed();
-	void commaButtonPressed();	
+	void commaButtonPressed();
 	void mathButtonPressed();
-	
+
 	void equalButtonPressed();
-	void percentButtonPressed();	
+	void percentButtonPressed();
 
 	void squareButtonPressed();
 	void sqrtButtonPressed();
@@ -113,15 +119,15 @@ public slots:
 	void piButtonPressed();
 	void eButtonPressed();
 	void randButtonPressed();
-	
+
 	void logBase2ButtonPressed();
 	void logBase10ButtonPressed();
 	void lnButtonPressed();
 
-	void factorialButtonPressed();	
+	void factorialButtonPressed();
 	void expButtonPressed();
 	void e10ToXButtonPressed();
-	
+
 	void absButtonPressed();
 	void inverseButtonPressed();
 
