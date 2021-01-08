@@ -2,16 +2,11 @@
 #include <unordered_map>
 
 #include <QPushButton>
-#include <QtMath>
 #include <QMessageBox>
 
 #include "./gui/Calc.h"
 #include "./gui/Settings.h"
 #include "./core/utility.h"
-
-#ifdef QT_DEBUG
-#include <QDebug>
-#endif
 
 /*
 ///////////////////////////////////////////////////////////
@@ -63,7 +58,6 @@ void Calc::menuViewBasicTriggered()
 		core_->data.calc_mode = mode::basic;
 		ui->menuFunctions->menuAction()->setVisible(false);
 
-		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::basic");
 		ui->statusbar->showMessage("Changed mode to Basic.", 2000);
 		curr_display_ = ui->display;
 	}
@@ -81,7 +75,6 @@ void Calc::menuViewScientificTriggered()
 		core_->data.calc_mode = mode::scientific;
 		ui->menuFunctions->menuAction()->setVisible(true);
 
-		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::scientific");
 		ui->statusbar->showMessage("Changed mode to Scientific.", 2000);
 		curr_display_ = ui->display_sci;
 	}
@@ -104,7 +97,6 @@ void Calc::menuViewProgrammerTriggered()
 		disableButtons<QPushButton*>(ui->button_hex_A, ui->button_hex_B, ui->button_hex_C,
 				ui->button_hex_D, ui->button_hex_E, ui->button_hex_F);
 
-		qInfo("void Calc::menuViewModeChanged(): Enabled Mode::programmer");
 		ui->statusbar->showMessage("Changed mode to Programmer.", 2000);
 		curr_display_ = ui->display_prog;
 	}
