@@ -47,6 +47,11 @@ Calc::Calc(QWidget* parent)
 	ui->display_sci->setText(QString::number(core_->config.init_value));
 	ui->display_prog->setText(QString::number(core_->config.init_value));
 
+	// Display text alignment fix.
+	ui->display->setAlignment(Qt::AlignRight);
+	ui->display_sci->setAlignment(Qt::AlignRight);
+	ui->display_prog->setAlignment(Qt::AlignRight);
+
 /// BASIC MODE BUTTONS INIT ///
 
 	// Initialize number buttons.
